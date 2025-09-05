@@ -297,23 +297,13 @@
 
   <style>
     .theme-toggle {
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width:28px;height:28px;
-      border-radius:6px;
-      line-height:1;
-      font-size:18px;
-      margin-left:8px;
-      user-select:none;
-      cursor:pointer;
-      border:1px solid #ccc;
-      background:#fff;
-      color:#111;
+      display:inline-flex;align-items:center;justify-content:center;
+      width:28px;height:28px;border-radius:6px;line-height:1;
+      font-size:18px;margin-left:8px;user-select:none;cursor:pointer;
+      border:1px solid #ccc;background:#fff;color:#111;
     }
     nav h2 { display:flex; align-items:center; gap:6px; }
     body.dark .theme-toggle { background:#2a2a2a; color:#e5e5e5; border-color:#444; }
-    /* Force SOL text to white in dark */
     body.dark #sol, body.dark #sol * { color:#fff !important; }
   </style>
 
@@ -1016,29 +1006,26 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
   <script>
     (function(){
       const gbtn = document.getElementById('globalThemeToggle');
-      if (gbtn) {
+      if (gbtn){
         function updateThemeIcon(){
           gbtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
         }
         gbtn.addEventListener('click', function(e){
           e.preventDefault();
-          e.stopPropagation();
           document.body.classList.toggle('dark');
           updateThemeIcon();
         });
         updateThemeIcon();
       }
-      // 2FA: ensure paste/input auto-refresh via updateSecrets (if available)
-      const sb = document.getElementById('secretBox');
-      if (sb) {
-        const handler = (typeof updateSecrets === 'function') ? updateSecrets
-                        : (typeof refresh === 'function') ? refresh
-                        : null;
-        if (handler) {
-          sb.addEventListener('input', handler);
-          // also handle paste explicitly (some browsers delay 'input')
-          sb.addEventListener('paste', function(){ setTimeout(handler, 0); });
-        }
+      // 2FA: ensure secretBox triggers updateSecrets
+      const sb = document.getElementById("secretBox");
+      if (sb && typeof updateSecrets==='function'){
+        sb.addEventListener("input", updateSecrets);
+      }
+      // 2FA: ensure timer updates
+      if(typeof updateTimer==='function'){
+        updateTimer();
+        setInterval(updateTimer,1000);
       }
     })();
   </script>
