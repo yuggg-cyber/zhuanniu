@@ -1029,8 +1029,50 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
       }
     })();
   </script>
+
+  <script>
+    (function(){
+      const gbtn = document.getElementById('globalThemeToggle');
+      if (gbtn){
+        function updateThemeIcon(){
+          gbtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
+        }
+        gbtn.addEventListener('click', function(e){
+          e.preventDefault();
+          document.body.classList.toggle('dark');
+          updateThemeIcon();
+        });
+        updateThemeIcon();
+      }
+      // 2FA: ensure secretBox triggers updateSecrets
+      const sb = document.getElementById("secretBox");
+      if (sb && typeof updateSecrets==='function'){
+        sb.addEventListener("input", updateSecrets);
+      }
+      // 2FA: timer logic restored
+      if (typeof refreshCodesForCurrentStep==='function'){
+        let lastStep=-1;
+        const period=30;
+        setInterval(async ()=>{
+          const now=Math.floor(Date.now()/1000);
+          const step=Math.floor(now/period);
+          let left=period - (now % period);
+          if(left===0) left=period;
+          const tEl=document.getElementById("timer");
+          if(tEl) tEl.textContent=left;
+          if(step!==lastStep){
+            lastStep=step;
+            if(typeof secrets!=='undefined' && secrets.length){
+              await refreshCodesForCurrentStep();
+            }
+          }
+        },1000);
+      }
+    })();
+  </script>
 </body>
 </html>
+
 
 
 
