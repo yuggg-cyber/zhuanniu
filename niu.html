@@ -294,10 +294,15 @@
     body.dark #fa .code { color:#90ee90 !important; }
   </style>
 
+
+  <style>
+    body.dark #sol, body.dark #sol * { color:#fff !important; }
+  </style>
+
 </head>
 <body>
   <nav>
-    <h2>功能导航 <button id="globalThemeToggle">🌙</button></h2>
+    <h2>功能导航 <button id="globalThemeToggle type="button"">🌙</button></h2>
     <button data-tab="sol" class="active">SOL账户工具</button>
     <button data-tab="fa">批量2FA生成器</button>
     <hr>
@@ -795,7 +800,7 @@
 
 <script>
 /* ====== 主题切换 ====== */
-const themeBtn=document.getElementById('themeToggle');
+const themeBtn=null;
 function setTheme(mode){
   if(mode==='dark'){document.body.classList.add('dark');themeBtn.textContent='🌞 浅色模式';}
   else{document.body.classList.remove('dark');themeBtn.textContent='🌙 暗黑模式';}
@@ -989,7 +994,15 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
       gbtn.textContent=document.body.classList.contains('dark')?'🌞':'🌙';
     });
   </script>
+
+  <script>
+    const sb=document.getElementById("secretBox");
+    if(sb && typeof refresh==='function'){
+      sb.addEventListener("input", refresh);
+    }
+  </script>
 </body>
 </html>
+
 
 
