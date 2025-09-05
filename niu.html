@@ -350,8 +350,7 @@
 
 </nav>
   <main>
-    <!-- === SOL 工具区域开始 === -->
-<section id="sol" class="active">
+    <section id="sol" class="active">
       
   <h2>🔥 Solana Token Manager (Batch Burn & Close)</h2>
   <button id="connectBtn">连接钱包</button>
@@ -552,11 +551,9 @@
     };
   </script>
 
-    <!-- === SOL 工具区域结束 === -->
-</section>
+    </section>
 
-    <!-- === 2FA 工具区域开始 === -->
-<section id="fa">
+    <section id="fa">
       
   <div class="container">
     <!-- 左：输入 -->
@@ -734,8 +731,7 @@
     </section>
 
     <!-- Keep full Text Toolbox DOM once, we'll switch inner panes via the left nav -->
-    <!-- === 文本工具箱区域开始 === -->
-<section id="text">
+    <section id="text">
       
   <!-- 左侧导航 -->
   <nav>
@@ -832,8 +828,7 @@
         </div>
         <textarea id="pwdOut" readonly></textarea>
       </div></div>
-    <!-- === 文本工具箱区域结束 === -->
-</section>
+    </section>
   </main>
 
   <div id="toast"></div>
@@ -990,8 +985,7 @@ document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document
 document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
 </script>
 
-    <!-- === 文本工具箱区域结束 === -->
-</section>
+    </section>
   </main>
 
   <script>
@@ -1036,8 +1030,7 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
     });
   </script>
 
-  <!-- === 全局暗黑模式切换脚本 === -->
-<script>
+  <script>
     (function(){
       const gbtn = document.getElementById('globalThemeToggle');
       if (gbtn){
@@ -1128,7 +1121,6 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
 
 
 <script>
-<!-- === 全局 Toast 提示脚本 === -->
 window.showToast = function(msg){
   const toast=document.createElement("div");
   toast.className="copy-toast show";
@@ -1140,8 +1132,12 @@ window.showToast = function(msg){
 </script>
 
 
+
+
+
 <!-- Text toolbox scripts START -->
 <script>
+document.addEventListener("DOMContentLoaded", function(){
 
 /* ====== 主题切换 ====== */
 const themeBtn=document.getElementById('themeToggle');
@@ -1307,6 +1303,7 @@ document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document
 ').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
 document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
 
+});
 </script>
 <!-- Text toolbox scripts END -->
 
