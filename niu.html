@@ -239,10 +239,65 @@
     }
   </style>
 
+
+  <style>
+    nav button {
+      background:#fff;
+      color:#111;
+      border:1px solid #ccc;
+      transition:background 0.2s,color 0.2s;
+    }
+    nav button:hover { background:#f0f0f0; }
+    nav button.active {
+      background:#0d6efd;
+      color:#fff;
+      border-color:#0d6efd;
+    }
+    /* Global dark mode */
+    body.dark {
+      background:#121212;
+      color:#e5e5e5;
+    }
+    body.dark nav { background:#1e1e1e; border-right:1px solid #333; }
+    body.dark nav button { background:#2a2a2a; color:#e5e5e5; border:1px solid #444; }
+    body.dark nav button.active { background:#0d6efd; color:#fff; }
+    body.dark section { background:#1e1e1e; color:#e5e5e5; }
+    body.dark #sol #log { background:#222; color:#e5e5e5; border:1px solid #444; }
+  </style>
+
+
+  <style>
+    /* Dark mode overrides */
+    body.dark #sol {
+      background:#1e1e1e !important;
+      color:#e5e5e5 !important;
+    }
+    body.dark #sol .module {
+      background:#2a2a2a !important;
+      border:1px solid #444 !important;
+      color:#e5e5e5 !important;
+    }
+    body.dark #sol h2, body.dark #sol h3 { color:#e5e5e5 !important; }
+    body.dark #sol button {
+      background:#333 !important;
+      color:#e5e5e5 !important;
+      border:1px solid #555 !important;
+    }
+    body.dark #sol button:hover { background:#444 !important; }
+    body.dark #sol #log {
+      background:#222 !important;
+      color:#90ee90 !important;
+      border:1px solid #444 !important;
+    }
+    /* 2FA codes green */
+    body.dark #fa td:first-child { color:#90ee90 !important; }
+    body.dark #fa .code { color:#90ee90 !important; }
+  </style>
+
 </head>
 <body>
   <nav>
-    <h2>功能导航</h2>
+    <h2>功能导航 <button id="globalThemeToggle">🌙</button></h2>
     <button data-tab="sol" class="active">SOL账户工具</button>
     <button data-tab="fa">批量2FA生成器</button>
     <hr>
@@ -250,7 +305,10 @@
     <button data-tab="affix">文本批量增加</button>
     <button data-tab="split">文本分列</button>
     <button data-tab="passwd">密码生成</button>
-  </nav>
+  
+    
+
+</nav>
   <main>
     <section id="sol" class="active">
       
@@ -470,7 +528,7 @@
         <button class="scale-btn" data-scale="150" data-font="1.5em">中号</button>
         <button class="scale-btn" data-scale="200" data-font="2em">大号</button>
         <button class="scale-btn" data-scale="300" data-font="3em">老年模式</button>
-        <button class="theme-btn" id="themeToggle">🌙 暗黑模式</button>
+        
       </div>
     </div>
 
@@ -643,7 +701,7 @@
     <button class="nav-btn" data-tab="split">文本分列</button>
     <button class="nav-btn" data-tab="passwd">密码生成</button>
     <hr>
-    <button id="themeToggle" class="theme-btn">🌙 暗黑模式</button>
+    
   </nav>
 
   <!-- 右侧主体 -->
@@ -915,5 +973,23 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
     // Ensure a default inner pane visible when entering text toolbox via outer left nav
     // (initial load keeps SOL active; nothing to do here)
   </script>
+
+  <script>
+    const gbtn=document.getElementById('globalThemeToggle');
+    gbtn.addEventListener('click',()=>{
+      document.body.classList.toggle('dark');
+      gbtn.textContent=document.body.classList.contains('dark')?'🌞 浅色模式':'🌙 暗黑模式';
+    });
+  </script>
+
+  <script>
+    const gbtn=document.getElementById('globalThemeToggle');
+    gbtn.addEventListener('click',()=>{
+      document.body.classList.toggle('dark');
+      gbtn.textContent=document.body.classList.contains('dark')?'🌞':'🌙';
+    });
+  </script>
 </body>
 </html>
+
+
