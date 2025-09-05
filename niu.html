@@ -530,7 +530,7 @@
     }
 
     function setScale(val,font){
-      document.documentElement.style.fontSize = val+"%";
+      document.querySelector('#fa').style.fontSize = val+"%";
       codeFontSize=font;
       localStorage.setItem("scalePercent", val);
       localStorage.setItem("codeFontSize", font);
