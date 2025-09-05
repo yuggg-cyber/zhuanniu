@@ -564,7 +564,7 @@ body.dark #pane-pass textarea:focus {
 <body>
   <nav>
     <h2>功能导航 <span id="globalThemeToggle" class="theme-toggle" role="button" aria-label="切换主题">🌙</span></h2>
-    <button data-tab="sol" class="active">SOL账户工具</button><hr><button data-tab="fa">批量2FA生成器</button><hr><button data-tab="dedupe">文本去重复</button><hr><button data-tab="affix">文本批量增加</button><hr><button data-tab="split">文本分列</button><hr><button data-tab="passwd">密码生成</button></nav>
+    <button data-tab="sol" class="active">SOL账户工具</button><hr><button data-tab="fa">批量2FA验证器</button><hr><button data-tab="dedupe">文本去重复</button><hr><button data-tab="affix">文本批量增加</button><hr><button data-tab="split">文本分列</button><hr><button data-tab="passwd">密码生成</button></nav>
   <main>
     <section id="sol" class="active">
       
@@ -968,8 +968,8 @@ body.dark #pane-pass textarea:focus {
       <div class="card"><div class="hd">输入</div><div class="bd">
         <textarea id="affixIn"></textarea>
         <input type="text" id="affixStr" placeholder="增加的内容">
-        <label><input type="radio" name="affixSide" value="left" checked> 左侧</label>
-        <label><input type="radio" name="affixSide" value="right"> 右侧</label>
+        <label><input type="radio" name="affixSide" value="left" checked> 前缀</label>
+        <label><input type="radio" name="affixSide" value="right"> 后缀</label>
       </div></div>
       <div class="card"><div class="hd">结果</div><div class="bd">
         <div class="btnbar">
@@ -1610,6 +1610,7 @@ function toggleTheme(){
 
 </body>
 </html>
+
 
 
 
