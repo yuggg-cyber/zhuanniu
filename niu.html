@@ -307,33 +307,6 @@
     body.dark #sol, body.dark #sol * { color:#fff !important; }
   </style>
 
-
-<style>
-.copy-toast {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: rgba(50, 50, 50, 0.9);
-  color: #fff;
-  padding: 10px 16px;
-  border-radius: 12px;
-  font-size: 14px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-  opacity: 0;
-  transition: opacity 0.5s ease, transform 0.5s ease;
-  transform: translateY(20px);
-  z-index: 9999;
-}
-.copy-toast.show {
-  opacity: 1;
-  transform: translateY(0);
-}
-.copy-toast.hide {
-  opacity: 0;
-  transform: translateY(20px);
-}
-</style>
-
 </head>
 <body>
   <nav>
@@ -1097,43 +1070,8 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
       }
     })();
   </script>
-
-<script>
-(function(){
-  function initScale(){
-    const savedScale = localStorage.getItem("scalePercent") || "100";
-    const savedFont = localStorage.getItem("codeFontSize") || "1.2em";
-    if(typeof setScale==='function'){
-      setScale(savedScale, savedFont);
-    }
-    // highlight correct button
-    document.querySelectorAll("#scaleBtns button").forEach(btn=>{
-      if(btn.dataset.scale===savedScale && btn.dataset.font===savedFont){
-        btn.classList.add("active");
-      } else {
-        btn.classList.remove("active");
-      }
-    });
-  }
-  if(document.getElementById("fa")) initScale();
-})();
-</script>
-
-
-<script>
-window.showToast = function(msg){
-  const toast=document.createElement("div");
-  toast.className="copy-toast show";
-  toast.textContent=msg;
-  document.body.appendChild(toast);
-  setTimeout(()=>toast.classList.add("hide"),2000);
-  setTimeout(()=>toast.remove(),2500);
-};
-</script>
-
 </body>
 </html>
-
 
 
 
