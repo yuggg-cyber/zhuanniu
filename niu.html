@@ -307,6 +307,33 @@
     body.dark #sol, body.dark #sol * { color:#fff !important; }
   </style>
 
+
+<style>
+.copy-toast {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background: rgba(50, 50, 50, 0.9);
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  opacity: 0;
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(20px);
+  z-index: 9999;
+}
+.copy-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+.copy-toast.hide {
+  opacity: 0;
+  transform: translateY(20px);
+}
+</style>
+
 </head>
 <body>
   <nav>
@@ -323,7 +350,8 @@
 
 </nav>
   <main>
-    <section id="sol" class="active">
+    <!-- === SOL 工具区域开始 === -->
+<section id="sol" class="active">
       
   <h2>🔥 Solana Token Manager (Batch Burn & Close)</h2>
   <button id="connectBtn">连接钱包</button>
@@ -524,9 +552,11 @@
     };
   </script>
 
-    </section>
+    <!-- === SOL 工具区域结束 === -->
+</section>
 
-    <section id="fa">
+    <!-- === 2FA 工具区域开始 === -->
+<section id="fa">
       
   <div class="container">
     <!-- 左：输入 -->
@@ -704,7 +734,8 @@
     </section>
 
     <!-- Keep full Text Toolbox DOM once, we'll switch inner panes via the left nav -->
-    <section id="text">
+    <!-- === 文本工具箱区域开始 === -->
+<section id="text">
       
   <!-- 左侧导航 -->
   <nav>
@@ -801,7 +832,8 @@
         </div>
         <textarea id="pwdOut" readonly></textarea>
       </div></div>
-    </section>
+    <!-- === 文本工具箱区域结束 === -->
+</section>
   </main>
 
   <div id="toast"></div>
@@ -958,7 +990,8 @@ document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document
 document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
 </script>
 
-    </section>
+    <!-- === 文本工具箱区域结束 === -->
+</section>
   </main>
 
   <script>
@@ -1003,7 +1036,8 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
     });
   </script>
 
-  <script>
+  <!-- === 全局暗黑模式切换脚本 === -->
+<script>
     (function(){
       const gbtn = document.getElementById('globalThemeToggle');
       if (gbtn){
@@ -1070,8 +1104,215 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
       }
     })();
   </script>
+
+<script>
+(function(){
+  function initScale(){
+    const savedScale = localStorage.getItem("scalePercent") || "100";
+    const savedFont = localStorage.getItem("codeFontSize") || "1.2em";
+    if(typeof setScale==='function'){
+      setScale(savedScale, savedFont);
+    }
+    // highlight correct button
+    document.querySelectorAll("#scaleBtns button").forEach(btn=>{
+      if(btn.dataset.scale===savedScale && btn.dataset.font===savedFont){
+        btn.classList.add("active");
+      } else {
+        btn.classList.remove("active");
+      }
+    });
+  }
+  if(document.getElementById("fa")) initScale();
+})();
+</script>
+
+
+<script>
+<!-- === 全局 Toast 提示脚本 === -->
+window.showToast = function(msg){
+  const toast=document.createElement("div");
+  toast.className="copy-toast show";
+  toast.textContent=msg;
+  document.body.appendChild(toast);
+  setTimeout(()=>toast.classList.add("hide"),2000);
+  setTimeout(()=>toast.remove(),2500);
+};
+</script>
+
+
+<!-- Text toolbox scripts START -->
+<script>
+
+/* ====== 主题切换 ====== */
+const themeBtn=document.getElementById('themeToggle');
+function setTheme(mode){
+  if(mode==='dark'){document.body.classList.add('dark');themeBtn.textContent='🌞 浅色模式';}
+  else{document.body.classList.remove('dark');themeBtn.textContent='🌙 暗黑模式';}
+  localStorage.setItem('tools_theme',mode);
+}
+themeBtn.onclick=()=>setTheme(document.body.classList.contains('dark')?'light':'dark');
+setTheme(localStorage.getItem('tools_theme')||'light');
+
+/* ====== 标签切换 ====== */
+document.querySelectorAll('.nav-btn').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+    document.getElementById('pane-'+btn.dataset.tab).style.display='block';
+  };
+});
+
+/* ====== 公共函数 ====== */
+function toast(msg){
+  const box=document.getElementById('toast');
+  const div=document.createElement('div');
+  div.className='toast';div.textContent=msg;
+  box.appendChild(div); requestAnimationFrame(()=>div.classList.add('show'));
+  setTimeout(()=>{div.classList.remove('show'); setTimeout(()=>div.remove(),200)},1500);
+}
+function fileTimestamp(){
+  const d=new Date(),p=n=>String(n).padStart(2,'0');
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+function saveTxt(name,content){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));
+  a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+function aoaToXlsx(rows,name){
+  if(typeof XLSX==='undefined'){toast('未加载XLSX库');return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  const colWidths=[];
+  rows.forEach(r=>{r.forEach((cell,i)=>{const len=String(cell||'').length;colWidths[i]=Math.max(colWidths[i]||10,len+2);});});
+  ws['!cols']=colWidths.map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');XLSX.writeFile(wb,name);
+}
+
+/* ====== 去重 ====== */
+document.getElementById('dedupeRun').onclick=()=>{
+  let lines=document.getElementById('dedupeIn').value.split(/
+?
+/);
+  if(document.getElementById('trimDedupe').checked) lines=lines.map(s=>s.trim()).filter(s=>s);
+  const seen=new Set(),out=[];
+  for(const s of lines){const k=document.getElementById('caseDedupe').checked?s.toLowerCase():s;
+    if(!seen.has(k)){seen.add(k);out.push(s);}
+  }
+  document.getElementById('dedupeOut').value=out.join('
+');
+  document.getElementById('dedupeStat').textContent=`原${lines.length}行 → 去重后${out.length}行`;
+  toast('去重完成');
+};
+document.getElementById('dedupeCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('dedupeOut').value);toast('已复制');};
+document.getElementById('dedupeTxt').onclick=()=>saveTxt(`文本去重复${fileTimestamp()}.txt`,document.getElementById('dedupeOut').value);
+document.getElementById('dedupeXlsx').onclick=()=>aoaToXlsx([['结果'],...document.getElementById('dedupeOut').value.split('
+').map(v=>[v])],`文本去重复${fileTimestamp()}.xlsx`);
+document.getElementById('dedupeClear').onclick=()=>{document.getElementById('dedupeOut').value='';document.getElementById('dedupeStat').textContent='—';};
+
+/* ====== 批量增加 ====== */
+document.getElementById('affixRun').onclick=()=>{
+  let lines=document.getElementById('affixIn').value.split(/
+?
+/).map(s=>s.trim()).filter(s=>s);
+  const add=document.getElementById('affixStr').value;
+  const side=document.querySelector('input[name="affixSide"]:checked').value;
+  const out=lines.map(s=>side==='left'?add+s:s+add);
+  document.getElementById('affixOut').value=out.join('
+');
+  document.getElementById('affixStat').textContent=`输入${lines.length}行 → 输出${out.length}行`;
+  toast('批量完成');
+};
+document.getElementById('affixCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('affixOut').value);toast('已复制');};
+document.getElementById('affixTxt').onclick=()=>saveTxt(`文本批量增加${fileTimestamp()}.txt`,document.getElementById('affixOut').value);
+document.getElementById('affixXlsx').onclick=()=>aoaToXlsx([['结果'],...document.getElementById('affixOut').value.split('
+').map(v=>[v])],`文本批量增加${fileTimestamp()}.xlsx`);
+document.getElementById('affixClear').onclick=()=>{document.getElementById('affixOut').value='';document.getElementById('affixStat').textContent='—';};
+
+/* ====== 分列 ====== */
+function buildSplitTable(rows){
+  const table=document.getElementById('splitTable');
+  table.innerHTML='';
+  if(!rows.length){window.splitRows=[];window.splitColCount=0;return;}
+  const colCount=Math.max(...rows.map(r=>r.length));
+  const normalized=rows.map(r=>Array.from({length:colCount},(_,i)=>r[i]??''));
+  const colgroup=document.createElement('colgroup');
+  for(let i=0;i<colCount;i++){const col=document.createElement('col');col.style.width=`${100/colCount}%`;colgroup.appendChild(col);}
+  table.appendChild(colgroup);
+  const thead=document.createElement('thead');const trh=document.createElement('tr');
+  for(let i=0;i<colCount;i++){const th=document.createElement('th');th.textContent=`列${i+1}`;trh.appendChild(th);}
+  thead.appendChild(trh);table.appendChild(thead);
+  const tbody=document.createElement('tbody');
+  normalized.forEach(r=>{const tr=document.createElement('tr');r.forEach(cell=>{const td=document.createElement('td');td.textContent=cell;tr.appendChild(td)});tbody.appendChild(tr);});
+  table.appendChild(tbody);
+  window.splitRows=normalized;window.splitColCount=colCount;
+}
+document.getElementById('splitRun').onclick=()=>{
+  const sep=document.getElementById('splitSep').value;if(!sep){toast('请输入分隔符');return;}
+  const lines=document.getElementById('splitIn').value.split(/
+?
+/).filter(s=>s);
+  const rows=lines.map(l=>l.split(sep).map(c=>c.trim()));
+  buildSplitTable(rows);
+  document.getElementById('splitStat').textContent=`行 ${rows.length} ｜ 最大列数 ${window.splitColCount}`;
+  toast('分列完成');
+};
+document.getElementById('splitCopy').onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast('没有可复制的数据');return;}navigator.clipboard.writeText(rows.map(r=>r.join('	')).join('
+'));toast('已复制TSV');};
+document.getElementById('splitTxt').onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast('没有可导出的数据');return;}saveTxt(`文本分列${fileTimestamp()}.txt`,rows.map(r=>r.join('	')).join('
+'));};
+document.getElementById('splitXlsx').onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast('没有可导出的数据');return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
+document.getElementById('splitClear').onclick=()=>{document.getElementById('splitTable').innerHTML='';document.getElementById('splitStat').textContent='—';};
+
+/* ====== 密码生成 ====== */
+function genPwd(len,upper,num,sym){
+  let lower='abcdefghijklmnopqrstuvwxyz';
+  let chars=lower;
+  if(upper) chars+=lower.toUpperCase();
+  if(num) chars+='23456789';
+  if(sym) chars+='!@#$%^&*()-_=+[]{};:,.<>?';
+  chars=chars.replace(/[oOlI]/g,'');
+  if(!chars) return '';
+  let pwd='';for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
+  return pwd;
+}
+function evalStrength(pwd,upper,num,sym){
+  let score=0;
+  if(pwd.length>=12) score++;
+  if(upper) score++;
+  if(num) score++;
+  if(sym) score++;
+  return score;
+}
+document.getElementById('pwdRun').onclick=()=>{
+  const len=+document.getElementById('pwdLen').value;
+  const cnt=+document.getElementById('pwdCount').value;
+  const upper=document.getElementById('pwdUpper').checked,
+        num=document.getElementById('pwdNum').checked,
+        sym=document.getElementById('pwdSym').checked;
+  const out=[];for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
+  document.getElementById('pwdOut').value=out.join('
+');
+  const score=evalStrength(out[0],upper,num,sym);
+  const bar=document.getElementById('strengthFill');
+  if(score<=1){bar.className='strength-fill weak';bar.style.width='33%';}
+  else if(score<=3){bar.className='strength-fill medium';bar.style.width='66%';}
+  else{bar.className='strength-fill strong';bar.style.width='100%';}
+  toast('生成完成');
+};
+document.getElementById('pwdCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('pwdOut').value);toast('已复制');};
+document.getElementById('pwdTxt').onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById('pwdOut').value);
+document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document.getElementById('pwdOut').value.split('
+').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
+document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
+
+</script>
+<!-- Text toolbox scripts END -->
+
 </body>
 </html>
+
 
 
 
