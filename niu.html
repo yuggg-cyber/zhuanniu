@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>Zhuanniu 工具集</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+  <style>
+    :root {
+      --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
+      --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
+      --area-bg:#fff; --code-color:#000;
+    }
+    body.dark {
+      --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
+      --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
+      --area-bg:#161616; --code-color:#4FC3F7;
+    }
+    body{margin:0;display:flex;height:100vh;background:var(--bg);color:var(--fg);
+      font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;}
+
+    nav{width:200px;border-right:1px solid var(--border);padding:20px;box-sizing:border-box}
+    nav h2{font-size:18px;margin-bottom:16px}
+    .nav-btn{display:block;width:100%;text-align:left;
+      background:var(--btn-bg);color:var(--btn-fg);border:1px solid var(--border);
+      border-radius:6px;padding:10px;margin-bottom:8px;cursor:pointer}
+    .nav-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    main{flex:1;padding:20px;overflow:auto}
+    .card{border:1px solid var(--border);border-radius:10px;background:var(--area-bg);margin-bottom:20px;}
+    .card .hd{padding:10px 12px;border-bottom:1px solid var(--border);font-weight:600}
+    .card .bd{padding:12px}
+
+    textarea,input[type="text"],input[type="number"]{
+      width:100%;background:var(--area-bg);color:var(--fg);
+      border:1px solid var(--border);border-radius:6px;padding:8px;margin-bottom:8px;
+    }
+    textarea{min-height:180px;font:14px/1.5 ui-monospace,monospace}
+    .btn{border:1px solid var(--border);background:var(--btn-bg);color:var(--btn-fg);
+      padding:6px 12px;border-radius:6px;cursor:pointer}
+    .btn:hover{background:var(--btn-hover)}
+    .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    /* 表格样式 */
+    table{width:100%;border-collapse:collapse;table-layout:fixed}
+    th,td{padding:8px;border-bottom:1px solid var(--border);text-align:center;word-break:break-all}
+    .code{font-weight:700;cursor:pointer;color:var(--code-color)}
+    .code:hover{background:var(--btn-hover);border-radius:4px}
+
+    /* Toast */
+    #toast{position:fixed;right:16px;bottom:16px;z-index:9999}
+    .toast{background:rgba(0,0,0,.8);color:#fff;padding:6px 12px;border-radius:6px;margin-top:6px;
+      font-size:14px;opacity:0;transition:opacity .2s}
+    .toast.show{opacity:1}
+  </style>
+</head>
+<body>
+  <!-- 左侧导航 -->
+  <nav>
+    <h2>🧰 工具集</h2>
+    <button class="nav-btn active" data-tab="sol">🔥 SOL 空账户关闭</button>
+    <button class="nav-btn" data-tab="fa2">🔑 批量 2FA 工具</button>
+    <button class="nav-btn" data-tab="dedupe">📄 文本去重复</button>
+    <button class="nav-btn" data-tab="affix">📄 文本批量增加</button>
+    <button class="nav-btn" data-tab="split">📄 文本分列</button>
+    <button class="nav-btn" data-tab="passwd">🔒 密码生成</button>
+    <hr>
+    <button id="themeToggle" class="btn">🌙 暗黑模式</button>
+  </nav>
+
+  <!-- 右侧主体 -->
+  <main>
+    <!-- ========== SOL 工具 ========== -->
+    <section class="tab-pane" id="pane-sol" style="display:block">
+      <!-- TODO: 嵌入 SOL 工具代码（已改UI风格） -->
+    </section>
+
+    <!-- ========== 2FA 工具 ========== -->
+    <section class="tab-pane" id="pane-fa2" style="display:none">
+      <!-- TODO: 嵌入 2FA 工具代码 -->
+    </section>
+
+    <!-- ========== 文本去重复 ========== -->
+    <section class="tab-pane" id="pane-dedupe" style="display:none">
+      <!-- TODO: 嵌入 文本去重复 功能代码 -->
+    </section>
+
+    <!-- ========== 文本批量增加 ========== -->
+    <section class="tab-pane" id="pane-affix" style="display:none">
+      <!-- TODO: 嵌入 文本批量增加 功能代码 -->
+    </section>
+
+    <!-- ========== 文本分列 ========== -->
+    <section class="tab-pane" id="pane-split" style="display:none">
+      <!-- TODO: 嵌入 文本分列 功能代码 -->
+    </section>
+
+    <!-- ========== 密码生成 ========== -->
+    <section class="tab-pane" id="pane-passwd" style="display:none">
+      <!-- TODO: 嵌入 密码生成 功能代码 -->
+    </section>
+  </main>
+
+  <div id="toast"></div>
+
+  <script>
+    /* ========== 公共逻辑 ========== */
+    function toast(msg){
+      const box=document.getElementById('toast');
+      const div=document.createElement('div');
+      div.className='toast';div.textContent=msg;
+      box.appendChild(div); requestAnimationFrame(()=>div.classList.add('show'));
+      setTimeout(()=>{div.classList.remove('show'); setTimeout(()=>div.remove(),200)},1500);
+    }
+
+    // 标签切换
+    document.querySelectorAll('.nav-btn').forEach(btn=>{
+      btn.onclick=()=>{
+        document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
+        document.getElementById('pane-'+btn.dataset.tab).style.display='block';
+      }
+    });
+
+    // 主题切换
+    function setTheme(mode){
+      if(mode==='dark'){
+        document.body.classList.add('dark');
+        document.getElementById('themeToggle').textContent='🌞 浅色模式';
+        localStorage.setItem('tools_theme','dark');
+      }else{
+        document.body.classList.remove('dark');
+        document.getElementById('themeToggle').textContent='🌙 暗黑模式';
+        localStorage.setItem('tools_theme','light');
+      }
+    }
+    document.getElementById('themeToggle').onclick=()=>{
+      if(document.body.classList.contains('dark')) setTheme('light'); else setTheme('dark');
+    };
+    setTheme(localStorage.getItem('tools_theme')||'light');
+  </script>
+</body>
+</html>
