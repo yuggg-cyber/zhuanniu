@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>赚🐮工具箱</title>
+  <title>多功能工具箱</title>
   <style>
     body {
       margin:0; display:flex; height:100vh; font-family:sans-serif;
@@ -72,7 +72,7 @@
 
   
   <meta charset="UTF-8">
-  <title>批量 2FA 验证器</title>
+  <title>批量 2FA 生成器</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -507,6 +507,56 @@ body.dark select:focus,
 body.dark textarea:focus {
   border:2px solid #3399ff !important;
   background:#2a2a2a !important;
+}
+</style>
+
+
+<style>
+/* 强化：暗黑模式下「增加的内容」输入框（#affixStr）颜色，不允许变白 */
+body.dark #pane-affix #affixStr {
+  background:#2e2e2e !important;
+  border:2px solid #444 !important;
+  color:#e5e5e5 !important;
+}
+body.dark #pane-affix #affixStr:focus {
+  background:#2a2a2a !important;
+  border:2px solid #3399ff !important;
+  color:#e5e5e5 !important;
+}
+</style>
+
+
+<style>
+/* v18: 暗黑模式 - 仅文本工具区输入框修复（不影响 2FA） */
+body.dark #pane-affix input[type="text"],
+body.dark #pane-affix input[type="number"],
+body.dark #pane-split input[type="text"],
+body.dark #pane-split input[type="number"],
+body.dark #pane-pass input[type="text"],
+body.dark #pane-pass input[type="number"],
+body.dark #pane-affix textarea,
+body.dark #pane-split textarea,
+body.dark #pane-pass textarea {
+  background-color:#2e2e2e !important;
+  color:#e5e5e5 !important;
+  -webkit-text-fill-color:#e5e5e5 !important;
+  box-shadow:inset 0 0 0px 1000px #2e2e2e !important;
+  border:2px solid #444 !important;
+}
+body.dark #pane-affix input[type="text"]:focus,
+body.dark #pane-affix input[type="number"]:focus,
+body.dark #pane-split input[type="text"]:focus,
+body.dark #pane-split input[type="number"]:focus,
+body.dark #pane-pass input[type="text"]:focus,
+body.dark #pane-pass input[type="number"]:focus,
+body.dark #pane-affix textarea:focus,
+body.dark #pane-split textarea:focus,
+body.dark #pane-pass textarea:focus {
+  background-color:#2a2a2a !important;
+  box-shadow:inset 0 0 0px 1000px #2a2a2a !important;
+  border:2px solid #3399ff !important;
+  color:#e5e5e5 !important;
+  -webkit-text-fill-color:#e5e5e5 !important;
 }
 </style>
 
@@ -1462,6 +1512,130 @@ function toggleTheme(){
     localStorage.setItem("theme","dark");
   }
 }
+</script>
+
+
+<script>
+(function(){
+  // 初始应用主题（记忆）
+  const savedTheme = localStorage.getItem("theme") || "light";
+  document.body.classList.add(savedTheme);
+
+  // 切换函数
+  function toggleTheme(){
+    if(document.body.classList.contains("dark")){
+      document.body.classList.remove("dark");
+      document.body.classList.add("light");
+      localStorage.setItem("theme","light");
+    } else {
+      document.body.classList.remove("light");
+      document.body.classList.add("dark");
+      localStorage.setItem("theme","dark");
+    }
+    syncIcon();
+  }
+
+  // 绑定到导航里的图标
+  const btn = document.getElementById("globalThemeToggle");
+  function syncIcon(){
+    if(!btn) return;
+    btn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
+  }
+  if(btn){
+    btn.addEventListener("click", toggleTheme);
+    syncIcon(); // 初始根据状态刷新图标
+  }
+
+  // 兼容：如页面其他地方也有 themeToggle 元素
+  const alt = document.getElementById("themeToggle");
+  if(alt && alt !== btn){
+    alt.addEventListener("click", toggleTheme);
+  }
+})();
+</script>
+
+
+<script>
+// v18 主题切换：自适应按钮、可记忆、不依赖现有结构
+(function(){
+  const ROOT = document.body;
+  const THEMES = ["light","dark"];
+
+  // 清理并应用已保存主题（若无保存，保持现状或默认 light）
+  const saved = localStorage.getItem("theme");
+  THEMES.forEach(c => ROOT.classList.remove(c));
+  ROOT.classList.add(saved ? saved : (ROOT.classList.contains("dark") ? "dark" : "light"));
+
+  function setTheme(t){
+    THEMES.forEach(c => ROOT.classList.remove(c));
+    ROOT.classList.add(t);
+    localStorage.setItem("theme", t);
+    syncIcon();
+  }
+  function toggle(){
+    setTheme(ROOT.classList.contains("dark") ? "light" : "dark");
+  }
+  function ensureToggleButton(){
+    let btn = document.getElementById("globalThemeToggle");
+    if(!btn){
+      const h2 = document.querySelector("nav h2");
+      if(h2){
+        btn = document.createElement("span");
+        btn.id = "globalThemeToggle";
+        btn.style.cursor = "pointer";
+        btn.style.marginLeft = "8px";
+        btn.title = "切换日间/夜间";
+        h2.appendChild(btn);
+      }
+    }
+    if(btn){
+      btn.addEventListener("click", toggle);
+      syncIcon();
+    }
+  }
+  function syncIcon(){
+    const btn = document.getElementById("globalThemeToggle");
+    if(btn){
+      btn.textContent = ROOT.classList.contains("dark") ? "☀️" : "🌙";
+    }
+  }
+
+  // 初始化
+  ensureToggleButton();
+  // 暴露只读接口以便其他脚本（如果有）调用
+  window.__toggleTheme = toggle;
+  window.__setTheme = setTheme;
+})();
+</script>
+
+
+<script>
+// v19: 记住并恢复上次使用的功能页面
+(function(){
+  const navButtons = document.querySelectorAll("nav button[data-target]");
+  navButtons.forEach(btn => {
+    btn.addEventListener("click", () => {
+      const targetId = btn.getAttribute("data-target");
+      if(targetId){
+        localStorage.setItem("activeTool", targetId);
+      }
+    });
+  });
+
+  const lastTool = localStorage.getItem("activeTool");
+  if(lastTool){
+    // 隐藏所有 section
+    document.querySelectorAll("main section").forEach(sec => sec.style.display="none");
+    // 移除所有按钮激活状态
+    document.querySelectorAll("nav button").forEach(b => b.classList.remove("active"));
+    // 显示保存的 section
+    const sec = document.getElementById(lastTool);
+    if(sec) sec.style.display="block";
+    // 设置对应按钮高亮
+    const activeBtn = document.querySelector(`nav button[data-target="${lastTool}"]`);
+    if(activeBtn) activeBtn.classList.add("active");
+  }
+})();
 </script>
 
 </body>
