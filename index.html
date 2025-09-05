@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
   <meta charset="UTF-8">
-  <title>赚牛工具箱</title>
+  <title>多功能工具箱</title>
   <style>
     body {
       margin:0; display:flex; height:100vh; font-family:sans-serif;
@@ -72,7 +72,7 @@
 
   
   <meta charset="UTF-8">
-  <title>批量 2FA 验证器</title>
+  <title>批量 2FA 生成器</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
     :root {
@@ -1605,60 +1605,6 @@ function toggleTheme(){
   // 暴露只读接口以便其他脚本（如果有）调用
   window.__toggleTheme = toggle;
   window.__setTheme = setTheme;
-})();
-</script>
-
-
-<script>
-// v20: 记住并恢复上次使用的功能页面 (通过自动触发按钮点击)
-(function(){
-  document.addEventListener("DOMContentLoaded", () => {
-    const lastTool = localStorage.getItem("activeTool");
-    if(lastTool){
-      const btn = document.querySelector(`nav button[data-target="${lastTool}"]`);
-      if(btn){
-        btn.click();
-      }
-    }
-    // 点击时保存当前工具
-    document.querySelectorAll("nav button[data-target]").forEach(b => {
-      b.addEventListener("click", () => {
-        const targetId = b.getAttribute("data-target");
-        if(targetId){
-          localStorage.setItem("activeTool", targetId);
-        }
-      });
-    });
-  });
-})();
-</script>
-
-
-<script>
-// v21: 本地 file:// 模式兼容 - 页面加载时立即恢复上次工具
-(function(){
-  const lastTool = localStorage.getItem("activeTool");
-  if(lastTool){
-    // 隐藏所有 section
-    document.write('<style>main section{display:none}</style>');
-  }
-  document.addEventListener("DOMContentLoaded", () => {
-    if(lastTool){
-      // 显示保存的 section
-      const sec = document.getElementById(lastTool);
-      if(sec) sec.style.display="block";
-      // 设置按钮状态
-      const btn = document.querySelector(`nav button[data-target="${lastTool}"]`);
-      if(btn) btn.classList.add("active");
-    }
-    // 点击时保存
-    document.querySelectorAll("nav button[data-target]").forEach(b => {
-      b.addEventListener("click", () => {
-        const id = b.getAttribute("data-target");
-        if(id){ localStorage.setItem("activeTool", id); }
-      });
-    });
-  });
 })();
 </script>
 
