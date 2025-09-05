@@ -8,7 +8,7 @@
       margin:0; display:flex; height:100vh; font-family:sans-serif;
     }
     nav {
-      width:220px; border-right:1px solid #ccc; padding:20px; box-sizing:border-box;
+      width:240px; border-right:1px solid #ccc; padding:20px; box-sizing:border-box;
       background:#fff; overflow-y:auto;
     }
     nav h2 {margin-top:0; font-size:18px;}
@@ -19,8 +19,10 @@
     }
     nav button.active {background:#0d6efd; color:#fff; border-color:#0d6efd;}
     main {flex:1; overflow:auto;}
-    section {display:none; height:100%; overflow:auto; padding:10px; box-sizing:border-box;}
+    section {display:none; min-height:100%; overflow:auto; padding:10px; box-sizing:border-box;}
     section.active {display:block;}
+    /* Hide inner nav of text toolbox */
+    #text nav { display:none !important; }
   </style>
   
   <meta charset="UTF-8" />
@@ -78,7 +80,7 @@
       --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
       --area-bg:#fff; --code-color:#000;
     }
-    body.dark {
+    #fa.dark {
       --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
       --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
       --area-bg:#161616; --code-color:#4FC3F7;
@@ -124,8 +126,8 @@
     .code:hover{background:var(--btn-hover);border-radius:4px}
 
     /* 深色模式下编号颜色 */
-    body.dark td:first-child {color: var(--code-color);font-weight:bold;}
-    body:not(.dark) td:first-child {font-weight:bold;}
+    #fa.dark td:first-child {color: var(--code-color);font-weight:bold;}
+    #fa:not(.dark) td:first-child {font-weight:bold;}
 
     .scaler{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
     .scale-btn,.theme-btn{
@@ -206,6 +208,7 @@
     <h2>功能导航</h2>
     <button data-tab="sol" class="active">SOL账户工具</button>
     <button data-tab="fa">批量2FA生成器</button>
+    <hr>
     <button data-tab="dedupe">文本去重复</button>
     <button data-tab="affix">文本批量增加</button>
     <button data-tab="split">文本分列</button>
@@ -414,6 +417,7 @@
   </script>
 
     </section>
+
     <section id="fa">
       
   <div class="container">
@@ -530,7 +534,7 @@
     }
 
     function setScale(val,font){
-      document.querySelector('#fa').style.fontSize = val+"%";
+      document.getElementById('fa').style.fontSize = val+"%";
       codeFontSize=font;
       localStorage.setItem("scalePercent", val);
       localStorage.setItem("codeFontSize", font);
@@ -545,11 +549,11 @@
 
     function setTheme(mode){
       if(mode==="dark"){
-        document.body.classList.add("dark");
+        document.getElementById('fa').classList.add('dark');
         document.getElementById("themeToggle").textContent="🌞 浅色模式";
         localStorage.setItem("theme","dark");
       }else{
-        document.body.classList.remove("dark");
+        document.getElementById('fa').classList.remove('dark');
         document.getElementById("themeToggle").textContent="🌙 暗黑模式";
         localStorage.setItem("theme","light");
       }
@@ -590,8 +594,25 @@
   </script>
 
     </section>
-    <section id="dedupe">
-      <section class="tab-pane" id="pane-dedupe" style="display:block">
+
+    <!-- Keep full Text Toolbox DOM once, we'll switch inner panes via the left nav -->
+    <section id="text">
+      
+  <!-- 左侧导航 -->
+  <nav>
+    <h2>文本工具箱</h2>
+    <button class="nav-btn active" data-tab="dedupe">文本去重复</button>
+    <button class="nav-btn" data-tab="affix">文本批量增加</button>
+    <button class="nav-btn" data-tab="split">文本分列</button>
+    <button class="nav-btn" data-tab="passwd">密码生成</button>
+    <hr>
+    <button id="themeToggle" class="theme-btn">🌙 暗黑模式</button>
+  </nav>
+
+  <!-- 右侧主体 -->
+  <main>
+    <!-- 去重 -->
+    <section class="tab-pane" id="pane-dedupe" style="display:block">
       <div class="card"><div class="hd">输入</div><div class="bd">
         <textarea id="dedupeIn"></textarea>
         <label><input type="checkbox" id="trimDedupe" checked> 去除空行/空格</label>
@@ -609,9 +630,9 @@
         <textarea id="dedupeOut" readonly></textarea>
       </div></div>
     </section>
-    </section>
-    <section id="affix">
-      <section class="tab-pane" id="pane-affix" style="display:none">
+
+    <!-- 批量增加 -->
+    <section class="tab-pane" id="pane-affix" style="display:none">
       <div class="card"><div class="hd">输入</div><div class="bd">
         <textarea id="affixIn"></textarea>
         <input type="text" id="affixStr" placeholder="增加的内容">
@@ -630,9 +651,9 @@
         <textarea id="affixOut" readonly></textarea>
       </div></div>
     </section>
-    </section>
-    <section id="split">
-      <section class="tab-pane" id="pane-split" style="display:none">
+
+    <!-- 分列 -->
+    <section class="tab-pane" id="pane-split" style="display:none">
       <div class="card"><div class="hd">输入</div><div class="bd">
         <textarea id="splitIn"></textarea>
         <input type="text" id="splitSep" placeholder="分隔符，如 ---- , |">
@@ -651,9 +672,9 @@
         </div>
       </div></div>
     </section>
-    </section>
-    <section id="passwd">
-      <section class="tab-pane" id="pane-passwd" style="display:none">
+
+    <!-- 密码生成 -->
+    <section class="tab-pane" id="pane-passwd" style="display:none">
       <div class="card"><div class="hd">设置</div><div class="bd">
         <label>长度：<input type="number" id="pwdLen" value="12" min="4" max="64"></label><br>
         <label><input type="checkbox" id="pwdUpper" checked> 大写字母</label>
@@ -673,29 +694,19 @@
         <textarea id="pwdOut" readonly></textarea>
       </div></div>
     </section>
-    </section>
   </main>
 
-  <script>
-    document.querySelectorAll('nav button').forEach(btn=>{
-      btn.onclick=()=>{
-        document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('main section').forEach(sec=>sec.classList.remove('active'));
-        document.getElementById(btn.dataset.tab).classList.add('active');
-      }
-    });
-  </script>
-  <script>
+  <div id="toast"></div>
 
+<script>
 /* ====== 主题切换 ====== */
 const themeBtn=document.getElementById('themeToggle');
 function setTheme(mode){
-  if(mode==='dark'){document.body.classList.add('dark');if(themeBtn){themeBtn.textContent='🌞 浅色模式';}}
-  else{document.body.classList.remove('dark');if(themeBtn){themeBtn.textContent='🌙 暗黑模式';}}
+  if(mode==='dark'){document.body.classList.add('dark');themeBtn.textContent='🌞 浅色模式';}
+  else{document.body.classList.remove('dark');themeBtn.textContent='🌙 暗黑模式';}
   localStorage.setItem('tools_theme',mode);
 }
-if(themeBtn){themeBtn.onclick=()=>setTheme(document.body.classList.contains('dark')?'light':'dark');
+themeBtn.onclick=()=>setTheme(document.body.classList.contains('dark')?'light':'dark');
 setTheme(localStorage.getItem('tools_theme')||'light');
 
 /* ====== 标签切换 ====== */
@@ -837,7 +848,35 @@ document.getElementById('pwdCopy').onclick=()=>{navigator.clipboard.writeText(do
 document.getElementById('pwdTxt').onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById('pwdOut').value);
 document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document.getElementById('pwdOut').value.split('\n').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
 document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
-}
 </script>
+
+    </section>
+  </main>
+
+  <script>
+    // Left nav switching
+    const mapTextTab = { 'dedupe':'pane-dedupe', 'affix':'pane-affix', 'split':'pane-split', 'passwd':'pane-passwd' };
+    function showSection(tab) {
+      // highlight left nav
+      document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
+      // show/hide outer sections
+      document.querySelectorAll('main section').forEach(sec=>sec.classList.remove('active'));
+      if (mapTextTab[tab]) {
+        document.getElementById('text').classList.add('active');
+        // hide all inner panes, show the one requested
+        const target = mapTextTab[tab];
+        document.querySelectorAll('#text .tab-pane').forEach(p=>p.style.display='none');
+        const el = document.querySelector('#text #' + target);
+        if (el) el.style.display = 'block';
+      } else {
+        document.getElementById(tab).classList.add('active');
+      }
+    }
+    document.querySelectorAll('nav button').forEach(btn=>{
+      btn.addEventListener('click', ()=> showSection(btn.dataset.tab));
+    });
+    // Ensure a default inner pane visible when entering text toolbox via outer left nav
+    // (initial load keeps SOL active; nothing to do here)
+  </script>
 </body>
 </html>
