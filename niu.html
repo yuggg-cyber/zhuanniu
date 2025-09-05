@@ -8,21 +8,37 @@
       margin:0; display:flex; height:100vh; font-family:sans-serif;
     }
     nav {
-      width:200px; border-right:1px solid #ccc; padding:20px; box-sizing:border-box;
-      background:#fff;
+      width:220px; border-right:1px solid #ccc; padding:20px; box-sizing:border-box;
+      background:#fff; overflow-y:auto;
     }
     nav h2 {margin-top:0; font-size:18px;}
     nav button {
       display:block; width:100%; padding:10px; margin-bottom:10px;
       cursor:pointer; border:1px solid #ccc; border-radius:6px;
-      background:#f6f6f6;
+      background:#f6f6f6; text-align:left;
     }
     nav button.active {background:#0d6efd; color:#fff; border-color:#0d6efd;}
     main {flex:1; overflow:auto;}
-    section {display:none; height:100%; overflow:auto;}
+    section {display:none; height:100%; overflow:auto; padding:10px; box-sizing:border-box;}
     section.active {display:block;}
   </style>
-  <!-- 原始 head 的样式和脚本 -->
+</head>
+<body>
+  <nav>
+    <h2>功能导航</h2>
+    <button data-tab="sol" class="active">SOL账户工具</button>
+    <button data-tab="fa">批量2FA生成器</button>
+    <button data-tab="dedupe">文本去重复</button>
+    <button data-tab="affix">文本批量增加</button>
+    <button data-tab="split">文本分列</button>
+    <button data-tab="passwd">密码生成</button>
+  </nav>
+  <main>
+    <section id="sol" class="active">
+      <h2>SOL账户工具</h2>
+      <iframe srcdoc='<!DOCTYPE html>
+<html lang="zh">
+<head>
   <meta charset="UTF-8" />
   <title>Solana Token Burner & Close Empty Accounts</title>
   <style>
@@ -67,145 +83,9 @@
       white-space:pre-wrap;
     }
   </style>
-  <meta charset="UTF-8">
-  <title>批量 2FA 生成器</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    :root {
-      --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
-      --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
-      --area-bg:#fff; --code-color:#000;
-    }
-    body.dark {
-      --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
-      --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
-      --area-bg:#161616; --code-color:#4FC3F7;
-    }
-
-    body{
-      margin:0;padding:20px;
-      background:var(--bg);color:var(--fg);
-      font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
-    }
-    .container{display:flex;gap:20px}
-    .left,.right{
-      border:1px solid var(--border);
-      padding:12px;border-radius:10px;
-      background:var(--area-bg);
-    }
-    .left{flex:1}.right{flex:2}
-
-    textarea{
-      width:100%;height:400px;
-      font:14px/1.4 ui-monospace,monospace;
-      color:var(--fg);background:var(--area-bg);
-      border:1px solid var(--border);border-radius:6px;
-      padding:8px;box-sizing:border-box;
-    }
-
-    .btn{
-      border:1px solid var(--border);
-      background:var(--btn-bg);color:var(--btn-fg);
-      border-radius:6px;padding:6px 12px;
-      cursor:pointer;font-size:14px;
-    }
-    .btn:hover{background:var(--btn-hover)}
-    .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-
-    .header{
-      display:flex;justify-content:space-between;align-items:center;
-      margin-bottom:12px;font-weight:600
-    }
-    table{width:100%;border-collapse:collapse;table-layout:fixed}
-    th,td{padding:8px;border-bottom:1px solid var(--border);text-align:center}
-    .code{font-weight:700;cursor:pointer;color:var(--code-color)}
-    .code:hover{background:var(--btn-hover);border-radius:4px}
-
-    /* 深色模式下编号颜色 */
-    body.dark td:first-child {color: var(--code-color);font-weight:bold;}
-    body:not(.dark) td:first-child {font-weight:bold;}
-
-    .scaler{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
-    .scale-btn,.theme-btn{
-      border:1px solid var(--border);
-      background:var(--btn-bg);color:var(--btn-fg);
-      border-radius:6px;padding:6px 12px;
-      cursor:pointer;font-size:14px;
-    }
-    .scale-btn.active,.theme-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
-
-    #toast-container{position:fixed;right:20px;bottom:20px;z-index:9999}
-    .toast{
-      background:rgba(0,0,0,0.8);color:#fff;padding:8px 14px;margin-top:8px;
-      border-radius:6px;font-size:14px;
-      animation:fadein .2s, fadeout .2s 1.3s;
-    }
-    @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
-    @keyframes fadeout{from{opacity:1}to{opacity:0}}
-  </style>
-  <meta charset="utf-8" />
-<title>文本工具箱</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
-<style>
-  :root{
-    --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
-    --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
-    --area-bg:#fff;
-  }
-  body.dark{
-    --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
-    --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
-    --area-bg:#161616;
-  }
-  body{margin:0; background:var(--bg); color:var(--fg);
-       font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
-       display:flex; height:100vh;}
-  nav{width:200px; border-right:1px solid var(--border); padding:20px; box-sizing:border-box;}
-  nav h2{font-size:18px; margin-bottom:16px}
-  .nav-btn{display:block; width:100%; text-align:left;
-           background:var(--btn-bg); color:var(--btn-fg); border:1px solid var(--border);
-           border-radius:6px; padding:10px; margin-bottom:8px; cursor:pointer;}
-  .nav-btn.active{background:var(--accent); color:#fff; border-color:var(--accent);}
-  main{flex:1; padding:20px; overflow:auto;}
-  .theme-btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
-             padding:6px 10px; border-radius:8px; cursor:pointer}
-  .card{border:1px solid var(--border); border-radius:10px; background:var(--area-bg); margin-bottom:20px;}
-  .card .hd{padding:10px 12px; border-bottom:1px solid var(--border); font-weight:600}
-  .card .bd{padding:12px}
-  textarea,input[type="text"],input[type="number"]{
-    width:100%; background:var(--area-bg); color:var(--fg);
-    border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px;
-  }
-  textarea{min-height:180px; font:14px/1.5 ui-monospace,monospace}
-  .btnbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
-  .btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
-       padding:6px 12px; border-radius:6px; cursor:pointer}
-  .btn:hover{background:var(--btn-hover)}
-  .btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
-  .stat{font-size:12px; color:var(--muted); margin-bottom:8px}
-  table{width:100%; border-collapse:collapse; table-layout:fixed;}
-  th,td{border-bottom:1px solid var(--border); padding:6px 8px; text-align:left; word-break:break-all;}
-  #toast{position:fixed; right:16px; bottom:16px; z-index:9999}
-  .toast{background:rgba(0,0,0,.8); color:#fff; padding:6px 12px; border-radius:6px; margin-top:6px;
-         font-size:14px; opacity:0; transition:opacity .2s}
-  .toast.show{opacity:1}
-  /* 密码强度条 */
-  .strength-bar{height:8px; border-radius:4px; background:#ddd; margin-bottom:8px; overflow:hidden}
-  .strength-fill{height:100%; width:0; transition:width .3s}
-  .weak{background:#e74c3c} .medium{background:#f39c12} .strong{background:#27ae60}
-</style>
 </head>
 <body>
-  <nav>
-    <h2>功能导航</h2>
-    <button data-tab="sol" class="active">SOL账户工具</button>
-    <button data-tab="fa">批量2FA生成器</button>
-    <button data-tab="text">文本工具箱</button>
-  </nav>
-  <main>
-    <section id="sol" class="active">
-      <h2>🔥 Solana Token Manager (Batch Burn & Close)</h2>
+  <h2>🔥 Solana Token Manager (Batch Burn & Close)</h2>
   <button id="connectBtn">连接钱包</button>
   <span id="wallet">未连接</span>
 
@@ -403,9 +283,98 @@
       await loadTokens();
     };
   </script>
+</body>
+</html>
+
+
+
+' style="width:100%;height:90vh;border:none;"></iframe>
     </section>
+
     <section id="fa">
-      <div class="container">
+      <h2>批量2FA生成器</h2>
+      <iframe srcdoc='<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <title>批量 2FA 生成器</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    :root {
+      --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
+      --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
+      --area-bg:#fff; --code-color:#000;
+    }
+    body.dark {
+      --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
+      --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
+      --area-bg:#161616; --code-color:#4FC3F7;
+    }
+
+    body{
+      margin:0;padding:20px;
+      background:var(--bg);color:var(--fg);
+      font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
+    }
+    .container{display:flex;gap:20px}
+    .left,.right{
+      border:1px solid var(--border);
+      padding:12px;border-radius:10px;
+      background:var(--area-bg);
+    }
+    .left{flex:1}.right{flex:2}
+
+    textarea{
+      width:100%;height:400px;
+      font:14px/1.4 ui-monospace,monospace;
+      color:var(--fg);background:var(--area-bg);
+      border:1px solid var(--border);border-radius:6px;
+      padding:8px;box-sizing:border-box;
+    }
+
+    .btn{
+      border:1px solid var(--border);
+      background:var(--btn-bg);color:var(--btn-fg);
+      border-radius:6px;padding:6px 12px;
+      cursor:pointer;font-size:14px;
+    }
+    .btn:hover{background:var(--btn-hover)}
+    .btn.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    .header{
+      display:flex;justify-content:space-between;align-items:center;
+      margin-bottom:12px;font-weight:600
+    }
+    table{width:100%;border-collapse:collapse;table-layout:fixed}
+    th,td{padding:8px;border-bottom:1px solid var(--border);text-align:center}
+    .code{font-weight:700;cursor:pointer;color:var(--code-color)}
+    .code:hover{background:var(--btn-hover);border-radius:4px}
+
+    /* 深色模式下编号颜色 */
+    body.dark td:first-child {color: var(--code-color);font-weight:bold;}
+    body:not(.dark) td:first-child {font-weight:bold;}
+
+    .scaler{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
+    .scale-btn,.theme-btn{
+      border:1px solid var(--border);
+      background:var(--btn-bg);color:var(--btn-fg);
+      border-radius:6px;padding:6px 12px;
+      cursor:pointer;font-size:14px;
+    }
+    .scale-btn.active,.theme-btn.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+    #toast-container{position:fixed;right:20px;bottom:20px;z-index:9999}
+    .toast{
+      background:rgba(0,0,0,0.8);color:#fff;padding:8px 14px;margin-top:8px;
+      border-radius:6px;font-size:14px;
+      animation:fadein .2s, fadeout .2s 1.3s;
+    }
+    @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+    @keyframes fadeout{from{opacity:1}to{opacity:0}}
+  </style>
+</head>
+<body>
+  <div class="container">
     <!-- 左：输入 -->
     <div class="left">
       <div style="display:flex;gap:8px;margin-bottom:8px">
@@ -499,9 +468,9 @@
       currentCodes.forEach((it,i)=>{
         const tr=document.createElement("tr");
         tr.innerHTML=`<td>${i+1}</td>
-                      <td class="code" style="font-size:${codeFontSize}" onclick="copyCode('${it.code}')">${it.code}</td>
+                      <td class="code" style="font-size:${codeFontSize}" onclick="copyCode(&apos;${it.code}&apos;)">${it.code}</td>
                       <td>${it.masked}</td>
-                      <td><button class="btn" onclick="copyCode('${it.code}')">复制</button></td>`;
+                      <td><button class="btn" onclick="copyCode(&apos;${it.code}&apos;)">复制</button></td>`;
         tb.appendChild(tr);
       });
     }
@@ -577,9 +546,74 @@
 
     (async ()=>{ lastStep=Math.floor(Math.floor(Date.now()/1000)/period); })();
   </script>
+</body>
+</html>
+
+' style="width:100%;height:90vh;border:none;"></iframe>
     </section>
-    <section id="text">
-      <!-- 左侧导航 -->
+
+    <section id="dedupe">
+      <h2>文本去重复</h2>
+      <iframe srcdoc='
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>文本工具箱</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<style>
+  :root{
+    --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
+    --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
+    --area-bg:#fff;
+  }
+  body.dark{
+    --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
+    --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
+    --area-bg:#161616;
+  }
+  body{margin:0; background:var(--bg); color:var(--fg);
+       font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
+       display:flex; height:100vh;}
+  nav{width:200px; border-right:1px solid var(--border); padding:20px; box-sizing:border-box;}
+  nav h2{font-size:18px; margin-bottom:16px}
+  .nav-btn{display:block; width:100%; text-align:left;
+           background:var(--btn-bg); color:var(--btn-fg); border:1px solid var(--border);
+           border-radius:6px; padding:10px; margin-bottom:8px; cursor:pointer;}
+  .nav-btn.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  main{flex:1; padding:20px; overflow:auto;}
+  .theme-btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+             padding:6px 10px; border-radius:8px; cursor:pointer}
+  .card{border:1px solid var(--border); border-radius:10px; background:var(--area-bg); margin-bottom:20px;}
+  .card .hd{padding:10px 12px; border-bottom:1px solid var(--border); font-weight:600}
+  .card .bd{padding:12px}
+  textarea,input[type="text"],input[type="number"]{
+    width:100%; background:var(--area-bg); color:var(--fg);
+    border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px;
+  }
+  textarea{min-height:180px; font:14px/1.5 ui-monospace,monospace}
+  .btnbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+  .btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+       padding:6px 12px; border-radius:6px; cursor:pointer}
+  .btn:hover{background:var(--btn-hover)}
+  .btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .stat{font-size:12px; color:var(--muted); margin-bottom:8px}
+  table{width:100%; border-collapse:collapse; table-layout:fixed;}
+  th,td{border-bottom:1px solid var(--border); padding:6px 8px; text-align:left; word-break:break-all;}
+  #toast{position:fixed; right:16px; bottom:16px; z-index:9999}
+  .toast{background:rgba(0,0,0,.8); color:#fff; padding:6px 12px; border-radius:6px; margin-top:6px;
+         font-size:14px; opacity:0; transition:opacity .2s}
+  .toast.show{opacity:1}
+  /* 密码强度条 */
+  .strength-bar{height:8px; border-radius:4px; background:#ddd; margin-bottom:8px; overflow:hidden}
+  .strength-fill{height:100%; width:0; transition:width .3s}
+  .weak{background:#e74c3c} .medium{background:#f39c12} .strong{background:#27ae60}
+</style>
+</head>
+<body>
+  <!-- 左侧导航 -->
   <nav>
     <h2>文本工具箱</h2>
     <button class="nav-btn active" data-tab="dedupe">文本去重复</button>
@@ -681,125 +715,125 @@
 
 <script>
 /* ====== 主题切换 ====== */
-const themeBtn=document.getElementById('themeToggle');
+const themeBtn=document.getElementById(&apos;themeToggle&apos;);
 function setTheme(mode){
-  if(mode==='dark'){document.body.classList.add('dark');themeBtn.textContent='🌞 浅色模式';}
-  else{document.body.classList.remove('dark');themeBtn.textContent='🌙 暗黑模式';}
-  localStorage.setItem('tools_theme',mode);
+  if(mode===&apos;dark&apos;){document.body.classList.add(&apos;dark&apos;);themeBtn.textContent=&apos;🌞 浅色模式&apos;;}
+  else{document.body.classList.remove(&apos;dark&apos;);themeBtn.textContent=&apos;🌙 暗黑模式&apos;;}
+  localStorage.setItem(&apos;tools_theme&apos;,mode);
 }
-themeBtn.onclick=()=>setTheme(document.body.classList.contains('dark')?'light':'dark');
-setTheme(localStorage.getItem('tools_theme')||'light');
+themeBtn.onclick=()=>setTheme(document.body.classList.contains(&apos;dark&apos;)?&apos;light&apos;:&apos;dark&apos;);
+setTheme(localStorage.getItem(&apos;tools_theme&apos;)||&apos;light&apos;);
 
 /* ====== 标签切换 ====== */
-document.querySelectorAll('.nav-btn').forEach(btn=>{
+document.querySelectorAll(&apos;.nav-btn&apos;).forEach(btn=>{
   btn.onclick=()=>{
-    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
-    document.getElementById('pane-'+btn.dataset.tab).style.display='block';
+    document.querySelectorAll(&apos;.nav-btn&apos;).forEach(b=>b.classList.remove(&apos;active&apos;));
+    btn.classList.add(&apos;active&apos;);
+    document.querySelectorAll(&apos;.tab-pane&apos;).forEach(p=>p.style.display=&apos;none&apos;);
+    document.getElementById(&apos;pane-&apos;+btn.dataset.tab).style.display=&apos;block&apos;;
   };
 });
 
 /* ====== 公共函数 ====== */
 function toast(msg){
-  const box=document.getElementById('toast');
-  const div=document.createElement('div');
-  div.className='toast';div.textContent=msg;
-  box.appendChild(div); requestAnimationFrame(()=>div.classList.add('show'));
-  setTimeout(()=>{div.classList.remove('show'); setTimeout(()=>div.remove(),200)},1500);
+  const box=document.getElementById(&apos;toast&apos;);
+  const div=document.createElement(&apos;div&apos;);
+  div.className=&apos;toast&apos;;div.textContent=msg;
+  box.appendChild(div); requestAnimationFrame(()=>div.classList.add(&apos;show&apos;));
+  setTimeout(()=>{div.classList.remove(&apos;show&apos;); setTimeout(()=>div.remove(),200)},1500);
 }
 function fileTimestamp(){
-  const d=new Date(),p=n=>String(n).padStart(2,'0');
+  const d=new Date(),p=n=>String(n).padStart(2,&apos;0&apos;);
   return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
 }
 function saveTxt(name,content){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));
+  const a=document.createElement(&apos;a&apos;);
+  a.href=URL.createObjectURL(new Blob([content],{type:&apos;text/plain&apos;}));
   a.download=name;a.click();URL.revokeObjectURL(a.href);
 }
 function aoaToXlsx(rows,name){
-  if(typeof XLSX==='undefined'){toast('未加载XLSX库');return;}
+  if(typeof XLSX===&apos;undefined&apos;){toast(&apos;未加载XLSX库&apos;);return;}
   const wb=XLSX.utils.book_new();
   const ws=XLSX.utils.aoa_to_sheet(rows);
   const colWidths=[];
-  rows.forEach(r=>{r.forEach((cell,i)=>{const len=String(cell||'').length;colWidths[i]=Math.max(colWidths[i]||10,len+2);});});
-  ws['!cols']=colWidths.map(w=>({wch:w}));
-  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');XLSX.writeFile(wb,name);
+  rows.forEach(r=>{r.forEach((cell,i)=>{const len=String(cell||&apos;&apos;).length;colWidths[i]=Math.max(colWidths[i]||10,len+2);});});
+  ws[&apos;!cols&apos;]=colWidths.map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws,&apos;Sheet1&apos;);XLSX.writeFile(wb,name);
 }
 
 /* ====== 去重 ====== */
-document.getElementById('dedupeRun').onclick=()=>{
-  let lines=document.getElementById('dedupeIn').value.split(/\r?\n/);
-  if(document.getElementById('trimDedupe').checked) lines=lines.map(s=>s.trim()).filter(s=>s);
+document.getElementById(&apos;dedupeRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;dedupeIn&apos;).value.split(/\r?\n/);
+  if(document.getElementById(&apos;trimDedupe&apos;).checked) lines=lines.map(s=>s.trim()).filter(s=>s);
   const seen=new Set(),out=[];
-  for(const s of lines){const k=document.getElementById('caseDedupe').checked?s.toLowerCase():s;
+  for(const s of lines){const k=document.getElementById(&apos;caseDedupe&apos;).checked?s.toLowerCase():s;
     if(!seen.has(k)){seen.add(k);out.push(s);}
   }
-  document.getElementById('dedupeOut').value=out.join('\n');
-  document.getElementById('dedupeStat').textContent=`原${lines.length}行 → 去重后${out.length}行`;
-  toast('去重完成');
+  document.getElementById(&apos;dedupeOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;dedupeStat&apos;).textContent=`原${lines.length}行 → 去重后${out.length}行`;
+  toast(&apos;去重完成&apos;);
 };
-document.getElementById('dedupeCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('dedupeOut').value);toast('已复制');};
-document.getElementById('dedupeTxt').onclick=()=>saveTxt(`文本去重复${fileTimestamp()}.txt`,document.getElementById('dedupeOut').value);
-document.getElementById('dedupeXlsx').onclick=()=>aoaToXlsx([['结果'],...document.getElementById('dedupeOut').value.split('\n').map(v=>[v])],`文本去重复${fileTimestamp()}.xlsx`);
-document.getElementById('dedupeClear').onclick=()=>{document.getElementById('dedupeOut').value='';document.getElementById('dedupeStat').textContent='—';};
+document.getElementById(&apos;dedupeCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;dedupeOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;dedupeTxt&apos;).onclick=()=>saveTxt(`文本去重复${fileTimestamp()}.txt`,document.getElementById(&apos;dedupeOut&apos;).value);
+document.getElementById(&apos;dedupeXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;dedupeOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本去重复${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;dedupeClear&apos;).onclick=()=>{document.getElementById(&apos;dedupeOut&apos;).value=&apos;&apos;;document.getElementById(&apos;dedupeStat&apos;).textContent=&apos;—&apos;;};
 
 /* ====== 批量增加 ====== */
-document.getElementById('affixRun').onclick=()=>{
-  let lines=document.getElementById('affixIn').value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s);
-  const add=document.getElementById('affixStr').value;
-  const side=document.querySelector('input[name="affixSide"]:checked').value;
-  const out=lines.map(s=>side==='left'?add+s:s+add);
-  document.getElementById('affixOut').value=out.join('\n');
-  document.getElementById('affixStat').textContent=`输入${lines.length}行 → 输出${out.length}行`;
-  toast('批量完成');
+document.getElementById(&apos;affixRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;affixIn&apos;).value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s);
+  const add=document.getElementById(&apos;affixStr&apos;).value;
+  const side=document.querySelector(&apos;input[name="affixSide"]:checked&apos;).value;
+  const out=lines.map(s=>side===&apos;left&apos;?add+s:s+add);
+  document.getElementById(&apos;affixOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;affixStat&apos;).textContent=`输入${lines.length}行 → 输出${out.length}行`;
+  toast(&apos;批量完成&apos;);
 };
-document.getElementById('affixCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('affixOut').value);toast('已复制');};
-document.getElementById('affixTxt').onclick=()=>saveTxt(`文本批量增加${fileTimestamp()}.txt`,document.getElementById('affixOut').value);
-document.getElementById('affixXlsx').onclick=()=>aoaToXlsx([['结果'],...document.getElementById('affixOut').value.split('\n').map(v=>[v])],`文本批量增加${fileTimestamp()}.xlsx`);
-document.getElementById('affixClear').onclick=()=>{document.getElementById('affixOut').value='';document.getElementById('affixStat').textContent='—';};
+document.getElementById(&apos;affixCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;affixOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;affixTxt&apos;).onclick=()=>saveTxt(`文本批量增加${fileTimestamp()}.txt`,document.getElementById(&apos;affixOut&apos;).value);
+document.getElementById(&apos;affixXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;affixOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本批量增加${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;affixClear&apos;).onclick=()=>{document.getElementById(&apos;affixOut&apos;).value=&apos;&apos;;document.getElementById(&apos;affixStat&apos;).textContent=&apos;—&apos;;};
 
 /* ====== 分列 ====== */
 function buildSplitTable(rows){
-  const table=document.getElementById('splitTable');
-  table.innerHTML='';
+  const table=document.getElementById(&apos;splitTable&apos;);
+  table.innerHTML=&apos;&apos;;
   if(!rows.length){window.splitRows=[];window.splitColCount=0;return;}
   const colCount=Math.max(...rows.map(r=>r.length));
-  const normalized=rows.map(r=>Array.from({length:colCount},(_,i)=>r[i]??''));
-  const colgroup=document.createElement('colgroup');
-  for(let i=0;i<colCount;i++){const col=document.createElement('col');col.style.width=`${100/colCount}%`;colgroup.appendChild(col);}
+  const normalized=rows.map(r=>Array.from({length:colCount},(_,i)=>r[i]??&apos;&apos;));
+  const colgroup=document.createElement(&apos;colgroup&apos;);
+  for(let i=0;i<colCount;i++){const col=document.createElement(&apos;col&apos;);col.style.width=`${100/colCount}%`;colgroup.appendChild(col);}
   table.appendChild(colgroup);
-  const thead=document.createElement('thead');const trh=document.createElement('tr');
-  for(let i=0;i<colCount;i++){const th=document.createElement('th');th.textContent=`列${i+1}`;trh.appendChild(th);}
+  const thead=document.createElement(&apos;thead&apos;);const trh=document.createElement(&apos;tr&apos;);
+  for(let i=0;i<colCount;i++){const th=document.createElement(&apos;th&apos;);th.textContent=`列${i+1}`;trh.appendChild(th);}
   thead.appendChild(trh);table.appendChild(thead);
-  const tbody=document.createElement('tbody');
-  normalized.forEach(r=>{const tr=document.createElement('tr');r.forEach(cell=>{const td=document.createElement('td');td.textContent=cell;tr.appendChild(td)});tbody.appendChild(tr);});
+  const tbody=document.createElement(&apos;tbody&apos;);
+  normalized.forEach(r=>{const tr=document.createElement(&apos;tr&apos;);r.forEach(cell=>{const td=document.createElement(&apos;td&apos;);td.textContent=cell;tr.appendChild(td)});tbody.appendChild(tr);});
   table.appendChild(tbody);
   window.splitRows=normalized;window.splitColCount=colCount;
 }
-document.getElementById('splitRun').onclick=()=>{
-  const sep=document.getElementById('splitSep').value;if(!sep){toast('请输入分隔符');return;}
-  const lines=document.getElementById('splitIn').value.split(/\r?\n/).filter(s=>s);
+document.getElementById(&apos;splitRun&apos;).onclick=()=>{
+  const sep=document.getElementById(&apos;splitSep&apos;).value;if(!sep){toast(&apos;请输入分隔符&apos;);return;}
+  const lines=document.getElementById(&apos;splitIn&apos;).value.split(/\r?\n/).filter(s=>s);
   const rows=lines.map(l=>l.split(sep).map(c=>c.trim()));
   buildSplitTable(rows);
-  document.getElementById('splitStat').textContent=`行 ${rows.length} ｜ 最大列数 ${window.splitColCount}`;
-  toast('分列完成');
+  document.getElementById(&apos;splitStat&apos;).textContent=`行 ${rows.length} ｜ 最大列数 ${window.splitColCount}`;
+  toast(&apos;分列完成&apos;);
 };
-document.getElementById('splitCopy').onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast('没有可复制的数据');return;}navigator.clipboard.writeText(rows.map(r=>r.join('\t')).join('\n'));toast('已复制TSV');};
-document.getElementById('splitTxt').onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast('没有可导出的数据');return;}saveTxt(`文本分列${fileTimestamp()}.txt`,rows.map(r=>r.join('\t')).join('\n'));};
-document.getElementById('splitXlsx').onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast('没有可导出的数据');return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
-document.getElementById('splitClear').onclick=()=>{document.getElementById('splitTable').innerHTML='';document.getElementById('splitStat').textContent='—';};
+document.getElementById(&apos;splitCopy&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可复制的数据&apos;);return;}navigator.clipboard.writeText(rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));toast(&apos;已复制TSV&apos;);};
+document.getElementById(&apos;splitTxt&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可导出的数据&apos;);return;}saveTxt(`文本分列${fileTimestamp()}.txt`,rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));};
+document.getElementById(&apos;splitXlsx&apos;).onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast(&apos;没有可导出的数据&apos;);return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
+document.getElementById(&apos;splitClear&apos;).onclick=()=>{document.getElementById(&apos;splitTable&apos;).innerHTML=&apos;&apos;;document.getElementById(&apos;splitStat&apos;).textContent=&apos;—&apos;;};
 
 /* ====== 密码生成 ====== */
 function genPwd(len,upper,num,sym){
-  let lower='abcdefghijklmnopqrstuvwxyz';
+  let lower=&apos;abcdefghijklmnopqrstuvwxyz&apos;;
   let chars=lower;
   if(upper) chars+=lower.toUpperCase();
-  if(num) chars+='23456789';
-  if(sym) chars+='!@#$%^&*()-_=+[]{};:,.<>?';
-  chars=chars.replace(/[oOlI]/g,'');
-  if(!chars) return '';
-  let pwd='';for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
+  if(num) chars+=&apos;23456789&apos;;
+  if(sym) chars+=&apos;!@#$%^&*()-_=+[]{};:,.<>?&apos;;
+  chars=chars.replace(/[oOlI]/g,&apos;&apos;);
+  if(!chars) return &apos;&apos;;
+  let pwd=&apos;&apos;;for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
   return pwd;
 }
 function evalStrength(pwd,upper,num,sym){
@@ -810,26 +844,996 @@ function evalStrength(pwd,upper,num,sym){
   if(sym) score++;
   return score;
 }
-document.getElementById('pwdRun').onclick=()=>{
-  const len=+document.getElementById('pwdLen').value;
-  const cnt=+document.getElementById('pwdCount').value;
-  const upper=document.getElementById('pwdUpper').checked,
-        num=document.getElementById('pwdNum').checked,
-        sym=document.getElementById('pwdSym').checked;
+document.getElementById(&apos;pwdRun&apos;).onclick=()=>{
+  const len=+document.getElementById(&apos;pwdLen&apos;).value;
+  const cnt=+document.getElementById(&apos;pwdCount&apos;).value;
+  const upper=document.getElementById(&apos;pwdUpper&apos;).checked,
+        num=document.getElementById(&apos;pwdNum&apos;).checked,
+        sym=document.getElementById(&apos;pwdSym&apos;).checked;
   const out=[];for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
-  document.getElementById('pwdOut').value=out.join('\n');
+  document.getElementById(&apos;pwdOut&apos;).value=out.join(&apos;\n&apos;);
   const score=evalStrength(out[0],upper,num,sym);
-  const bar=document.getElementById('strengthFill');
-  if(score<=1){bar.className='strength-fill weak';bar.style.width='33%';}
-  else if(score<=3){bar.className='strength-fill medium';bar.style.width='66%';}
-  else{bar.className='strength-fill strong';bar.style.width='100%';}
-  toast('生成完成');
+  const bar=document.getElementById(&apos;strengthFill&apos;);
+  if(score<=1){bar.className=&apos;strength-fill weak&apos;;bar.style.width=&apos;33%&apos;;}
+  else if(score<=3){bar.className=&apos;strength-fill medium&apos;;bar.style.width=&apos;66%&apos;;}
+  else{bar.className=&apos;strength-fill strong&apos;;bar.style.width=&apos;100%&apos;;}
+  toast(&apos;生成完成&apos;);
 };
-document.getElementById('pwdCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('pwdOut').value);toast('已复制');};
-document.getElementById('pwdTxt').onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById('pwdOut').value);
-document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document.getElementById('pwdOut').value.split('\n').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
-document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
+document.getElementById(&apos;pwdCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;pwdOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;pwdTxt&apos;).onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById(&apos;pwdOut&apos;).value);
+document.getElementById(&apos;pwdXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;密码&apos;],...document.getElementById(&apos;pwdOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;pwdClear&apos;).onclick=()=>{document.getElementById(&apos;pwdOut&apos;).value=&apos;&apos;;document.getElementById(&apos;strengthFill&apos;).style.width=&apos;0&apos;;};
 </script>
+</body>
+</html>
+
+
+
+
+' style="width:100%;height:90vh;border:none;"></iframe>
+    </section>
+
+    <section id="affix">
+      <h2>文本批量增加</h2>
+      <iframe srcdoc='
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>文本工具箱</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<style>
+  :root{
+    --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
+    --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
+    --area-bg:#fff;
+  }
+  body.dark{
+    --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
+    --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
+    --area-bg:#161616;
+  }
+  body{margin:0; background:var(--bg); color:var(--fg);
+       font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
+       display:flex; height:100vh;}
+  nav{width:200px; border-right:1px solid var(--border); padding:20px; box-sizing:border-box;}
+  nav h2{font-size:18px; margin-bottom:16px}
+  .nav-btn{display:block; width:100%; text-align:left;
+           background:var(--btn-bg); color:var(--btn-fg); border:1px solid var(--border);
+           border-radius:6px; padding:10px; margin-bottom:8px; cursor:pointer;}
+  .nav-btn.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  main{flex:1; padding:20px; overflow:auto;}
+  .theme-btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+             padding:6px 10px; border-radius:8px; cursor:pointer}
+  .card{border:1px solid var(--border); border-radius:10px; background:var(--area-bg); margin-bottom:20px;}
+  .card .hd{padding:10px 12px; border-bottom:1px solid var(--border); font-weight:600}
+  .card .bd{padding:12px}
+  textarea,input[type="text"],input[type="number"]{
+    width:100%; background:var(--area-bg); color:var(--fg);
+    border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px;
+  }
+  textarea{min-height:180px; font:14px/1.5 ui-monospace,monospace}
+  .btnbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+  .btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+       padding:6px 12px; border-radius:6px; cursor:pointer}
+  .btn:hover{background:var(--btn-hover)}
+  .btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .stat{font-size:12px; color:var(--muted); margin-bottom:8px}
+  table{width:100%; border-collapse:collapse; table-layout:fixed;}
+  th,td{border-bottom:1px solid var(--border); padding:6px 8px; text-align:left; word-break:break-all;}
+  #toast{position:fixed; right:16px; bottom:16px; z-index:9999}
+  .toast{background:rgba(0,0,0,.8); color:#fff; padding:6px 12px; border-radius:6px; margin-top:6px;
+         font-size:14px; opacity:0; transition:opacity .2s}
+  .toast.show{opacity:1}
+  /* 密码强度条 */
+  .strength-bar{height:8px; border-radius:4px; background:#ddd; margin-bottom:8px; overflow:hidden}
+  .strength-fill{height:100%; width:0; transition:width .3s}
+  .weak{background:#e74c3c} .medium{background:#f39c12} .strong{background:#27ae60}
+</style>
+</head>
+<body>
+  <!-- 左侧导航 -->
+  <nav>
+    <h2>文本工具箱</h2>
+    <button class="nav-btn active" data-tab="dedupe">文本去重复</button>
+    <button class="nav-btn" data-tab="affix">文本批量增加</button>
+    <button class="nav-btn" data-tab="split">文本分列</button>
+    <button class="nav-btn" data-tab="passwd">密码生成</button>
+    <hr>
+    <button id="themeToggle" class="theme-btn">🌙 暗黑模式</button>
+  </nav>
+
+  <!-- 右侧主体 -->
+  <main>
+    <!-- 去重 -->
+    <section class="tab-pane" id="pane-dedupe" style="display:block">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="dedupeIn"></textarea>
+        <label><input type="checkbox" id="trimDedupe" checked> 去除空行/空格</label>
+        <label><input type="checkbox" id="caseDedupe"> 忽略大小写</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="dedupeRun">处理</button>
+          <button class="btn" id="dedupeCopy">复制</button>
+          <button class="btn" id="dedupeTxt">导出 TXT</button>
+          <button class="btn" id="dedupeXlsx">导出 XLSX</button>
+          <button class="btn" id="dedupeClear">清空</button>
+        </div>
+        <div class="stat" id="dedupeStat">—</div>
+        <textarea id="dedupeOut" readonly></textarea>
+      </div></div>
+    </section>
+
+    <!-- 批量增加 -->
+    <section class="tab-pane" id="pane-affix" style="display:none">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="affixIn"></textarea>
+        <input type="text" id="affixStr" placeholder="增加的内容">
+        <label><input type="radio" name="affixSide" value="left" checked> 左侧</label>
+        <label><input type="radio" name="affixSide" value="right"> 右侧</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="affixRun">处理</button>
+          <button class="btn" id="affixCopy">复制</button>
+          <button class="btn" id="affixTxt">导出 TXT</button>
+          <button class="btn" id="affixXlsx">导出 XLSX</button>
+          <button class="btn" id="affixClear">清空</button>
+        </div>
+        <div class="stat" id="affixStat">—</div>
+        <textarea id="affixOut" readonly></textarea>
+      </div></div>
+    </section>
+
+    <!-- 分列 -->
+    <section class="tab-pane" id="pane-split" style="display:none">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="splitIn"></textarea>
+        <input type="text" id="splitSep" placeholder="分隔符，如 ---- , |">
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="splitRun">处理</button>
+          <button class="btn" id="splitCopy">复制</button>
+          <button class="btn" id="splitTxt">导出 TXT</button>
+          <button class="btn" id="splitXlsx">导出 XLSX</button>
+          <button class="btn" id="splitClear">清空</button>
+        </div>
+        <div class="stat" id="splitStat">—</div>
+        <div id="splitTableWrap" style="overflow:auto; max-height:250px">
+          <table id="splitTable"></table>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- 密码生成 -->
+    <section class="tab-pane" id="pane-passwd" style="display:none">
+      <div class="card"><div class="hd">设置</div><div class="bd">
+        <label>长度：<input type="number" id="pwdLen" value="12" min="4" max="64"></label><br>
+        <label><input type="checkbox" id="pwdUpper" checked> 大写字母</label>
+        <label><input type="checkbox" id="pwdNum" checked> 数字</label>
+        <label><input type="checkbox" id="pwdSym"> 特殊符号</label>
+        <label><input type="number" id="pwdCount" value="5" min="1" max="50"> 生成数量</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="strength-bar"><div id="strengthFill" class="strength-fill"></div></div>
+        <div class="btnbar">
+          <button class="btn primary" id="pwdRun">生成</button>
+          <button class="btn" id="pwdCopy">复制</button>
+          <button class="btn" id="pwdTxt">导出 TXT</button>
+          <button class="btn" id="pwdXlsx">导出 XLSX</button>
+          <button class="btn" id="pwdClear">清空</button>
+        </div>
+        <textarea id="pwdOut" readonly></textarea>
+      </div></div>
+    </section>
+  </main>
+
+  <div id="toast"></div>
+
+<script>
+/* ====== 主题切换 ====== */
+const themeBtn=document.getElementById(&apos;themeToggle&apos;);
+function setTheme(mode){
+  if(mode===&apos;dark&apos;){document.body.classList.add(&apos;dark&apos;);themeBtn.textContent=&apos;🌞 浅色模式&apos;;}
+  else{document.body.classList.remove(&apos;dark&apos;);themeBtn.textContent=&apos;🌙 暗黑模式&apos;;}
+  localStorage.setItem(&apos;tools_theme&apos;,mode);
+}
+themeBtn.onclick=()=>setTheme(document.body.classList.contains(&apos;dark&apos;)?&apos;light&apos;:&apos;dark&apos;);
+setTheme(localStorage.getItem(&apos;tools_theme&apos;)||&apos;light&apos;);
+
+/* ====== 标签切换 ====== */
+document.querySelectorAll(&apos;.nav-btn&apos;).forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll(&apos;.nav-btn&apos;).forEach(b=>b.classList.remove(&apos;active&apos;));
+    btn.classList.add(&apos;active&apos;);
+    document.querySelectorAll(&apos;.tab-pane&apos;).forEach(p=>p.style.display=&apos;none&apos;);
+    document.getElementById(&apos;pane-&apos;+btn.dataset.tab).style.display=&apos;block&apos;;
+  };
+});
+
+/* ====== 公共函数 ====== */
+function toast(msg){
+  const box=document.getElementById(&apos;toast&apos;);
+  const div=document.createElement(&apos;div&apos;);
+  div.className=&apos;toast&apos;;div.textContent=msg;
+  box.appendChild(div); requestAnimationFrame(()=>div.classList.add(&apos;show&apos;));
+  setTimeout(()=>{div.classList.remove(&apos;show&apos;); setTimeout(()=>div.remove(),200)},1500);
+}
+function fileTimestamp(){
+  const d=new Date(),p=n=>String(n).padStart(2,&apos;0&apos;);
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+function saveTxt(name,content){
+  const a=document.createElement(&apos;a&apos;);
+  a.href=URL.createObjectURL(new Blob([content],{type:&apos;text/plain&apos;}));
+  a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+function aoaToXlsx(rows,name){
+  if(typeof XLSX===&apos;undefined&apos;){toast(&apos;未加载XLSX库&apos;);return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  const colWidths=[];
+  rows.forEach(r=>{r.forEach((cell,i)=>{const len=String(cell||&apos;&apos;).length;colWidths[i]=Math.max(colWidths[i]||10,len+2);});});
+  ws[&apos;!cols&apos;]=colWidths.map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws,&apos;Sheet1&apos;);XLSX.writeFile(wb,name);
+}
+
+/* ====== 去重 ====== */
+document.getElementById(&apos;dedupeRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;dedupeIn&apos;).value.split(/\r?\n/);
+  if(document.getElementById(&apos;trimDedupe&apos;).checked) lines=lines.map(s=>s.trim()).filter(s=>s);
+  const seen=new Set(),out=[];
+  for(const s of lines){const k=document.getElementById(&apos;caseDedupe&apos;).checked?s.toLowerCase():s;
+    if(!seen.has(k)){seen.add(k);out.push(s);}
+  }
+  document.getElementById(&apos;dedupeOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;dedupeStat&apos;).textContent=`原${lines.length}行 → 去重后${out.length}行`;
+  toast(&apos;去重完成&apos;);
+};
+document.getElementById(&apos;dedupeCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;dedupeOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;dedupeTxt&apos;).onclick=()=>saveTxt(`文本去重复${fileTimestamp()}.txt`,document.getElementById(&apos;dedupeOut&apos;).value);
+document.getElementById(&apos;dedupeXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;dedupeOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本去重复${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;dedupeClear&apos;).onclick=()=>{document.getElementById(&apos;dedupeOut&apos;).value=&apos;&apos;;document.getElementById(&apos;dedupeStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 批量增加 ====== */
+document.getElementById(&apos;affixRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;affixIn&apos;).value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s);
+  const add=document.getElementById(&apos;affixStr&apos;).value;
+  const side=document.querySelector(&apos;input[name="affixSide"]:checked&apos;).value;
+  const out=lines.map(s=>side===&apos;left&apos;?add+s:s+add);
+  document.getElementById(&apos;affixOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;affixStat&apos;).textContent=`输入${lines.length}行 → 输出${out.length}行`;
+  toast(&apos;批量完成&apos;);
+};
+document.getElementById(&apos;affixCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;affixOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;affixTxt&apos;).onclick=()=>saveTxt(`文本批量增加${fileTimestamp()}.txt`,document.getElementById(&apos;affixOut&apos;).value);
+document.getElementById(&apos;affixXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;affixOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本批量增加${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;affixClear&apos;).onclick=()=>{document.getElementById(&apos;affixOut&apos;).value=&apos;&apos;;document.getElementById(&apos;affixStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 分列 ====== */
+function buildSplitTable(rows){
+  const table=document.getElementById(&apos;splitTable&apos;);
+  table.innerHTML=&apos;&apos;;
+  if(!rows.length){window.splitRows=[];window.splitColCount=0;return;}
+  const colCount=Math.max(...rows.map(r=>r.length));
+  const normalized=rows.map(r=>Array.from({length:colCount},(_,i)=>r[i]??&apos;&apos;));
+  const colgroup=document.createElement(&apos;colgroup&apos;);
+  for(let i=0;i<colCount;i++){const col=document.createElement(&apos;col&apos;);col.style.width=`${100/colCount}%`;colgroup.appendChild(col);}
+  table.appendChild(colgroup);
+  const thead=document.createElement(&apos;thead&apos;);const trh=document.createElement(&apos;tr&apos;);
+  for(let i=0;i<colCount;i++){const th=document.createElement(&apos;th&apos;);th.textContent=`列${i+1}`;trh.appendChild(th);}
+  thead.appendChild(trh);table.appendChild(thead);
+  const tbody=document.createElement(&apos;tbody&apos;);
+  normalized.forEach(r=>{const tr=document.createElement(&apos;tr&apos;);r.forEach(cell=>{const td=document.createElement(&apos;td&apos;);td.textContent=cell;tr.appendChild(td)});tbody.appendChild(tr);});
+  table.appendChild(tbody);
+  window.splitRows=normalized;window.splitColCount=colCount;
+}
+document.getElementById(&apos;splitRun&apos;).onclick=()=>{
+  const sep=document.getElementById(&apos;splitSep&apos;).value;if(!sep){toast(&apos;请输入分隔符&apos;);return;}
+  const lines=document.getElementById(&apos;splitIn&apos;).value.split(/\r?\n/).filter(s=>s);
+  const rows=lines.map(l=>l.split(sep).map(c=>c.trim()));
+  buildSplitTable(rows);
+  document.getElementById(&apos;splitStat&apos;).textContent=`行 ${rows.length} ｜ 最大列数 ${window.splitColCount}`;
+  toast(&apos;分列完成&apos;);
+};
+document.getElementById(&apos;splitCopy&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可复制的数据&apos;);return;}navigator.clipboard.writeText(rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));toast(&apos;已复制TSV&apos;);};
+document.getElementById(&apos;splitTxt&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可导出的数据&apos;);return;}saveTxt(`文本分列${fileTimestamp()}.txt`,rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));};
+document.getElementById(&apos;splitXlsx&apos;).onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast(&apos;没有可导出的数据&apos;);return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
+document.getElementById(&apos;splitClear&apos;).onclick=()=>{document.getElementById(&apos;splitTable&apos;).innerHTML=&apos;&apos;;document.getElementById(&apos;splitStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 密码生成 ====== */
+function genPwd(len,upper,num,sym){
+  let lower=&apos;abcdefghijklmnopqrstuvwxyz&apos;;
+  let chars=lower;
+  if(upper) chars+=lower.toUpperCase();
+  if(num) chars+=&apos;23456789&apos;;
+  if(sym) chars+=&apos;!@#$%^&*()-_=+[]{};:,.<>?&apos;;
+  chars=chars.replace(/[oOlI]/g,&apos;&apos;);
+  if(!chars) return &apos;&apos;;
+  let pwd=&apos;&apos;;for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
+  return pwd;
+}
+function evalStrength(pwd,upper,num,sym){
+  let score=0;
+  if(pwd.length>=12) score++;
+  if(upper) score++;
+  if(num) score++;
+  if(sym) score++;
+  return score;
+}
+document.getElementById(&apos;pwdRun&apos;).onclick=()=>{
+  const len=+document.getElementById(&apos;pwdLen&apos;).value;
+  const cnt=+document.getElementById(&apos;pwdCount&apos;).value;
+  const upper=document.getElementById(&apos;pwdUpper&apos;).checked,
+        num=document.getElementById(&apos;pwdNum&apos;).checked,
+        sym=document.getElementById(&apos;pwdSym&apos;).checked;
+  const out=[];for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
+  document.getElementById(&apos;pwdOut&apos;).value=out.join(&apos;\n&apos;);
+  const score=evalStrength(out[0],upper,num,sym);
+  const bar=document.getElementById(&apos;strengthFill&apos;);
+  if(score<=1){bar.className=&apos;strength-fill weak&apos;;bar.style.width=&apos;33%&apos;;}
+  else if(score<=3){bar.className=&apos;strength-fill medium&apos;;bar.style.width=&apos;66%&apos;;}
+  else{bar.className=&apos;strength-fill strong&apos;;bar.style.width=&apos;100%&apos;;}
+  toast(&apos;生成完成&apos;);
+};
+document.getElementById(&apos;pwdCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;pwdOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;pwdTxt&apos;).onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById(&apos;pwdOut&apos;).value);
+document.getElementById(&apos;pwdXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;密码&apos;],...document.getElementById(&apos;pwdOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;pwdClear&apos;).onclick=()=>{document.getElementById(&apos;pwdOut&apos;).value=&apos;&apos;;document.getElementById(&apos;strengthFill&apos;).style.width=&apos;0&apos;;};
+</script>
+</body>
+</html>
+
+
+
+
+' style="width:100%;height:90vh;border:none;"></iframe>
+    </section>
+
+    <section id="split">
+      <h2>文本分列</h2>
+      <iframe srcdoc='
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>文本工具箱</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<style>
+  :root{
+    --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
+    --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
+    --area-bg:#fff;
+  }
+  body.dark{
+    --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
+    --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
+    --area-bg:#161616;
+  }
+  body{margin:0; background:var(--bg); color:var(--fg);
+       font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
+       display:flex; height:100vh;}
+  nav{width:200px; border-right:1px solid var(--border); padding:20px; box-sizing:border-box;}
+  nav h2{font-size:18px; margin-bottom:16px}
+  .nav-btn{display:block; width:100%; text-align:left;
+           background:var(--btn-bg); color:var(--btn-fg); border:1px solid var(--border);
+           border-radius:6px; padding:10px; margin-bottom:8px; cursor:pointer;}
+  .nav-btn.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  main{flex:1; padding:20px; overflow:auto;}
+  .theme-btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+             padding:6px 10px; border-radius:8px; cursor:pointer}
+  .card{border:1px solid var(--border); border-radius:10px; background:var(--area-bg); margin-bottom:20px;}
+  .card .hd{padding:10px 12px; border-bottom:1px solid var(--border); font-weight:600}
+  .card .bd{padding:12px}
+  textarea,input[type="text"],input[type="number"]{
+    width:100%; background:var(--area-bg); color:var(--fg);
+    border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px;
+  }
+  textarea{min-height:180px; font:14px/1.5 ui-monospace,monospace}
+  .btnbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+  .btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+       padding:6px 12px; border-radius:6px; cursor:pointer}
+  .btn:hover{background:var(--btn-hover)}
+  .btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .stat{font-size:12px; color:var(--muted); margin-bottom:8px}
+  table{width:100%; border-collapse:collapse; table-layout:fixed;}
+  th,td{border-bottom:1px solid var(--border); padding:6px 8px; text-align:left; word-break:break-all;}
+  #toast{position:fixed; right:16px; bottom:16px; z-index:9999}
+  .toast{background:rgba(0,0,0,.8); color:#fff; padding:6px 12px; border-radius:6px; margin-top:6px;
+         font-size:14px; opacity:0; transition:opacity .2s}
+  .toast.show{opacity:1}
+  /* 密码强度条 */
+  .strength-bar{height:8px; border-radius:4px; background:#ddd; margin-bottom:8px; overflow:hidden}
+  .strength-fill{height:100%; width:0; transition:width .3s}
+  .weak{background:#e74c3c} .medium{background:#f39c12} .strong{background:#27ae60}
+</style>
+</head>
+<body>
+  <!-- 左侧导航 -->
+  <nav>
+    <h2>文本工具箱</h2>
+    <button class="nav-btn active" data-tab="dedupe">文本去重复</button>
+    <button class="nav-btn" data-tab="affix">文本批量增加</button>
+    <button class="nav-btn" data-tab="split">文本分列</button>
+    <button class="nav-btn" data-tab="passwd">密码生成</button>
+    <hr>
+    <button id="themeToggle" class="theme-btn">🌙 暗黑模式</button>
+  </nav>
+
+  <!-- 右侧主体 -->
+  <main>
+    <!-- 去重 -->
+    <section class="tab-pane" id="pane-dedupe" style="display:block">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="dedupeIn"></textarea>
+        <label><input type="checkbox" id="trimDedupe" checked> 去除空行/空格</label>
+        <label><input type="checkbox" id="caseDedupe"> 忽略大小写</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="dedupeRun">处理</button>
+          <button class="btn" id="dedupeCopy">复制</button>
+          <button class="btn" id="dedupeTxt">导出 TXT</button>
+          <button class="btn" id="dedupeXlsx">导出 XLSX</button>
+          <button class="btn" id="dedupeClear">清空</button>
+        </div>
+        <div class="stat" id="dedupeStat">—</div>
+        <textarea id="dedupeOut" readonly></textarea>
+      </div></div>
+    </section>
+
+    <!-- 批量增加 -->
+    <section class="tab-pane" id="pane-affix" style="display:none">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="affixIn"></textarea>
+        <input type="text" id="affixStr" placeholder="增加的内容">
+        <label><input type="radio" name="affixSide" value="left" checked> 左侧</label>
+        <label><input type="radio" name="affixSide" value="right"> 右侧</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="affixRun">处理</button>
+          <button class="btn" id="affixCopy">复制</button>
+          <button class="btn" id="affixTxt">导出 TXT</button>
+          <button class="btn" id="affixXlsx">导出 XLSX</button>
+          <button class="btn" id="affixClear">清空</button>
+        </div>
+        <div class="stat" id="affixStat">—</div>
+        <textarea id="affixOut" readonly></textarea>
+      </div></div>
+    </section>
+
+    <!-- 分列 -->
+    <section class="tab-pane" id="pane-split" style="display:none">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="splitIn"></textarea>
+        <input type="text" id="splitSep" placeholder="分隔符，如 ---- , |">
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="splitRun">处理</button>
+          <button class="btn" id="splitCopy">复制</button>
+          <button class="btn" id="splitTxt">导出 TXT</button>
+          <button class="btn" id="splitXlsx">导出 XLSX</button>
+          <button class="btn" id="splitClear">清空</button>
+        </div>
+        <div class="stat" id="splitStat">—</div>
+        <div id="splitTableWrap" style="overflow:auto; max-height:250px">
+          <table id="splitTable"></table>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- 密码生成 -->
+    <section class="tab-pane" id="pane-passwd" style="display:none">
+      <div class="card"><div class="hd">设置</div><div class="bd">
+        <label>长度：<input type="number" id="pwdLen" value="12" min="4" max="64"></label><br>
+        <label><input type="checkbox" id="pwdUpper" checked> 大写字母</label>
+        <label><input type="checkbox" id="pwdNum" checked> 数字</label>
+        <label><input type="checkbox" id="pwdSym"> 特殊符号</label>
+        <label><input type="number" id="pwdCount" value="5" min="1" max="50"> 生成数量</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="strength-bar"><div id="strengthFill" class="strength-fill"></div></div>
+        <div class="btnbar">
+          <button class="btn primary" id="pwdRun">生成</button>
+          <button class="btn" id="pwdCopy">复制</button>
+          <button class="btn" id="pwdTxt">导出 TXT</button>
+          <button class="btn" id="pwdXlsx">导出 XLSX</button>
+          <button class="btn" id="pwdClear">清空</button>
+        </div>
+        <textarea id="pwdOut" readonly></textarea>
+      </div></div>
+    </section>
+  </main>
+
+  <div id="toast"></div>
+
+<script>
+/* ====== 主题切换 ====== */
+const themeBtn=document.getElementById(&apos;themeToggle&apos;);
+function setTheme(mode){
+  if(mode===&apos;dark&apos;){document.body.classList.add(&apos;dark&apos;);themeBtn.textContent=&apos;🌞 浅色模式&apos;;}
+  else{document.body.classList.remove(&apos;dark&apos;);themeBtn.textContent=&apos;🌙 暗黑模式&apos;;}
+  localStorage.setItem(&apos;tools_theme&apos;,mode);
+}
+themeBtn.onclick=()=>setTheme(document.body.classList.contains(&apos;dark&apos;)?&apos;light&apos;:&apos;dark&apos;);
+setTheme(localStorage.getItem(&apos;tools_theme&apos;)||&apos;light&apos;);
+
+/* ====== 标签切换 ====== */
+document.querySelectorAll(&apos;.nav-btn&apos;).forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll(&apos;.nav-btn&apos;).forEach(b=>b.classList.remove(&apos;active&apos;));
+    btn.classList.add(&apos;active&apos;);
+    document.querySelectorAll(&apos;.tab-pane&apos;).forEach(p=>p.style.display=&apos;none&apos;);
+    document.getElementById(&apos;pane-&apos;+btn.dataset.tab).style.display=&apos;block&apos;;
+  };
+});
+
+/* ====== 公共函数 ====== */
+function toast(msg){
+  const box=document.getElementById(&apos;toast&apos;);
+  const div=document.createElement(&apos;div&apos;);
+  div.className=&apos;toast&apos;;div.textContent=msg;
+  box.appendChild(div); requestAnimationFrame(()=>div.classList.add(&apos;show&apos;));
+  setTimeout(()=>{div.classList.remove(&apos;show&apos;); setTimeout(()=>div.remove(),200)},1500);
+}
+function fileTimestamp(){
+  const d=new Date(),p=n=>String(n).padStart(2,&apos;0&apos;);
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+function saveTxt(name,content){
+  const a=document.createElement(&apos;a&apos;);
+  a.href=URL.createObjectURL(new Blob([content],{type:&apos;text/plain&apos;}));
+  a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+function aoaToXlsx(rows,name){
+  if(typeof XLSX===&apos;undefined&apos;){toast(&apos;未加载XLSX库&apos;);return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  const colWidths=[];
+  rows.forEach(r=>{r.forEach((cell,i)=>{const len=String(cell||&apos;&apos;).length;colWidths[i]=Math.max(colWidths[i]||10,len+2);});});
+  ws[&apos;!cols&apos;]=colWidths.map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws,&apos;Sheet1&apos;);XLSX.writeFile(wb,name);
+}
+
+/* ====== 去重 ====== */
+document.getElementById(&apos;dedupeRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;dedupeIn&apos;).value.split(/\r?\n/);
+  if(document.getElementById(&apos;trimDedupe&apos;).checked) lines=lines.map(s=>s.trim()).filter(s=>s);
+  const seen=new Set(),out=[];
+  for(const s of lines){const k=document.getElementById(&apos;caseDedupe&apos;).checked?s.toLowerCase():s;
+    if(!seen.has(k)){seen.add(k);out.push(s);}
+  }
+  document.getElementById(&apos;dedupeOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;dedupeStat&apos;).textContent=`原${lines.length}行 → 去重后${out.length}行`;
+  toast(&apos;去重完成&apos;);
+};
+document.getElementById(&apos;dedupeCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;dedupeOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;dedupeTxt&apos;).onclick=()=>saveTxt(`文本去重复${fileTimestamp()}.txt`,document.getElementById(&apos;dedupeOut&apos;).value);
+document.getElementById(&apos;dedupeXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;dedupeOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本去重复${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;dedupeClear&apos;).onclick=()=>{document.getElementById(&apos;dedupeOut&apos;).value=&apos;&apos;;document.getElementById(&apos;dedupeStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 批量增加 ====== */
+document.getElementById(&apos;affixRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;affixIn&apos;).value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s);
+  const add=document.getElementById(&apos;affixStr&apos;).value;
+  const side=document.querySelector(&apos;input[name="affixSide"]:checked&apos;).value;
+  const out=lines.map(s=>side===&apos;left&apos;?add+s:s+add);
+  document.getElementById(&apos;affixOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;affixStat&apos;).textContent=`输入${lines.length}行 → 输出${out.length}行`;
+  toast(&apos;批量完成&apos;);
+};
+document.getElementById(&apos;affixCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;affixOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;affixTxt&apos;).onclick=()=>saveTxt(`文本批量增加${fileTimestamp()}.txt`,document.getElementById(&apos;affixOut&apos;).value);
+document.getElementById(&apos;affixXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;affixOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本批量增加${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;affixClear&apos;).onclick=()=>{document.getElementById(&apos;affixOut&apos;).value=&apos;&apos;;document.getElementById(&apos;affixStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 分列 ====== */
+function buildSplitTable(rows){
+  const table=document.getElementById(&apos;splitTable&apos;);
+  table.innerHTML=&apos;&apos;;
+  if(!rows.length){window.splitRows=[];window.splitColCount=0;return;}
+  const colCount=Math.max(...rows.map(r=>r.length));
+  const normalized=rows.map(r=>Array.from({length:colCount},(_,i)=>r[i]??&apos;&apos;));
+  const colgroup=document.createElement(&apos;colgroup&apos;);
+  for(let i=0;i<colCount;i++){const col=document.createElement(&apos;col&apos;);col.style.width=`${100/colCount}%`;colgroup.appendChild(col);}
+  table.appendChild(colgroup);
+  const thead=document.createElement(&apos;thead&apos;);const trh=document.createElement(&apos;tr&apos;);
+  for(let i=0;i<colCount;i++){const th=document.createElement(&apos;th&apos;);th.textContent=`列${i+1}`;trh.appendChild(th);}
+  thead.appendChild(trh);table.appendChild(thead);
+  const tbody=document.createElement(&apos;tbody&apos;);
+  normalized.forEach(r=>{const tr=document.createElement(&apos;tr&apos;);r.forEach(cell=>{const td=document.createElement(&apos;td&apos;);td.textContent=cell;tr.appendChild(td)});tbody.appendChild(tr);});
+  table.appendChild(tbody);
+  window.splitRows=normalized;window.splitColCount=colCount;
+}
+document.getElementById(&apos;splitRun&apos;).onclick=()=>{
+  const sep=document.getElementById(&apos;splitSep&apos;).value;if(!sep){toast(&apos;请输入分隔符&apos;);return;}
+  const lines=document.getElementById(&apos;splitIn&apos;).value.split(/\r?\n/).filter(s=>s);
+  const rows=lines.map(l=>l.split(sep).map(c=>c.trim()));
+  buildSplitTable(rows);
+  document.getElementById(&apos;splitStat&apos;).textContent=`行 ${rows.length} ｜ 最大列数 ${window.splitColCount}`;
+  toast(&apos;分列完成&apos;);
+};
+document.getElementById(&apos;splitCopy&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可复制的数据&apos;);return;}navigator.clipboard.writeText(rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));toast(&apos;已复制TSV&apos;);};
+document.getElementById(&apos;splitTxt&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可导出的数据&apos;);return;}saveTxt(`文本分列${fileTimestamp()}.txt`,rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));};
+document.getElementById(&apos;splitXlsx&apos;).onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast(&apos;没有可导出的数据&apos;);return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
+document.getElementById(&apos;splitClear&apos;).onclick=()=>{document.getElementById(&apos;splitTable&apos;).innerHTML=&apos;&apos;;document.getElementById(&apos;splitStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 密码生成 ====== */
+function genPwd(len,upper,num,sym){
+  let lower=&apos;abcdefghijklmnopqrstuvwxyz&apos;;
+  let chars=lower;
+  if(upper) chars+=lower.toUpperCase();
+  if(num) chars+=&apos;23456789&apos;;
+  if(sym) chars+=&apos;!@#$%^&*()-_=+[]{};:,.<>?&apos;;
+  chars=chars.replace(/[oOlI]/g,&apos;&apos;);
+  if(!chars) return &apos;&apos;;
+  let pwd=&apos;&apos;;for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
+  return pwd;
+}
+function evalStrength(pwd,upper,num,sym){
+  let score=0;
+  if(pwd.length>=12) score++;
+  if(upper) score++;
+  if(num) score++;
+  if(sym) score++;
+  return score;
+}
+document.getElementById(&apos;pwdRun&apos;).onclick=()=>{
+  const len=+document.getElementById(&apos;pwdLen&apos;).value;
+  const cnt=+document.getElementById(&apos;pwdCount&apos;).value;
+  const upper=document.getElementById(&apos;pwdUpper&apos;).checked,
+        num=document.getElementById(&apos;pwdNum&apos;).checked,
+        sym=document.getElementById(&apos;pwdSym&apos;).checked;
+  const out=[];for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
+  document.getElementById(&apos;pwdOut&apos;).value=out.join(&apos;\n&apos;);
+  const score=evalStrength(out[0],upper,num,sym);
+  const bar=document.getElementById(&apos;strengthFill&apos;);
+  if(score<=1){bar.className=&apos;strength-fill weak&apos;;bar.style.width=&apos;33%&apos;;}
+  else if(score<=3){bar.className=&apos;strength-fill medium&apos;;bar.style.width=&apos;66%&apos;;}
+  else{bar.className=&apos;strength-fill strong&apos;;bar.style.width=&apos;100%&apos;;}
+  toast(&apos;生成完成&apos;);
+};
+document.getElementById(&apos;pwdCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;pwdOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;pwdTxt&apos;).onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById(&apos;pwdOut&apos;).value);
+document.getElementById(&apos;pwdXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;密码&apos;],...document.getElementById(&apos;pwdOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;pwdClear&apos;).onclick=()=>{document.getElementById(&apos;pwdOut&apos;).value=&apos;&apos;;document.getElementById(&apos;strengthFill&apos;).style.width=&apos;0&apos;;};
+</script>
+</body>
+</html>
+
+
+
+
+' style="width:100%;height:90vh;border:none;"></iframe>
+    </section>
+
+    <section id="passwd">
+      <h2>密码生成</h2>
+      <iframe srcdoc='
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<title>文本工具箱</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<style>
+  :root{
+    --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
+    --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
+    --area-bg:#fff;
+  }
+  body.dark{
+    --bg:#121212; --fg:#e5e5e5; --muted:#a0a0a0; --border:#2d2d2d;
+    --btn-bg:#232323; --btn-fg:#e5e5e5; --btn-hover:#2d2d2d; --accent:#4FC3F7;
+    --area-bg:#161616;
+  }
+  body{margin:0; background:var(--bg); color:var(--fg);
+       font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial;
+       display:flex; height:100vh;}
+  nav{width:200px; border-right:1px solid var(--border); padding:20px; box-sizing:border-box;}
+  nav h2{font-size:18px; margin-bottom:16px}
+  .nav-btn{display:block; width:100%; text-align:left;
+           background:var(--btn-bg); color:var(--btn-fg); border:1px solid var(--border);
+           border-radius:6px; padding:10px; margin-bottom:8px; cursor:pointer;}
+  .nav-btn.active{background:var(--accent); color:#fff; border-color:var(--accent);}
+  main{flex:1; padding:20px; overflow:auto;}
+  .theme-btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+             padding:6px 10px; border-radius:8px; cursor:pointer}
+  .card{border:1px solid var(--border); border-radius:10px; background:var(--area-bg); margin-bottom:20px;}
+  .card .hd{padding:10px 12px; border-bottom:1px solid var(--border); font-weight:600}
+  .card .bd{padding:12px}
+  textarea,input[type="text"],input[type="number"]{
+    width:100%; background:var(--area-bg); color:var(--fg);
+    border:1px solid var(--border); border-radius:6px; padding:8px; margin-bottom:8px;
+  }
+  textarea{min-height:180px; font:14px/1.5 ui-monospace,monospace}
+  .btnbar{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:8px}
+  .btn{border:1px solid var(--border); background:var(--btn-bg); color:var(--btn-fg);
+       padding:6px 12px; border-radius:6px; cursor:pointer}
+  .btn:hover{background:var(--btn-hover)}
+  .btn.primary{background:var(--accent); color:#fff; border-color:var(--accent)}
+  .stat{font-size:12px; color:var(--muted); margin-bottom:8px}
+  table{width:100%; border-collapse:collapse; table-layout:fixed;}
+  th,td{border-bottom:1px solid var(--border); padding:6px 8px; text-align:left; word-break:break-all;}
+  #toast{position:fixed; right:16px; bottom:16px; z-index:9999}
+  .toast{background:rgba(0,0,0,.8); color:#fff; padding:6px 12px; border-radius:6px; margin-top:6px;
+         font-size:14px; opacity:0; transition:opacity .2s}
+  .toast.show{opacity:1}
+  /* 密码强度条 */
+  .strength-bar{height:8px; border-radius:4px; background:#ddd; margin-bottom:8px; overflow:hidden}
+  .strength-fill{height:100%; width:0; transition:width .3s}
+  .weak{background:#e74c3c} .medium{background:#f39c12} .strong{background:#27ae60}
+</style>
+</head>
+<body>
+  <!-- 左侧导航 -->
+  <nav>
+    <h2>文本工具箱</h2>
+    <button class="nav-btn active" data-tab="dedupe">文本去重复</button>
+    <button class="nav-btn" data-tab="affix">文本批量增加</button>
+    <button class="nav-btn" data-tab="split">文本分列</button>
+    <button class="nav-btn" data-tab="passwd">密码生成</button>
+    <hr>
+    <button id="themeToggle" class="theme-btn">🌙 暗黑模式</button>
+  </nav>
+
+  <!-- 右侧主体 -->
+  <main>
+    <!-- 去重 -->
+    <section class="tab-pane" id="pane-dedupe" style="display:block">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="dedupeIn"></textarea>
+        <label><input type="checkbox" id="trimDedupe" checked> 去除空行/空格</label>
+        <label><input type="checkbox" id="caseDedupe"> 忽略大小写</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="dedupeRun">处理</button>
+          <button class="btn" id="dedupeCopy">复制</button>
+          <button class="btn" id="dedupeTxt">导出 TXT</button>
+          <button class="btn" id="dedupeXlsx">导出 XLSX</button>
+          <button class="btn" id="dedupeClear">清空</button>
+        </div>
+        <div class="stat" id="dedupeStat">—</div>
+        <textarea id="dedupeOut" readonly></textarea>
+      </div></div>
+    </section>
+
+    <!-- 批量增加 -->
+    <section class="tab-pane" id="pane-affix" style="display:none">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="affixIn"></textarea>
+        <input type="text" id="affixStr" placeholder="增加的内容">
+        <label><input type="radio" name="affixSide" value="left" checked> 左侧</label>
+        <label><input type="radio" name="affixSide" value="right"> 右侧</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="affixRun">处理</button>
+          <button class="btn" id="affixCopy">复制</button>
+          <button class="btn" id="affixTxt">导出 TXT</button>
+          <button class="btn" id="affixXlsx">导出 XLSX</button>
+          <button class="btn" id="affixClear">清空</button>
+        </div>
+        <div class="stat" id="affixStat">—</div>
+        <textarea id="affixOut" readonly></textarea>
+      </div></div>
+    </section>
+
+    <!-- 分列 -->
+    <section class="tab-pane" id="pane-split" style="display:none">
+      <div class="card"><div class="hd">输入</div><div class="bd">
+        <textarea id="splitIn"></textarea>
+        <input type="text" id="splitSep" placeholder="分隔符，如 ---- , |">
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="btnbar">
+          <button class="btn primary" id="splitRun">处理</button>
+          <button class="btn" id="splitCopy">复制</button>
+          <button class="btn" id="splitTxt">导出 TXT</button>
+          <button class="btn" id="splitXlsx">导出 XLSX</button>
+          <button class="btn" id="splitClear">清空</button>
+        </div>
+        <div class="stat" id="splitStat">—</div>
+        <div id="splitTableWrap" style="overflow:auto; max-height:250px">
+          <table id="splitTable"></table>
+        </div>
+      </div></div>
+    </section>
+
+    <!-- 密码生成 -->
+    <section class="tab-pane" id="pane-passwd" style="display:none">
+      <div class="card"><div class="hd">设置</div><div class="bd">
+        <label>长度：<input type="number" id="pwdLen" value="12" min="4" max="64"></label><br>
+        <label><input type="checkbox" id="pwdUpper" checked> 大写字母</label>
+        <label><input type="checkbox" id="pwdNum" checked> 数字</label>
+        <label><input type="checkbox" id="pwdSym"> 特殊符号</label>
+        <label><input type="number" id="pwdCount" value="5" min="1" max="50"> 生成数量</label>
+      </div></div>
+      <div class="card"><div class="hd">结果</div><div class="bd">
+        <div class="strength-bar"><div id="strengthFill" class="strength-fill"></div></div>
+        <div class="btnbar">
+          <button class="btn primary" id="pwdRun">生成</button>
+          <button class="btn" id="pwdCopy">复制</button>
+          <button class="btn" id="pwdTxt">导出 TXT</button>
+          <button class="btn" id="pwdXlsx">导出 XLSX</button>
+          <button class="btn" id="pwdClear">清空</button>
+        </div>
+        <textarea id="pwdOut" readonly></textarea>
+      </div></div>
+    </section>
+  </main>
+
+  <div id="toast"></div>
+
+<script>
+/* ====== 主题切换 ====== */
+const themeBtn=document.getElementById(&apos;themeToggle&apos;);
+function setTheme(mode){
+  if(mode===&apos;dark&apos;){document.body.classList.add(&apos;dark&apos;);themeBtn.textContent=&apos;🌞 浅色模式&apos;;}
+  else{document.body.classList.remove(&apos;dark&apos;);themeBtn.textContent=&apos;🌙 暗黑模式&apos;;}
+  localStorage.setItem(&apos;tools_theme&apos;,mode);
+}
+themeBtn.onclick=()=>setTheme(document.body.classList.contains(&apos;dark&apos;)?&apos;light&apos;:&apos;dark&apos;);
+setTheme(localStorage.getItem(&apos;tools_theme&apos;)||&apos;light&apos;);
+
+/* ====== 标签切换 ====== */
+document.querySelectorAll(&apos;.nav-btn&apos;).forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll(&apos;.nav-btn&apos;).forEach(b=>b.classList.remove(&apos;active&apos;));
+    btn.classList.add(&apos;active&apos;);
+    document.querySelectorAll(&apos;.tab-pane&apos;).forEach(p=>p.style.display=&apos;none&apos;);
+    document.getElementById(&apos;pane-&apos;+btn.dataset.tab).style.display=&apos;block&apos;;
+  };
+});
+
+/* ====== 公共函数 ====== */
+function toast(msg){
+  const box=document.getElementById(&apos;toast&apos;);
+  const div=document.createElement(&apos;div&apos;);
+  div.className=&apos;toast&apos;;div.textContent=msg;
+  box.appendChild(div); requestAnimationFrame(()=>div.classList.add(&apos;show&apos;));
+  setTimeout(()=>{div.classList.remove(&apos;show&apos;); setTimeout(()=>div.remove(),200)},1500);
+}
+function fileTimestamp(){
+  const d=new Date(),p=n=>String(n).padStart(2,&apos;0&apos;);
+  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
+}
+function saveTxt(name,content){
+  const a=document.createElement(&apos;a&apos;);
+  a.href=URL.createObjectURL(new Blob([content],{type:&apos;text/plain&apos;}));
+  a.download=name;a.click();URL.revokeObjectURL(a.href);
+}
+function aoaToXlsx(rows,name){
+  if(typeof XLSX===&apos;undefined&apos;){toast(&apos;未加载XLSX库&apos;);return;}
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.aoa_to_sheet(rows);
+  const colWidths=[];
+  rows.forEach(r=>{r.forEach((cell,i)=>{const len=String(cell||&apos;&apos;).length;colWidths[i]=Math.max(colWidths[i]||10,len+2);});});
+  ws[&apos;!cols&apos;]=colWidths.map(w=>({wch:w}));
+  XLSX.utils.book_append_sheet(wb,ws,&apos;Sheet1&apos;);XLSX.writeFile(wb,name);
+}
+
+/* ====== 去重 ====== */
+document.getElementById(&apos;dedupeRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;dedupeIn&apos;).value.split(/\r?\n/);
+  if(document.getElementById(&apos;trimDedupe&apos;).checked) lines=lines.map(s=>s.trim()).filter(s=>s);
+  const seen=new Set(),out=[];
+  for(const s of lines){const k=document.getElementById(&apos;caseDedupe&apos;).checked?s.toLowerCase():s;
+    if(!seen.has(k)){seen.add(k);out.push(s);}
+  }
+  document.getElementById(&apos;dedupeOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;dedupeStat&apos;).textContent=`原${lines.length}行 → 去重后${out.length}行`;
+  toast(&apos;去重完成&apos;);
+};
+document.getElementById(&apos;dedupeCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;dedupeOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;dedupeTxt&apos;).onclick=()=>saveTxt(`文本去重复${fileTimestamp()}.txt`,document.getElementById(&apos;dedupeOut&apos;).value);
+document.getElementById(&apos;dedupeXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;dedupeOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本去重复${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;dedupeClear&apos;).onclick=()=>{document.getElementById(&apos;dedupeOut&apos;).value=&apos;&apos;;document.getElementById(&apos;dedupeStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 批量增加 ====== */
+document.getElementById(&apos;affixRun&apos;).onclick=()=>{
+  let lines=document.getElementById(&apos;affixIn&apos;).value.split(/\r?\n/).map(s=>s.trim()).filter(s=>s);
+  const add=document.getElementById(&apos;affixStr&apos;).value;
+  const side=document.querySelector(&apos;input[name="affixSide"]:checked&apos;).value;
+  const out=lines.map(s=>side===&apos;left&apos;?add+s:s+add);
+  document.getElementById(&apos;affixOut&apos;).value=out.join(&apos;\n&apos;);
+  document.getElementById(&apos;affixStat&apos;).textContent=`输入${lines.length}行 → 输出${out.length}行`;
+  toast(&apos;批量完成&apos;);
+};
+document.getElementById(&apos;affixCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;affixOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;affixTxt&apos;).onclick=()=>saveTxt(`文本批量增加${fileTimestamp()}.txt`,document.getElementById(&apos;affixOut&apos;).value);
+document.getElementById(&apos;affixXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;结果&apos;],...document.getElementById(&apos;affixOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`文本批量增加${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;affixClear&apos;).onclick=()=>{document.getElementById(&apos;affixOut&apos;).value=&apos;&apos;;document.getElementById(&apos;affixStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 分列 ====== */
+function buildSplitTable(rows){
+  const table=document.getElementById(&apos;splitTable&apos;);
+  table.innerHTML=&apos;&apos;;
+  if(!rows.length){window.splitRows=[];window.splitColCount=0;return;}
+  const colCount=Math.max(...rows.map(r=>r.length));
+  const normalized=rows.map(r=>Array.from({length:colCount},(_,i)=>r[i]??&apos;&apos;));
+  const colgroup=document.createElement(&apos;colgroup&apos;);
+  for(let i=0;i<colCount;i++){const col=document.createElement(&apos;col&apos;);col.style.width=`${100/colCount}%`;colgroup.appendChild(col);}
+  table.appendChild(colgroup);
+  const thead=document.createElement(&apos;thead&apos;);const trh=document.createElement(&apos;tr&apos;);
+  for(let i=0;i<colCount;i++){const th=document.createElement(&apos;th&apos;);th.textContent=`列${i+1}`;trh.appendChild(th);}
+  thead.appendChild(trh);table.appendChild(thead);
+  const tbody=document.createElement(&apos;tbody&apos;);
+  normalized.forEach(r=>{const tr=document.createElement(&apos;tr&apos;);r.forEach(cell=>{const td=document.createElement(&apos;td&apos;);td.textContent=cell;tr.appendChild(td)});tbody.appendChild(tr);});
+  table.appendChild(tbody);
+  window.splitRows=normalized;window.splitColCount=colCount;
+}
+document.getElementById(&apos;splitRun&apos;).onclick=()=>{
+  const sep=document.getElementById(&apos;splitSep&apos;).value;if(!sep){toast(&apos;请输入分隔符&apos;);return;}
+  const lines=document.getElementById(&apos;splitIn&apos;).value.split(/\r?\n/).filter(s=>s);
+  const rows=lines.map(l=>l.split(sep).map(c=>c.trim()));
+  buildSplitTable(rows);
+  document.getElementById(&apos;splitStat&apos;).textContent=`行 ${rows.length} ｜ 最大列数 ${window.splitColCount}`;
+  toast(&apos;分列完成&apos;);
+};
+document.getElementById(&apos;splitCopy&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可复制的数据&apos;);return;}navigator.clipboard.writeText(rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));toast(&apos;已复制TSV&apos;);};
+document.getElementById(&apos;splitTxt&apos;).onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast(&apos;没有可导出的数据&apos;);return;}saveTxt(`文本分列${fileTimestamp()}.txt`,rows.map(r=>r.join(&apos;\t&apos;)).join(&apos;\n&apos;));};
+document.getElementById(&apos;splitXlsx&apos;).onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast(&apos;没有可导出的数据&apos;);return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
+document.getElementById(&apos;splitClear&apos;).onclick=()=>{document.getElementById(&apos;splitTable&apos;).innerHTML=&apos;&apos;;document.getElementById(&apos;splitStat&apos;).textContent=&apos;—&apos;;};
+
+/* ====== 密码生成 ====== */
+function genPwd(len,upper,num,sym){
+  let lower=&apos;abcdefghijklmnopqrstuvwxyz&apos;;
+  let chars=lower;
+  if(upper) chars+=lower.toUpperCase();
+  if(num) chars+=&apos;23456789&apos;;
+  if(sym) chars+=&apos;!@#$%^&*()-_=+[]{};:,.<>?&apos;;
+  chars=chars.replace(/[oOlI]/g,&apos;&apos;);
+  if(!chars) return &apos;&apos;;
+  let pwd=&apos;&apos;;for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
+  return pwd;
+}
+function evalStrength(pwd,upper,num,sym){
+  let score=0;
+  if(pwd.length>=12) score++;
+  if(upper) score++;
+  if(num) score++;
+  if(sym) score++;
+  return score;
+}
+document.getElementById(&apos;pwdRun&apos;).onclick=()=>{
+  const len=+document.getElementById(&apos;pwdLen&apos;).value;
+  const cnt=+document.getElementById(&apos;pwdCount&apos;).value;
+  const upper=document.getElementById(&apos;pwdUpper&apos;).checked,
+        num=document.getElementById(&apos;pwdNum&apos;).checked,
+        sym=document.getElementById(&apos;pwdSym&apos;).checked;
+  const out=[];for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
+  document.getElementById(&apos;pwdOut&apos;).value=out.join(&apos;\n&apos;);
+  const score=evalStrength(out[0],upper,num,sym);
+  const bar=document.getElementById(&apos;strengthFill&apos;);
+  if(score<=1){bar.className=&apos;strength-fill weak&apos;;bar.style.width=&apos;33%&apos;;}
+  else if(score<=3){bar.className=&apos;strength-fill medium&apos;;bar.style.width=&apos;66%&apos;;}
+  else{bar.className=&apos;strength-fill strong&apos;;bar.style.width=&apos;100%&apos;;}
+  toast(&apos;生成完成&apos;);
+};
+document.getElementById(&apos;pwdCopy&apos;).onclick=()=>{navigator.clipboard.writeText(document.getElementById(&apos;pwdOut&apos;).value);toast(&apos;已复制&apos;);};
+document.getElementById(&apos;pwdTxt&apos;).onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById(&apos;pwdOut&apos;).value);
+document.getElementById(&apos;pwdXlsx&apos;).onclick=()=>aoaToXlsx([[&apos;密码&apos;],...document.getElementById(&apos;pwdOut&apos;).value.split(&apos;\n&apos;).map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
+document.getElementById(&apos;pwdClear&apos;).onclick=()=>{document.getElementById(&apos;pwdOut&apos;).value=&apos;&apos;;document.getElementById(&apos;strengthFill&apos;).style.width=&apos;0&apos;;};
+</script>
+</body>
+</html>
+
+
+
+
+' style="width:100%;height:90vh;border:none;"></iframe>
     </section>
   </main>
 
