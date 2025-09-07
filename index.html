@@ -1,9 +1,10 @@
 <!DOCTYPE html>
+
 <html lang="zh">
 <head>
-  <meta charset="UTF-8">
-  <title>赚牛工具箱</title>
-  <style>
+<meta charset="utf-8"/>
+<title>赚牛工具箱</title>
+<style>
     body {
       margin:0; display:flex; height:100vh; font-family:sans-serif;
     }
@@ -21,13 +22,59 @@
     main {flex:1; overflow:auto;}
     section {display:none; min-height:100%; overflow:auto; padding:10px; box-sizing:border-box;}
     section.active {display:block;}
-    /* Hide inner nav of text toolbox */
-    #text nav { display:none !important; }
-  </style>
+
   
-  <meta charset="UTF-8" />
-  <title>Solana Token Burner & Close Empty Accounts</title>
-  <style>
+
+@keyframes colorBlink  {
+  0%   { opacity: 1; }
+  50%  { opacity: 0.4; }
+  100% { opacity: 1; }
+}
+
+@keyframes colorBlink {
+  0%   { color: #ff4d4f; transform: scale(1); }
+  50%  { color: #000;    transform: scale(1.1); }
+  100% { color: #ff4d4f; transform: scale(1); }
+}
+
+
+
+
+#sol-batch td:nth-child(2),
+#sol-batch th:nth-child(2) {
+  white-space: nowrap;
+  max-width: 500px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+/* 缩窄编号列，放宽地址列 */
+#sol-batch td:nth-child(1),
+#sol-batch th:nth-child(1) {
+  width: 40px;
+  text-align: center;
+}
+#sol-batch td:nth-child(2),
+#sol-batch th:nth-child(2) {
+  white-space: nowrap;
+  width: 600px;
+}
+
+
+@keyframes breatheBlink {
+  0%   { color: #000; opacity: 1; }
+  50%  { color: #999; opacity: 0.6; }
+  100% { color: #000; opacity: 1; }
+}
+.code.blinking {
+  animation: breatheBlink 1s infinite ease-in-out;
+}
+
+</style>
+<meta charset="utf-8"/>
+<title>Solana Token Burner &amp; Close Empty Accounts</title>
+<style>
     body {
       background:#0b0b0b;
       color:#cce8cc;
@@ -69,12 +116,10 @@
       white-space:pre-wrap;
     }
   </style>
-
-  
-  <meta charset="UTF-8">
-  <title>批量 2FA 验证器</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
+<meta charset="utf-8"/>
+<title>批量 2FA 验证器</title>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<style>
     :root {
       --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
       --btn-bg:#f6f6f6; --btn-fg:#111; --btn-hover:#eaeaea; --accent:#0d6efd;
@@ -147,12 +192,10 @@
     @keyframes fadein{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
     @keyframes fadeout{from{opacity:1}to{opacity:0}}
   </style>
-
-  
-<meta charset="utf-8" />
+<meta charset="utf-8"/>
 <title>文本工具箱</title>
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" defer></script>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<script defer="" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 <style>
   :root{
     --bg:#fff; --fg:#111; --muted:#666; --border:#e5e5e5;
@@ -201,9 +244,7 @@
   .strength-fill{height:100%; width:0; transition:width .3s}
   .weak{background:#e74c3c} .medium{background:#f39c12} .strong{background:#27ae60}
 </style>
-
-
-  <style>
+<style>
     /* === SOL tool light UI overrides === */
     #sol { background:#fff; color:#111; }
     #sol h2, #sol h3 { color:#111; font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Inter,Arial; }
@@ -238,9 +279,7 @@
       font-size:13px;
     }
   </style>
-
-
-  <style>
+<style>
     nav button {
       background:#fff;
       color:#111;
@@ -264,9 +303,7 @@
     body.dark section { background:#1e1e1e; color:#e5e5e5; }
     body.dark #sol #log { background:#222; color:#e5e5e5; border:1px solid #444; }
   </style>
-
-
-  <style>
+<style>
     /* Dark mode overrides */
     body.dark #sol {
       background:#1e1e1e !important;
@@ -293,9 +330,7 @@
     body.dark #fa td:first-child { color:#90ee90 !important; }
     body.dark #fa .code { color:#90ee90 !important; }
   </style>
-
-
-  <style>
+<style>
     .theme-toggle {
       display:inline-flex;align-items:center;justify-content:center;
       width:28px;height:28px;border-radius:6px;line-height:1;
@@ -306,8 +341,6 @@
     body.dark .theme-toggle { background:#2a2a2a; color:#e5e5e5; border-color:#444; }
     body.dark #sol, body.dark #sol * { color:#fff !important; }
   </style>
-
-
 <style>
 .copy-toast {
   position: fixed;
@@ -333,8 +366,6 @@
   transform: translateY(20px);
 }
 </style>
-
-
 <style>
 .tool-card {
   background:#fff;
@@ -386,8 +417,6 @@
   transform:scale(0.97);
 }
 </style>
-
-
 <style>
 input[type="text"],
 input[type="number"],
@@ -414,8 +443,6 @@ input[type="radio"] {
   border:2px solid #bbb;
 }
 </style>
-
-
 <style>
 body.dark {
   background:#1e1e1e;
@@ -469,8 +496,6 @@ body.dark .copy-toast {
   color:#fff;
 }
 </style>
-
-
 <style>
 nav hr {
   border:0;
@@ -481,8 +506,6 @@ body.dark nav hr {
   border-top:1px solid #444;
 }
 </style>
-
-
 <style>
 nav button {
   font-size:18px !important;
@@ -490,8 +513,6 @@ nav button {
   font-family:"Microsoft YaHei","Segoe UI",sans-serif !important;
 }
 </style>
-
-
 <style>
 body.dark input[type="text"],
 body.dark input[type="number"],
@@ -509,8 +530,6 @@ body.dark textarea:focus {
   background:#2a2a2a !important;
 }
 </style>
-
-
 <style>
 /* 强化：暗黑模式下「增加的内容」输入框（#affixStr）颜色，不允许变白 */
 body.dark #pane-affix #affixStr {
@@ -524,8 +543,6 @@ body.dark #pane-affix #affixStr:focus {
   color:#e5e5e5 !important;
 }
 </style>
-
-
 <style>
 /* v18: 暗黑模式 - 仅文本工具区输入框修复（不影响 2FA） */
 body.dark #pane-affix input[type="text"],
@@ -559,35 +576,188 @@ body.dark #pane-pass textarea:focus {
   -webkit-text-fill-color:#e5e5e5 !important;
 }
 </style>
+<style>
+body.dark #sol-batch {
+  background:#1e1e1e;
+  color:#e5e5e5;
+}
+body.dark #sol-batch .card {
+  background:#2a2a2a;
+  border:1px solid #444;
+}
+body.dark #sol-batch table {
+  background:#2a2a2a;
+  color:#e5e5e5;
+}
+body.dark #sol-batch th, 
+body.dark #sol-batch td {
+  border-bottom:1px solid #444;
+}
+body.dark #sol-batch button {
+  background:#333;
+  color:#e5e5e5;
+  border:1px solid #555;
+}
+body.dark #sol-batch button:hover {
+  background:#444;
+}
+body.dark #sol-batch #toast {
+  background:rgba(240,240,240,0.9);
+  color:#000;
+}
+body.dark #sol-batch #retryFailedBtn {
+  background:#3399ff;
+  color:#fff;
+}
+</style><style>#sol-batch #retryFailedBtn{display:none;}</style>
+<style>
+/* Status tags */
+#sol-batch .tag-success { color:#0f9d58; background:#e8f5e9; border:1px solid #b7e1cd; padding:4px 10px; border-radius:8px; font-size:12px; }
+#sol-batch .tag-fail    { color:#d93025; background:#fdecea; border:1px solid #f5c2bf; padding:4px 10px; border-radius:8px; font-size:12px; }
+#sol-batch .tag-wait    { color:#666;    background:#f0f0f0; border:1px solid #ccc;    padding:4px 10px; border-radius:8px; font-size:12px; }
+/* Retry hidden by default */
+#sol-batch #retryFailedBtn{ display:none; }
+/* Primary look aligned with main site */
+#sol-batch #runBtn,
+#sol-batch #exportXlsxBtn,
+#sol-batch #copyBtn,
+#sol-batch #sortBtn,
+#sol-batch #retryFailedBtn{
+  background:#0d6efd; color:#fff; border:none; border-radius:8px; padding:10px 18px; cursor:pointer;
+}
+#sol-batch #runBtn:hover,
+#sol-batch #exportXlsxBtn:hover,
+#sol-batch #copyBtn:hover,
+#sol-batch #sortBtn:hover,
+#sol-batch #retryFailedBtn:hover{ background:linear-gradient(90deg,#0d6efd,#0b5ed7); }
+#sol-batch #clearBtn{
+  background:#f6f6f6; color:#111; border:1px solid #bbb; border-radius:8px; padding:10px 18px; cursor:pointer;
+}
+#sol-batch #clearBtn:hover{ background:#eaeaea; }
+
+/* Dark mode */
+body.dark #sol-batch #clearBtn{ background:#333; color:#e5e5e5; border:1px solid #555; }
+body.dark #sol-batch #clearBtn:hover{ background:#444; }
+body.dark #sol-batch #runBtn,
+body.dark #sol-batch #exportXlsxBtn,
+body.dark #sol-batch #copyBtn,
+body.dark #sol-batch #sortBtn,
+body.dark #sol-batch #retryFailedBtn{ background:#3399ff; }
+body.dark #sol-batch .tag-success { background:#1b4332; color:#90ee90; border-color:#2d6a4f; }
+body.dark #sol-batch .tag-fail    { background:#5a1e1e; color:#ff6b6b; border-color:#8b0000; }
+body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#555; }
+</style>
+
+<style>
+
+    #sol-batch { margin:0; font-family:monospace; background:#f9f9f9; color:#111; }
+    .wrap { max-width:960px; margin:0 auto; padding:30px; }
+#sol-batch label { font-size:14px; margin-top:16px; display:block; }
+    .inline-label { display:inline-block !important; margin:0; }
+#sol-batch input,#sol-batch textarea,#sol-batch button {
+#sol-batch font-family:inherit; font-size:16px; padding:12px; margin-top:6px;
+#sol-batch border:1px solid #d9d9d9; border-radius:8px; background:#fff; color:#111;
+    }
+#sol-batch input,#sol-batch textarea { width:100%; }
+#sol-batch textarea { min-height:220px; resize:vertical; font-size:15px; }
+#sol-batch button { cursor:pointer; width:auto; font-weight:bold; }
+    .row { display:flex; gap:12px; align-items:center; margin-top:12px; flex-wrap:wrap; }
+    .progress { height:14px; background:#eee; border-radius:6px; margin-top:14px; overflow:hidden; }
+    .bar { height:100%; width:0; background:#4caf50; transition:width .2s ease; }
+#sol-batch table { width:100%; border-collapse:collapse; margin-top:18px; font-size:14px; background:#fff; }
+#sol-batch th,#sol-batch td { border-bottom:1px solid #e9e9e9; padding:10px; text-align:left; }
+#sol-batch tr:hover { background:#f3f3f3; }
+    .muted { color:#666; font-size:13px; }
+    .error-text { color:#d93025; font-weight:bold; }
+    .card { background:#fff; padding:20px; border:1px solid #e6e6e6; border-radius:10px; margin-bottom:20px; }
+    .tag {
+#sol-batch display:inline-block; padding:4px 10px; border-radius:8px; font-size:12px; line-height:1;
+#sol-batch border:1px solid transparent;
+    }
+    /* === DO NOT MODIFY START: Tag styles (成功/失败/等待) === */
+.tag-success { color:#0f9d58; background:#e8f5e9; border-color:#b7e1cd; padding:4px 10px; border-radius:8px; }
+    .tag-wait { color:#666; background:#f0f0f0; border-color:#ccc; padding:2px 6px; border-radius:6px; }
+    .tag-fail    { color:#d93025; background:#fdecea; border-color:#f5c2bf; padding:4px 10px; border-radius:8px; }
+
+    #toast {
+#sol-batch position: fixed;
+#sol-batch top: 20px;
+#sol-batch right: 20px;
+#sol-batch background: rgba(50,50,50,0.9);
+#sol-batch color: #fff;
+#sol-batch padding: 10px 20px;
+#sol-batch border-radius: 6px;
+#sol-batch opacity: 0;
+#sol-batch pointer-events: none;
+#sol-batch transition: opacity 0.5s ease;
+#sol-batch z-index: 9999;
+#sol-batch font-size: 14px;
+    }
+    #toast.show { opacity: 1; }
+  
+/* === DO NOT MODIFY START: Retry button style === */
+#retryFailedBtn {
+#sol-batch display:none;
+#sol-batch background:#007bff;
+#sol-batch color:#fff;
+#sol-batch border:none;
+#sol-batch padding:6px 12px;
+#sol-batch border-radius:6px;
+#sol-batch cursor:pointer;
+}
+/* === DO NOT MODIFY START: Retry button style === */
+#retryFailedBtn:hover {
+#sol-batch background:#0069d9;
+}
+
+/* === DO NOT MODIFY END: CSS === */
+</style>
+
+<style>
+/* === SOL批量查询 暗黑模式支持 === */
+body.dark #sol-batch { background:#1e1e1e; color:#e5e5e5; }
+body.dark #sol-batch .card { background:#2a2a2a; border:1px solid #444; }
+body.dark #sol-batch input,
+body.dark #sol-batch textarea,
+body.dark #sol-batch select {
+  background:#2a2a2a; color:#eee; border:1px solid #555;
+}
+body.dark #sol-batch button {
+  background:#333; color:#eee; border:1px solid #555;
+}
+body.dark #sol-batch button:hover { background:#444; }
+body.dark #sol-batch table { background:#2a2a2a; color:#e5e5e5; }
+body.dark #sol-batch th, body.dark #sol-batch td { border-color:#444; }
+body.dark #sol-batch tr:hover { background:#333; }
+body.dark #sol-batch .tag-success { background:#234d20; color:#90ee90; border-color:#2d6a4f; }
+body.dark #sol-batch .tag-fail    { background:#5a1e1e; color:#ffb3b3; border-color:#8b0000; }
+body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#555; }
+</style>
 
 </head>
 <body>
-  <nav>
-    <h2>功能导航 <span id="globalThemeToggle" class="theme-toggle" role="button" aria-label="切换主题">🌙</span></h2>
-    <button data-tab="sol" class="active">SOL账户工具</button><hr><button data-tab="fa">批量2FA验证器</button><hr><button data-tab="dedupe">文本去重复</button><hr><button data-tab="affix">文本批量增加</button><hr><button data-tab="split">文本分列</button><hr><button data-tab="passwd">密码生成</button></nav>
-  <main>
-    <section id="sol" class="active">
-      
-  <h2>🔥 Solana Token Manager (Batch Burn & Close)</h2>
-  <button id="connectBtn">连接钱包</button><span id="wallet">未连接</span>
-
-  <!-- 燃烧代币模块 -->
-  <div class="module" id="burn-module">
-    <h3>🔥 Burn Tokens</h3>
-    <div class="stats" id="burn-stats">非零代币账户数量: 0</div>
-    <div id="token-list"></div>
-    <button id="burn-all">燃烧金额为0代币</button></div>
-
-  <!-- 关闭空账户模块 -->
-  <div class="module" id="close-module">
-    <h3>🗑 Close Empty Token Accounts</h3>
-    <div class="stats" id="empty-stats">空账户数量: 0</div>
-    <div id="empty-token-list"></div>
-    <button id="close-empty">关闭空账户</button></div>
-
-  <pre id="log"></pre>
-
-  <script type="module">
+<nav>
+<h2>功能导航 <span aria-label="切换主题" class="theme-toggle" id="globalThemeToggle" role="button">🌙</span></h2>
+<button class="active" data-tab="sol">SOL账户工具</button><hr/><button data-tab="sol-batch">SOL批量查询</button><hr/>
+<button data-tab="fa">批量2FA验证器</button><hr/><button data-tab="dedupe">文本去重复</button><hr/><button data-tab="affix">文本批量增加</button><hr/><button data-tab="split">文本分列</button><hr/><button data-tab="passwd">密码生成</button></nav>
+<main>
+<section class="active" id="sol">
+<h2>🔥 Solana Token Manager (Batch Burn &amp; Close)</h2>
+<button id="connectBtn">连接钱包</button><span id="wallet">未连接</span>
+<!-- 燃烧代币模块 -->
+<div class="module" id="burn-module">
+<h3>🔥 Burn Tokens</h3>
+<div class="stats" id="burn-stats">非零代币账户数量: 0</div>
+<div id="token-list"></div>
+<button id="burn-all">燃烧金额为0代币</button></div>
+<!-- 关闭空账户模块 -->
+<div class="module" id="close-module">
+<h3>🗑 Close Empty Token Accounts</h3>
+<div class="stats" id="empty-stats">空账户数量: 0</div>
+<div id="empty-token-list"></div>
+<button id="close-empty">关闭空账户</button></div>
+<pre id="log"></pre>
+<script type="module">
     import {
       Connection, PublicKey, Transaction
     } from "https://esm.sh/@solana/web3.js";
@@ -763,37 +933,84 @@ body.dark #pane-pass textarea:focus {
       await loadTokens();
     };
   </script>
+</section>
+<section id="sol-batch">
+<div class="wrap">
+<div class="card">
+<div class="row" style="margin-top:0;">
+<label class="inline-label">RPC 节点</label>
+<button id="pingBtn">测速</button>
+<span class="muted" id="latency"></span>
+</div>
+<input id="rpc" type="text" value="https://mainnet.helius-rpc.com/?api-key=989d7cc1-be87-4b20-91d0-2fd136b55a74"/>
+<div class="row">
+<div style="flex:1">
+<label>查询线程数</label>
+<input id="threads" max="10" min="1" type="number" value="2"/>
+</div>
+<div style="flex:1">
+<label>延迟 (毫秒)</label>
+<input id="delay" max="5000" min="0" type="number" value="500"/>
+</div>
+</div>
+<label>地址列表（每行一个）</label>
+<textarea id="list" placeholder="
+"></textarea>
+<div class="row">
+<button id="runBtn">开始查询</button>
+<button id="clearBtn">清空</button>
+<button disabled="" id="exportXlsxBtn">导出 Excel</button>
+<button disabled="" id="copyBtn">复制结果</button>
+<button disabled="" id="sortBtn">按余额排序</button>
+<button disabled="" id="retryFailedBtn">重试失败地址</button>
+</div>
+<div class="progress"><div class="bar" id="bar"></div></div>
+<div class="row muted">
+<span>有效地址：<span id="validCount">0</span></span>
+<span>成功数量：<span id="successCount">0</span></span>
+<span>失败数量：<span id="failCount">0</span></span>
+<span>总余额：<span id="sumSol">0</span> SOL</span>
+</div>
+<div class="muted" id="msg"></div>
+</div>
+<div class="card" style="max-height:400px; overflow:auto;">
+<table>
+<thead>
+<tr><th>#</th><th>地址</th><th>SOL</th><th>状态</th></tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
+</div>
+</div>
+</section>
+<section id="fa">
+<div class="container">
+<!-- 左：输入 -->
+<div class="left">
+<div class="header">
+<b>密钥输入</b>
 
-    </section>
-
-    <section id="fa">
-      
-  <div class="container">
-    <!-- 左：输入 -->
-    <div class="left">
-      <div style="display:flex;gap:8px;margin-bottom:8px">
-        <button class="btn" onclick="pasteInput()">粘贴</button><button class="btn" onclick="clearInput()">清除</button></div>
-      <textarea id="secretBox" placeholder="每行一个密钥"></textarea>
-      <div class="scaler">
-        <button class="scale-btn" data-scale="100" data-font="1.2em">小号</button><button class="scale-btn" data-scale="150" data-font="1.5em">中号</button><button class="scale-btn" data-scale="200" data-font="2em">大号</button><button class="scale-btn" data-scale="300" data-font="3em">老年模式</button></div>
-    </div>
-
-    <!-- 右：列表 -->
-    <div class="right">
-      <div class="header">
-        <b>验证码列表</b>
-        <b>刷新倒计时：<span id="timer">--</span>s</b>
-      </div>
-      <table id="resultTable">
-        <thead><tr><th>#</th><th>验证码</th><th>密钥</th><th>复制</th></tr></thead>
-        <tbody></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div id="toast-container"></div>
-
-  <script>
+</div>
+<div style="display:flex;gap:8px;margin-bottom:8px">
+<button class="btn" onclick="pasteInput()">粘贴</button><button class="btn" onclick="clearInput()">清除</button></div>
+<textarea id="secretBox" placeholder="每行一个密钥"></textarea>
+<div class="scaler">
+<button class="scale-btn" data-font="1.2em" data-scale="100">小号</button><button class="scale-btn" data-font="1.5em" data-scale="150">中号</button><button class="scale-btn" data-font="2em" data-scale="200">大号</button><button class="scale-btn" data-font="3em" data-scale="300">老年模式</button></div>
+</div>
+<!-- 右：列表 -->
+<div class="right">
+<div class="header">
+<b>验证码列表</b>
+<b>刷新倒计时：<span id="timer">--</span>s</b>
+</div>
+<table id="resultTable">
+<thead><tr><th>#</th><th>验证码</th><th>密钥</th><th>复制</th></tr></thead>
+<tbody></tbody>
+</table>
+</div>
+</div>
+<div id="toast-container"></div>
+<script>
     const b32map="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     function base32ToBytes(b32){
       let bits="",out=[]; b32=b32.toUpperCase().replace(/[^A-Z2-7]/g,"");
@@ -866,13 +1083,7 @@ body.dark #pane-pass textarea:focus {
       navigator.clipboard.writeText(c).then(()=>{showToast("已复制验证码：" + c);});
     }
 
-    function showToast(msg){
-      const box=document.getElementById("toast-container");
-      const div=document.createElement("div");
-      div.className="toast"; div.textContent=msg;
-      box.appendChild(div);
-      setTimeout(()=>{div.remove()},1500);
-    }
+    function showToast(message){ try{ toast(message); }catch(e){} }
 
     function setScale(val,font){
       document.getElementById('fa').style.fontSize = val+"%";
@@ -891,17 +1102,15 @@ body.dark #pane-pass textarea:focus {
     function setTheme(mode){
       if(mode==="dark"){
         document.getElementById('fa').classList.add('dark');
-        document.getElementById("themeToggle").textContent="🌞 浅色模式";
-        localStorage.setItem("theme","dark");
+        const __tt_btn1=document.getElementById("themeToggle"); if(__tt_btn1){ __tt_btn1.textContent="🌞 浅色模式"; }
+        localStorage.setItem("tools_theme","dark");
       }else{
         document.getElementById('fa').classList.remove('dark');
-        document.getElementById("themeToggle").textContent="🌙 暗黑模式";
-        localStorage.setItem("theme","light");
+        const __tt_btn2=document.getElementById("themeToggle"); if(__tt_btn2){ __tt_btn2.textContent="🌙 暗黑模式"; }
+        localStorage.setItem("tools_theme","light");
       }
     }
-    document.getElementById("themeToggle").addEventListener("click", ()=>{
-      if(document.body.classList.contains("dark")) setTheme("light"); else setTheme("dark");
-    });
+    (()=>{ const __tt=document.getElementById("themeToggle"); if(__tt){ __tt.addEventListener("click", ()=>{ if(document.getElementById('fa').classList.contains("dark")) setTheme("light"); else setTheme("dark"); }); } })();
 
     function pasteInput(){navigator.clipboard.readText().then(t=>{document.getElementById("secretBox").value=t;updateSecrets();});}
     function clearInput(){document.getElementById("secretBox").value="";updateSecrets();}
@@ -910,133 +1119,117 @@ body.dark #pane-pass textarea:focus {
       const now=Math.floor(Date.now()/1000);
       const step=Math.floor(now/period);
       let left=period - (now % period);
-      if(left===0) left=period;
-      document.getElementById("timer").textContent=left;
-      if(step!==lastStep){
+      if(left===0) { left=period; await refreshCodesForCurrentStep(); }
+      var tel=document.getElementById("timer"); if(tel){ tel.textContent=left; }
+      
+  // 倒计时 ≤5 秒时，验证码呼吸闪烁
+  document.querySelectorAll("#resultTable .code").forEach(el=>{
+    if(left <= 5){
+      el.classList.add("blinking");
+    } else {
+      el.classList.remove("blinking");
+    }
+  });
+
+  if(step!==lastStep){
+
         lastStep=step;
         if(secrets.length) await refreshCodesForCurrentStep();
       }
     },1000);
 
-    document.getElementById("secretBox").addEventListener("input", updateSecrets);
-
-    (function initScale(){
+    document.addEventListener("DOMContentLoaded", function(){ var sb=document.getElementById("secretBox"); if(sb){ sb.addEventListener("input", updateSecrets); }});
+(function initScale(){
       const saved=localStorage.getItem("scalePercent") || "100";
       const savedFont=localStorage.getItem("codeFontSize") || "1.2em";
       codeFontSize=savedFont;
       setScale(saved, savedFont);
     })();
     (function initTheme(){
-      const saved=localStorage.getItem("theme") || "light";
-      setTheme(saved);
+      const saved=localStorage.getItem("tools_theme") || "light";
+      setTheme(saved); // Original line, no change needed here as the issue is with the global theme toggle logic.
     })();
 
     (async ()=>{ lastStep=Math.floor(Math.floor(Date.now()/1000)/period); })();
   </script>
-
-    </section>
-
-    <!-- Keep full Text Toolbox DOM once, we'll switch inner panes via the left nav -->
-    <section id="text">
-      
-  <!-- 左侧导航 -->
-  <nav>
-    <h2>文本工具箱</h2>
-    <button class="nav-btn active" data-tab="dedupe">文本去重复</button><button class="nav-btn" data-tab="affix">文本批量增加</button><button class="nav-btn" data-tab="split">文本分列</button><button class="nav-btn" data-tab="passwd">密码生成</button>
-    
-  </nav>
-
-  <!-- 右侧主体 -->
-  <main>
-    <!-- 去重 -->
-    <section class="tab-pane" id="pane-dedupe" style="display:block">
-      <div class="card"><div class="hd">输入</div><div class="bd">
-        <textarea id="dedupeIn"></textarea>
-        <label><input type="checkbox" id="trimDedupe" checked> 去除空行/空格</label>
-        <label><input type="checkbox" id="caseDedupe"> 忽略大小写</label>
-      </div></div>
-      <div class="card"><div class="hd">结果</div><div class="bd">
-        <div class="btnbar">
-          <button class="btn primary" id="dedupeRun">处理</button><button class="btn" id="dedupeCopy">复制</button><button class="btn" id="dedupeTxt">导出 TXT</button><button class="btn" id="dedupeXlsx">导出 XLSX</button><button class="btn" id="dedupeClear">清空</button></div>
-        <div class="stat" id="dedupeStat">—</div>
-        <textarea id="dedupeOut" readonly></textarea>
-      </div></div>
-    </section>
-
-    <!-- 批量增加 -->
-    <section class="tab-pane" id="pane-affix" style="display:none">
-      <div class="card"><div class="hd">输入</div><div class="bd">
-        <textarea id="affixIn"></textarea>
-        <input type="text" id="affixStr" placeholder="增加的内容">
-        <label><input type="radio" name="affixSide" value="left" checked> 前缀</label>
-        <label><input type="radio" name="affixSide" value="right"> 后缀</label>
-      </div></div>
-      <div class="card"><div class="hd">结果</div><div class="bd">
-        <div class="btnbar">
-          <button class="btn primary" id="affixRun">处理</button><button class="btn" id="affixCopy">复制</button><button class="btn" id="affixTxt">导出 TXT</button><button class="btn" id="affixXlsx">导出 XLSX</button><button class="btn" id="affixClear">清空</button></div>
-        <div class="stat" id="affixStat">—</div>
-        <textarea id="affixOut" readonly></textarea>
-      </div></div>
-    </section>
-
-    <!-- 分列 -->
-    <section class="tab-pane" id="pane-split" style="display:none">
-      <div class="card"><div class="hd">输入</div><div class="bd">
-        <textarea id="splitIn"></textarea>
-        <input type="text" id="splitSep" placeholder="分隔符，如 ---- , |">
-      </div></div>
-      <div class="card"><div class="hd">结果</div><div class="bd">
-        <div class="btnbar">
-          <button class="btn primary" id="splitRun">处理</button><button class="btn" id="splitCopy">复制</button><button class="btn" id="splitTxt">导出 TXT</button><button class="btn" id="splitXlsx">导出 XLSX</button><button class="btn" id="splitClear">清空</button></div>
-        <div class="stat" id="splitStat">—</div>
-        <div id="splitTableWrap" style="overflow:auto; max-height:250px">
-          <table id="splitTable"></table>
-        </div>
-      </div></div>
-    </section>
-
-    <!-- 密码生成 -->
-    <section class="tab-pane" id="pane-passwd" style="display:none">
-      <div class="card"><div class="hd">设置</div><div class="bd">
-        <label>长度：<input type="number" id="pwdLen" value="12" min="4" max="64"></label><br>
-        <label><input type="checkbox" id="pwdUpper" checked> 大写字母</label>
-        <label><input type="checkbox" id="pwdNum" checked> 数字</label>
-        <label><input type="checkbox" id="pwdSym"> 特殊符号</label>
-        <label><input type="number" id="pwdCount" value="5" min="1" max="50"> 生成数量</label>
-      </div></div>
-      <div class="card"><div class="hd">结果</div><div class="bd">
-        <div class="strength-bar"><div id="strengthFill" class="strength-fill"></div></div>
-        <div class="btnbar">
-          <button class="btn primary" id="pwdRun">生成</button><button class="btn" id="pwdCopy">复制</button><button class="btn" id="pwdTxt">导出 TXT</button><button class="btn" id="pwdXlsx">导出 XLSX</button><button class="btn" id="pwdClear">清空</button></div>
-        <textarea id="pwdOut" readonly></textarea>
-      </div></div>
-    </section>
-  </main>
-
-  <div id="toast"></div>
-
+</section>
+<section id="dedupe">
+<div class="card"><div class="hd">输入</div><div class="bd">
+<textarea id="dedupeIn"></textarea>
+<label><input checked="" id="trimDedupe" type="checkbox"/> 去除空行/空格</label>
+<label><input id="caseDedupe" type="checkbox"/> 忽略大小写</label>
+</div></div>
+<div class="card"><div class="hd">结果</div><div class="bd">
+<div class="btnbar">
+<button class="btn primary" id="dedupeRun">处理</button><button class="btn" id="dedupeCopy">复制</button><button class="btn" id="dedupeTxt">导出 TXT</button><button class="btn" id="dedupeXlsx">导出 XLSX</button><button class="btn" id="dedupeClear">清空</button></div>
+<div class="stat" id="dedupeStat">—</div>
+<textarea id="dedupeOut" readonly=""></textarea>
+</div></div>
+<div id="toast"></div>
+</section>
+<section id="affix">
+<div class="card"><div class="hd">输入</div><div class="bd">
+<textarea id="affixIn"></textarea>
+<input id="affixStr" placeholder="增加的内容" type="text"/>
+<label><input checked="" name="affixSide" type="radio" value="left"/> 前缀</label>
+<label><input name="affixSide" type="radio" value="right"/> 后缀</label>
+</div></div>
+<div class="card"><div class="hd">结果</div><div class="bd">
+<div class="btnbar">
+<button class="btn primary" id="affixRun">处理</button><button class="btn" id="affixCopy">复制</button><button class="btn" id="affixTxt">导出 TXT</button><button class="btn" id="affixXlsx">导出 XLSX</button><button class="btn" id="affixClear">清空</button></div>
+<div class="stat" id="affixStat">—</div>
+<textarea id="affixOut" readonly=""></textarea>
+</div></div>
+<div id="toast"></div>
+</section>
+<section id="split">
+<div class="card"><div class="hd">输入</div><div class="bd">
+<textarea id="splitIn"></textarea>
+<input id="splitSep" placeholder="分隔符，如 ---- , |" type="text"/>
+</div></div>
+<div class="card"><div class="hd">结果</div><div class="bd">
+<div class="btnbar">
+<button class="btn primary" id="splitRun">处理</button><button class="btn" id="splitCopy">复制</button><button class="btn" id="splitTxt">导出 TXT</button><button class="btn" id="splitXlsx">导出 XLSX</button><button class="btn" id="splitClear">清空</button></div>
+<div class="stat" id="splitStat">—</div>
+<div id="splitTableWrap" style="overflow:auto; max-height:250px">
+<table id="splitTable"></table>
+</div>
+</div></div>
+<div id="toast"></div>
+</section>
+<section id="passwd">
+<div class="card"><div class="hd">设置</div><div class="bd">
+<label>长度：<input id="pwdLen" max="64" min="4" type="number" value="12"/></label><br/>
+<label><input checked="" id="pwdUpper" type="checkbox"/> 大写字母</label>
+<label><input checked="" id="pwdNum" type="checkbox"/> 数字</label>
+<label><input id="pwdSym" type="checkbox"/> 特殊符号</label>
+<label><input id="pwdCount" max="50" min="1" type="number" value="5"/> 生成数量</label>
+</div></div>
+<div class="card"><div class="hd">结果</div><div class="bd">
+<div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+<div class="btnbar">
+<button class="btn primary" id="pwdRun">生成</button><button class="btn" id="pwdCopy">复制</button><button class="btn" id="pwdTxt">导出 TXT</button><button class="btn" id="pwdXlsx">导出 XLSX</button><button class="btn" id="pwdClear">清空</button></div>
+<textarea id="pwdOut" readonly=""></textarea>
+</div></div>
+<div id="toast"></div>
+</section>
 <script>
 /* ====== 主题切换 ====== */
 const themeBtn=document.getElementById('themeToggle');
 function setTheme(mode){
-  if(mode==='dark'){document.body.classList.add('dark');themeBtn.textContent='🌞 浅色模式';}
-  else{document.body.classList.remove('dark');themeBtn.textContent='🌙 暗黑模式';}
-  localStorage.setItem('tools_theme',mode);
+  if(mode==='dark'){
+    document.body.classList.add('dark');
+    if(themeBtn) themeBtn.textContent='🌞 浅色模式';
+  } else {
+    document.body.classList.remove('dark');
+    if(themeBtn) themeBtn.textContent='🌙 暗黑模式';
+  }
+  localStorage.setItem('tools_theme', mode);
 }
 if(themeBtn){
   themeBtn.onclick=()=>setTheme(document.body.classList.contains('dark')?'light':'dark');
   setTheme(localStorage.getItem('tools_theme')||'light');
 }
-
-/* ====== 标签切换 ====== */
-document.querySelectorAll('.nav-btn').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
-    document.getElementById('pane-'+btn.dataset.tab).style.display='block';
-  };
-});
 
 /* ====== 公共函数 ====== */
 function toast(msg){
@@ -1168,119 +1361,11 @@ document.getElementById('pwdTxt').onclick=()=>saveTxt(`密码生成${fileTimesta
 document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document.getElementById('pwdOut').value.split('\n').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
 document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
 </script>
+</section>
+</main>
 
-    </section>
-  </main>
 
-  <script>
-    // Left nav switching
-    const mapTextTab = { 'dedupe':'pane-dedupe', 'affix':'pane-affix', 'split':'pane-split', 'passwd':'pane-passwd' };
-    function showSection(tab) {
-      // highlight left nav
-      document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active', b.dataset.tab===tab));
-      // show/hide outer sections
-      document.querySelectorAll('main section').forEach(sec=>sec.classList.remove('active'));
-      if (mapTextTab[tab]) {
-        document.getElementById('text').classList.add('active');
-        // hide all inner panes, show the one requested
-        const target = mapTextTab[tab];
-        document.querySelectorAll('#text .tab-pane').forEach(p=>p.style.display='none');
-        const el = document.querySelector('#text #' + target);
-        if (el) el.style.display = 'block';
-      } else {
-        document.getElementById(tab).classList.add('active');
-      }
-    }
-    document.querySelectorAll('nav button').forEach(btn=>{
-      btn.addEventListener('click', ()=> showSection(btn.dataset.tab));
-    });
-    // Ensure a default inner pane visible when entering text toolbox via outer left nav
-    // (initial load keeps SOL active; nothing to do here)
-  </script>
 
-  <script>
-    const gbtn=document.getElementById('globalThemeToggle');
-    gbtn.addEventListener('click',()=>{
-      document.body.classList.toggle('dark');
-      gbtn.textContent=document.body.classList.contains('dark')?'🌞 浅色模式':'🌙 暗黑模式';
-    });
-  </script>
-
-  <script>
-    const gbtn=document.getElementById('globalThemeToggle');
-    gbtn.addEventListener('click',()=>{
-      document.body.classList.toggle('dark');
-      gbtn.textContent=document.body.classList.contains('dark')?'🌞':'🌙';
-    });
-  </script>
-
-  <script>
-    (function(){
-      const gbtn = document.getElementById('globalThemeToggle');
-      if (gbtn){
-        function updateThemeIcon(){
-          gbtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-        }
-        gbtn.addEventListener('click', function(e){
-          e.preventDefault();
-          document.body.classList.toggle('dark');
-          updateThemeIcon();
-        });
-        updateThemeIcon();
-      }
-      // 2FA: ensure secretBox triggers updateSecrets
-      const sb = document.getElementById("secretBox");
-      if (sb && typeof updateSecrets==='function'){
-        sb.addEventListener("input", updateSecrets);
-      }
-      // 2FA: ensure timer updates
-      if(typeof updateTimer==='function'){
-        updateTimer();
-        setInterval(updateTimer,1000);
-      }
-    })();
-  </script>
-
-  <script>
-    (function(){
-      const gbtn = document.getElementById('globalThemeToggle');
-      if (gbtn){
-        function updateThemeIcon(){
-          gbtn.textContent = document.body.classList.contains('dark') ? '☀️' : '🌙';
-        }
-        gbtn.addEventListener('click', function(e){
-          e.preventDefault();
-          document.body.classList.toggle('dark');
-          updateThemeIcon();
-        });
-        updateThemeIcon();
-      }
-      // 2FA: ensure secretBox triggers updateSecrets
-      const sb = document.getElementById("secretBox");
-      if (sb && typeof updateSecrets==='function'){
-        sb.addEventListener("input", updateSecrets);
-      }
-      // 2FA: timer logic restored
-      if (typeof refreshCodesForCurrentStep==='function'){
-        let lastStep=-1;
-        const period=30;
-        setInterval(async ()=>{
-          const now=Math.floor(Date.now()/1000);
-          const step=Math.floor(now/period);
-          let left=period - (now % period);
-          if(left===0) left=period;
-          const tEl=document.getElementById("timer");
-          if(tEl) tEl.textContent=left;
-          if(step!==lastStep){
-            lastStep=step;
-            if(typeof secrets!=='undefined' && secrets.length){
-              await refreshCodesForCurrentStep();
-            }
-          }
-        },1000);
-      }
-    })();
-  </script>
 
 <script>
 (function(){
@@ -1299,321 +1384,629 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
       }
     });
   }
-  if(document.getElementById("fa")) initScale();
-})();
-</script>
 
-
-<script>
-window.showToast = function(msg){
-  const toast=document.createElement("div");
-  toast.className="copy-toast show";
-  toast.textContent=msg;
-  document.body.appendChild(toast);
-  setTimeout(()=>toast.classList.add("hide"),2000);
-  setTimeout(()=>toast.remove(),2500);
-};
-</script>
-
-
-
-
-
-<!-- Text toolbox scripts START -->
-<script>
-document.addEventListener("DOMContentLoaded", function(){
-
-/* ====== 主题切换 ====== */
-const themeBtn=document.getElementById('themeToggle');
-function setTheme(mode){
-  if(mode==='dark'){document.body.classList.add('dark');themeBtn.textContent='🌞 浅色模式';}
-  else{document.body.classList.remove('dark');themeBtn.textContent='🌙 暗黑模式';}
-  localStorage.setItem('tools_theme',mode);
-}
-if(themeBtn){
-  themeBtn.onclick=()=>setTheme(document.body.classList.contains('dark')?'light':'dark');
-  setTheme(localStorage.getItem('tools_theme')||'light');
-}
-
-/* ====== 标签切换 ====== */
-document.querySelectorAll('.nav-btn').forEach(btn=>{
-  btn.onclick=()=>{
-    document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
-    btn.classList.add('active');
-    document.querySelectorAll('.tab-pane').forEach(p=>p.style.display='none');
-    document.getElementById('pane-'+btn.dataset.tab).style.display='block';
-  };
-});
-
-/* ====== 公共函数 ====== */
-function toast(msg){
-  const box=document.getElementById('toast');
-  const div=document.createElement('div');
-  div.className='toast';div.textContent=msg;
-  box.appendChild(div); requestAnimationFrame(()=>div.classList.add('show'));
-  setTimeout(()=>{div.classList.remove('show'); setTimeout(()=>div.remove(),200)},1500);
-}
-function fileTimestamp(){
-  const d=new Date(),p=n=>String(n).padStart(2,'0');
-  return `${d.getFullYear()}${p(d.getMonth()+1)}${p(d.getDate())}${p(d.getHours())}${p(d.getMinutes())}${p(d.getSeconds())}`;
-}
-function saveTxt(name,content){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(new Blob([content],{type:'text/plain'}));
-  a.download=name;a.click();URL.revokeObjectURL(a.href);
-}
-function aoaToXlsx(rows,name){
-  if(typeof XLSX==='undefined'){toast('未加载XLSX库');return;}
-  const wb=XLSX.utils.book_new();
-  const ws=XLSX.utils.aoa_to_sheet(rows);
-  const colWidths=[];
-  rows.forEach(r=>{r.forEach((cell,i)=>{const len=String(cell||'').length;colWidths[i]=Math.max(colWidths[i]||10,len+2);});});
-  ws['!cols']=colWidths.map(w=>({wch:w}));
-  XLSX.utils.book_append_sheet(wb,ws,'Sheet1');XLSX.writeFile(wb,name);
-}
-
-/* ====== 去重 ====== */
-document.getElementById('dedupeRun').onclick=()=>{
-  let lines=document.getElementById('dedupeIn').value.split(/
-?
-/);
-  if(document.getElementById('trimDedupe').checked) lines=lines.map(s=>s.trim()).filter(s=>s);
-  const seen=new Set(),out=[];
-  for(const s of lines){const k=document.getElementById('caseDedupe').checked?s.toLowerCase():s;
-    if(!seen.has(k)){seen.add(k);out.push(s);}
-  }
-  document.getElementById('dedupeOut').value=out.join('
-');
-  document.getElementById('dedupeStat').textContent=`原${lines.length}行 → 去重后${out.length}行`;
-  toast('去重完成');
-};
-document.getElementById('dedupeCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('dedupeOut').value);toast('已复制');};
-document.getElementById('dedupeTxt').onclick=()=>saveTxt(`文本去重复${fileTimestamp()}.txt`,document.getElementById('dedupeOut').value);
-document.getElementById('dedupeXlsx').onclick=()=>aoaToXlsx([['结果'],...document.getElementById('dedupeOut').value.split('
-').map(v=>[v])],`文本去重复${fileTimestamp()}.xlsx`);
-document.getElementById('dedupeClear').onclick=()=>{document.getElementById('dedupeOut').value='';document.getElementById('dedupeStat').textContent='—';};
-
-/* ====== 批量增加 ====== */
-document.getElementById('affixRun').onclick=()=>{
-  let lines=document.getElementById('affixIn').value.split(/
-?
-/).map(s=>s.trim()).filter(s=>s);
-  const add=document.getElementById('affixStr').value;
-  const side=document.querySelector('input[name="affixSide"]:checked').value;
-  const out=lines.map(s=>side==='left'?add+s:s+add);
-  document.getElementById('affixOut').value=out.join('
-');
-  document.getElementById('affixStat').textContent=`输入${lines.length}行 → 输出${out.length}行`;
-  toast('批量完成');
-};
-document.getElementById('affixCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('affixOut').value);toast('已复制');};
-document.getElementById('affixTxt').onclick=()=>saveTxt(`文本批量增加${fileTimestamp()}.txt`,document.getElementById('affixOut').value);
-document.getElementById('affixXlsx').onclick=()=>aoaToXlsx([['结果'],...document.getElementById('affixOut').value.split('
-').map(v=>[v])],`文本批量增加${fileTimestamp()}.xlsx`);
-document.getElementById('affixClear').onclick=()=>{document.getElementById('affixOut').value='';document.getElementById('affixStat').textContent='—';};
-
-/* ====== 分列 ====== */
-function buildSplitTable(rows){
-  const table=document.getElementById('splitTable');
-  table.innerHTML='';
-  if(!rows.length){window.splitRows=[];window.splitColCount=0;return;}
-  const colCount=Math.max(...rows.map(r=>r.length));
-  const normalized=rows.map(r=>Array.from({length:colCount},(_,i)=>r[i]??''));
-  const colgroup=document.createElement('colgroup');
-  for(let i=0;i<colCount;i++){const col=document.createElement('col');col.style.width=`${100/colCount}%`;colgroup.appendChild(col);}
-  table.appendChild(colgroup);
-  const thead=document.createElement('thead');const trh=document.createElement('tr');
-  for(let i=0;i<colCount;i++){const th=document.createElement('th');th.textContent=`列${i+1}`;trh.appendChild(th);}
-  thead.appendChild(trh);table.appendChild(thead);
-  const tbody=document.createElement('tbody');
-  normalized.forEach(r=>{const tr=document.createElement('tr');r.forEach(cell=>{const td=document.createElement('td');td.textContent=cell;tr.appendChild(td)});tbody.appendChild(tr);});
-  table.appendChild(tbody);
-  window.splitRows=normalized;window.splitColCount=colCount;
-}
-document.getElementById('splitRun').onclick=()=>{
-  const sep=document.getElementById('splitSep').value;if(!sep){toast('请输入分隔符');return;}
-  const lines=document.getElementById('splitIn').value.split(/
-?
-/).filter(s=>s);
-  const rows=lines.map(l=>l.split(sep).map(c=>c.trim()));
-  buildSplitTable(rows);
-  document.getElementById('splitStat').textContent=`行 ${rows.length} ｜ 最大列数 ${window.splitColCount}`;
-  toast('分列完成');
-};
-document.getElementById('splitCopy').onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast('没有可复制的数据');return;}navigator.clipboard.writeText(rows.map(r=>r.join('	')).join('
-'));toast('已复制TSV');};
-document.getElementById('splitTxt').onclick=()=>{const rows=window.splitRows||[];if(!rows.length){toast('没有可导出的数据');return;}saveTxt(`文本分列${fileTimestamp()}.txt`,rows.map(r=>r.join('	')).join('
-'));};
-document.getElementById('splitXlsx').onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast('没有可导出的数据');return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
-document.getElementById('splitClear').onclick=()=>{document.getElementById('splitTable').innerHTML='';document.getElementById('splitStat').textContent='—';};
-
-/* ====== 密码生成 ====== */
-function genPwd(len,upper,num,sym){
-  let lower='abcdefghijklmnopqrstuvwxyz';
-  let chars=lower;
-  if(upper) chars+=lower.toUpperCase();
-  if(num) chars+='23456789';
-  if(sym) chars+='!@#$%^&*()-_=+[]{};:,.<>?';
-  chars=chars.replace(/[oOlI]/g,'');
-  if(!chars) return '';
-  let pwd='';for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
-  return pwd;
-}
-function evalStrength(pwd,upper,num,sym){
-  let score=0;
-  if(pwd.length>=12) score++;
-  if(upper) score++;
-  if(num) score++;
-  if(sym) score++;
-  return score;
-}
-document.getElementById('pwdRun').onclick=()=>{
-  const len=+document.getElementById('pwdLen').value;
-  const cnt=+document.getElementById('pwdCount').value;
-  const upper=document.getElementById('pwdUpper').checked,
-        num=document.getElementById('pwdNum').checked,
-        sym=document.getElementById('pwdSym').checked;
-  const out=[];for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
-  document.getElementById('pwdOut').value=out.join('
-');
-  const score=evalStrength(out[0],upper,num,sym);
-  const bar=document.getElementById('strengthFill');
-  if(score<=1){bar.className='strength-fill weak';bar.style.width='33%';}
-  else if(score<=3){bar.className='strength-fill medium';bar.style.width='66%';}
-  else{bar.className='strength-fill strong';bar.style.width='100%';}
-  toast('生成完成');
-};
-document.getElementById('pwdCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('pwdOut').value);toast('已复制');};
-document.getElementById('pwdTxt').onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById('pwdOut').value);
-document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document.getElementById('pwdOut').value.split('
-').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
-document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
-
-});
-</script>
-<!-- Text toolbox scripts END -->
-
-
-<script>
-// Apply saved theme on load
-(function(){
-  const savedTheme = localStorage.getItem("theme") || "light";
-  document.body.classList.add(savedTheme);
-})();
-
-function toggleTheme(){
-  if(document.body.classList.contains("dark")){
-    document.body.classList.remove("dark");
-    document.body.classList.add("light");
-    localStorage.setItem("theme","light");
-  } else {
-    document.body.classList.remove("light");
-    document.body.classList.add("dark");
-    localStorage.setItem("theme","dark");
-  }
-}
-</script>
-
-
-<script>
-(function(){
-  // 初始应用主题（记忆）
-  const savedTheme = localStorage.getItem("theme") || "light";
-  document.body.classList.add(savedTheme);
-
-  // 切换函数
-  function toggleTheme(){
-    if(document.body.classList.contains("dark")){
-      document.body.classList.remove("dark");
-      document.body.classList.add("light");
-      localStorage.setItem("theme","light");
-    } else {
-      document.body.classList.remove("light");
-      document.body.classList.add("dark");
-      localStorage.setItem("theme","dark");
-    }
-    syncIcon();
-  }
-
-  // 绑定到导航里的图标
-  const btn = document.getElementById("globalThemeToggle");
-  function syncIcon(){
-    if(!btn) return;
-    btn.textContent = document.body.classList.contains("dark") ? "☀️" : "🌙";
-  }
-  if(btn){
-    btn.addEventListener("click", toggleTheme);
-    syncIcon(); // 初始根据状态刷新图标
-  }
-
-  // 兼容：如页面其他地方也有 themeToggle 元素
-  const alt = document.getElementById("themeToggle");
-  if(alt && alt !== btn){
-    alt.addEventListener("click", toggleTheme);
-  }
-})();
-</script>
-
-
-<script>
-// v18 主题切换：自适应按钮、可记忆、不依赖现有结构
-(function(){
-  const ROOT = document.body;
-  const THEMES = ["light","dark"];
-
-  // 清理并应用已保存主题（若无保存，保持现状或默认 light）
-  const saved = localStorage.getItem("theme");
-  THEMES.forEach(c => ROOT.classList.remove(c));
-  ROOT.classList.add(saved ? saved : (ROOT.classList.contains("dark") ? "dark" : "light"));
-
-  function setTheme(t){
-    THEMES.forEach(c => ROOT.classList.remove(c));
-    ROOT.classList.add(t);
-    localStorage.setItem("theme", t);
-    syncIcon();
-  }
-  function toggle(){
-    setTheme(ROOT.classList.contains("dark") ? "light" : "dark");
-  }
-  function ensureToggleButton(){
-    let btn = document.getElementById("globalThemeToggle");
-    if(!btn){
-      const h2 = document.querySelector("nav h2");
-      if(h2){
-        btn = document.createElement("span");
-        btn.id = "globalThemeToggle";
-        btn.style.cursor = "pointer";
-        btn.style.marginLeft = "8px";
-        btn.title = "切换日间/夜间";
-        h2.appendChild(btn);
-      }
-    }
-    if(btn){
-      btn.addEventListener("click", toggle);
-      syncIcon();
-    }
-  }
-  function syncIcon(){
-    const btn = document.getElementById("globalThemeToggle");
-    if(btn){
-      btn.textContent = ROOT.classList.contains("dark") ? "☀️" : "🌙";
+  function initTheme(){
+    const savedTheme = localStorage.getItem("tools_theme")||"light";
+    if(typeof setTheme==='function'){
+      if (document.getElementById('themeToggle')) { setTheme(savedTheme); }
     }
   }
 
   // 初始化
-  ensureToggleButton();
-  // 暴露只读接口以便其他脚本（如果有）调用
-  window.__toggleTheme = toggle;
-  window.__setTheme = setTheme;
+  initScale();
+  initTheme();
 })();
+
+// 全局主题切换
+document.addEventListener('DOMContentLoaded', function() {
+    const globalThemeToggle = document.getElementById('globalThemeToggle');
+  if (globalThemeToggle) {
+    globalThemeToggle.addEventListener('click', function() {
+      document.body.classList.toggle('dark');
+      const isDarkMode = document.body.classList.contains('dark');
+      localStorage.setItem('tools_theme', isDarkMode ? 'dark' : 'light');
+      globalThemeToggle.textContent = isDarkMode ? '🌞' : '🌙';
+      // >>> 新增：同步 2FA 容器的暗色类，保证与全局一致
+      (function syncFaToBody(){
+        var fa = document.getElementById('fa');
+        if(fa){ fa.classList.toggle('dark', isDarkMode); }
+      })();
+    });
+
+    // Apply saved theme on load
+    const savedGlobalTheme = localStorage.getItem('tools_theme');
+    if (savedGlobalTheme === 'dark') {
+      document.body.classList.add('dark');
+      globalThemeToggle.textContent = '🌞';
+    } else {
+      document.body.classList.remove('dark');
+      globalThemeToggle.textContent = '🌙';
+    }
+    // >>> 新增：初始加载时同步 2FA 容器与全局主题
+    (function syncFaToBodyOnLoad(){
+      var fa = document.getElementById('fa');
+      if(fa){ fa.classList.toggle('dark', document.body.classList.contains('dark')); }
+    })();
+    }
+
+  // Ensure the 2FA theme toggle also uses 'tools_theme' for consistency
+  const faThemeToggle = document.getElementById('themeToggle');
+  if (faThemeToggle) {
+    faThemeToggle.addEventListener('click', function() {
+      const faElement = document.getElementById('fa');
+      faElement.classList.toggle('dark');
+      const isDarkMode = faElement.classList.contains('dark');
+      localStorage.setItem('tools_theme', isDarkMode ? 'dark' : 'light');
+      faThemeToggle.textContent = isDarkMode ? '🌞 浅色模式' : '🌙 暗黑模式';
+    });
+
+    // Apply saved theme on load for 2FA section
+    const savedFaTheme = localStorage.getItem('tools_theme');
+    if (savedFaTheme === 'dark') {
+      document.getElementById('fa').classList.add('dark');
+      faThemeToggle.textContent = '🌞 浅色模式';
+    } else {
+      document.getElementById('fa').classList.remove('dark');
+      faThemeToggle.textContent = '🌙 暗黑模式';
+    }
+  }
+
+});
+
+// 标签切换功能
+document.querySelectorAll('nav button').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const tab = btn.dataset.tab;
+    if (!tab) return;
+    
+    // 更新按钮状态
+    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    
+    // 更新内容区域
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+    const section = document.getElementById(tab);
+    if (section) section.classList.add('active');
+  });
+});
+</script>
+
+
+<script>
+async function loadScriptOnce(src, id){
+  return new Promise((resolve, reject)=>{
+    if(id && document.getElementById(id)) return resolve();
+    const s=document.createElement('script');
+    s.src=src; if(id) s.id=id;
+    s.onload=()=>resolve(); s.onerror=()=>reject(new Error('Failed to load '+src));
+    document.head.appendChild(s);
+  });
+}
+async function ensureSolBatchDeps(){
+  if(typeof window.solanaWeb3==='undefined'){
+    await loadScriptOnce('https://unpkg.com/@solana/web3.js@1.95.4/lib/index.iife.min.js','solana-web3-iife');
+  }
+  if(typeof window.XLSX==='undefined'){
+    await loadScriptOnce('https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js','xlsx-full');
+  }
+}
+
+
+async function initSolBatchTool() {
+  await ensureSolBatchDeps();
+
+  if(window.solBatchInited) return;
+  window.solBatchInited = true;
+  
+    const LAMPORTS_PER_SOL = 1_000_000_000n;
+
+    function lamportsToSolString(lam){
+      try{
+        const b=BigInt(lam); const w=b/LAMPORTS_PER_SOL; const f=b%LAMPORTS_PER_SOL;
+        if(f===0n) return w.toString();
+        let fs=f.toString().padStart(9,'0'); fs=fs.replace(/0+$/,'');
+        return w+'.'+fs;
+      }catch{return '0'}
+    }
+
+    function parseLines(raw){
+      const lines=(raw||'').split(/\r?\n/);
+      const items=[];
+      for(let i=0;i<lines.length;i++){
+        const txt=lines[i].trim();
+        if(!txt) continue;
+        items.push({ line:i+1, address:txt });
+      }
+      return items;
+    }
+
+    async function copyText(text){
+      try{ await navigator.clipboard.writeText(text); return true }catch{ return false }
+    }
+    function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+    function showToast(message){ try{ toast(message); }catch(e){} }
+
+    const elRpc=document.getElementById('rpc');
+    const elRun=document.getElementById('runBtn');
+    const elClear=document.getElementById('clearBtn');
+    const elExport=document.getElementById('exportXlsxBtn');
+    const elCopy=document.getElementById('copyBtn');
+    const elSort=document.getElementById('sortBtn');
+    const elRetry=document.getElementById('retryFailedBtn');
+    const elPing=document.getElementById('pingBtn');
+    const elLatency=document.getElementById('latency');
+    const elBar=document.getElementById('bar');
+    const elValid=document.getElementById('validCount');
+    const elSuccess=document.getElementById('successCount');
+    const elFail=document.getElementById('failCount');
+    const elSum=document.getElementById('sumSol');
+    const elMsg=document.getElementById('msg');
+    const elList=document.getElementById('list');
+    const elThreads=document.getElementById('threads');
+    const elDelay=document.getElementById('delay');
+    const elTbody=document.getElementById('tbody');
+    const elTableContainer = elTbody.parentElement.parentElement;
+
+    let rows=[];
+    let originalRows=[];
+    let sorted=false;
+
+    elClear.onclick=()=>{
+      elList.value='';elTbody.innerHTML='';rows=[];originalRows=[];sorted=false;
+      elBar.style.width='0%';elValid.textContent='0';elSuccess.textContent='0';elFail.textContent='0';
+      elSum.textContent='0';elMsg.textContent='';
+      elExport.disabled=elCopy.disabled=elSort.disabled=true;
+      elSort.textContent='按余额排序';
+      elMsg.classList.remove('error-text');
+    };
+
+    elExport.onclick=()=>{
+      if(!rows.length) return;
+      const wb = XLSX.utils.book_new();
+      const sheetData = [['#','地址','SOL','状态']];
+      rows.forEach(r=>{
+        sheetData.push([r.index, r.address, r.sol, r.status]);
+      });
+      // 统计信息
+      sheetData.push([]);
+      sheetData.push(['统计信息','有效地址:'+elValid.textContent,'成功:'+elSuccess.textContent,'失败:'+elFail.textContent,'总余额:'+elSum.textContent+' SOL']);
+      const ws = XLSX.utils.aoa_to_sheet(sheetData);
+      // 自动列宽
+      const colWidths = sheetData[0].map((_, i) => Math.max(...sheetData.map(row => (row[i] ? String(row[i]).length : 0))) + 2);
+      ws['!cols'] = colWidths.map(w => ({ wch: w }));
+      XLSX.utils.book_append_sheet(wb, ws, "查询结果");
+      XLSX.writeFile(wb, `sol-balances-${Date.now()}.xlsx`);
+    };
+
+    elCopy.onclick=async()=>{
+      if(!rows.length) return;
+      const header=['#','Address','SOL','Status'];
+      const lines=[header.join('\t')];
+      for(const r of rows) lines.push([r.index,r.address,r.sol,r.status].join('\t'));
+      if(await copyText(lines.join('\n'))){
+        showToast('复制成功');
+      }else{
+        showToast('复制失败');
+      }
+    };
+
+    
+    // === DO NOT MODIFY START: elRetry.onclick (失败重试逻辑) ===
+elRetry.onclick=async()=>{
+      const failedRows = rows.filter(r=>r.status==='失败');
+      if(!failedRows.length){ showToast('没有失败的地址'); return; }
+      elRetry.disabled = true;
+      const connection=new solanaWeb3.Connection(elRpc.value.trim(),{commitment:'confirmed'});
+      const threads=Math.max(1, Math.min(10, parseInt(elThreads.value)||2));
+      const delay=Math.max(0, Math.min(5000, parseInt(elDelay.value)||500));
+      let cur=0;
+      async function worker(){
+        while(cur<failedRows.length){
+          const i = cur++;
+          const item = failedRows[i];
+          try{
+            const info = await connection.getAccountInfo(new solanaWeb3.PublicKey(item.address), {commitment:'confirmed'});
+            if(info){
+              const lam=BigInt(info.lamports);
+              const sol=lamportsToSolString(lam);
+              rows[item.index-1]={ index:item.index, address:item.address, lamports:lam, sol:sol, status:'成功' };
+              originalRows[item.index-1]=rows[item.index-1];
+            }else{
+              rows[item.index-1]={ index:item.index, address:item.address, lamports:0n, sol:'0', status:'失败' };
+              originalRows[item.index-1]=rows[item.index-1];
+            }
+          }catch(e){
+            rows[item.index-1]={ index:item.index, address:item.address, lamports:0n, sol:'0', status:'失败' };
+            originalRows[item.index-1]=rows[item.index-1];
+          }
+          appendRow(rows[item.index-1], true);
+          const sumLam = rows.reduce((acc, r) => acc + (r.lamports || 0n), 0n);
+          elSum.textContent = lamportsToSolString(sumLam);
+          const validNow = rows.length;
+          const succNow = rows.filter(r=>r.status==='成功').length;
+          const failNow = rows.filter(r=>r.status==='失败').length;
+          elValid.textContent = String(validNow);
+          elSuccess.textContent = String(succNow);
+          elFail.textContent = String(failNow);
+
+          await sleep(delay);
+        }
+      }
+      await Promise.all(Array.from({length: threads}, ()=>worker()));
+      const sumLam = rows.reduce((acc, r) => acc + (r.lamports || 0n), 0n);
+      elSum.textContent = lamportsToSolString(sumLam);
+      const _succEnd = rows.filter(r=>r.status==='成功').length;
+      const _failEnd = rows.filter(r=>r.status==='失败').length;
+      elSuccess.textContent = String(_succEnd);
+      elFail.textContent = String(_failEnd);
+      if(rows.filter(r=>r.status==='失败').length===0){ elRetry.style.display='none'; elRetry.disabled=true; }
+      if(rows.filter(r=>r.status==='失败').length===0){ elRetry.style.display='none'; elRetry.disabled=true; }
+      showToast('失败地址已重试完成');
+// === DO NOT MODIFY END: elRetry.onclick ===
+    };
+
+// === DO NOT MODIFY START: elSort.onclick (排序逻辑) ===
+elSort.onclick=()=>{
+      if(!rows.length) return;
+      if(!sorted){
+        rows = [...rows].sort((a,b)=>parseFloat(b.sol)-parseFloat(a.sol));
+        sorted=true;                       // 先设置，再渲染
+        renderTable(rows);
+        elSort.textContent='恢复原始顺序';
+      }else{
+        rows = [...originalRows];
+        sorted=false;                      // 先设置，再渲染
+        renderTable(rows);
+        elSort.textContent='按余额排序';
+      }
+    };
+
+    elPing.onclick=async()=>{
+      const url=elRpc.value;
+      const start=performance.now();
+      try{
+        await fetch(url,{method:'POST',body:JSON.stringify({jsonrpc:"2.0",id:1,method:"getHealth"}),headers:{'Content-Type':'application/json'}});
+        const ms=Math.round(performance.now()-start);
+        elLatency.textContent=ms+' ms';
+      }catch{ elLatency.textContent='超时'; }
+    };
+
+    // === DO NOT MODIFY START: elRun.onclick (初始化逻辑) ===
+elRun.onclick=async()=>{
+      const entries=parseLines(elList.value);
+      if(!entries.length){ elMsg.textContent='请输入地址'; elMsg.classList.remove('error-text'); return; }
+
+      const invalidLines=[];
+      for(const it of entries){
+        try{ new solanaWeb3.PublicKey(it.address); }
+        catch{ invalidLines.push(it.line); }
+      }
+      if(invalidLines.length){
+        elMsg.textContent = '⚠️ 第 ' + invalidLines.join(', ') + ' 行地址格式错误。请删除后再查询。';
+        elMsg.classList.add('error-text');
+        return;
+      }
+
+      elRun.disabled=true; elExport.disabled=elCopy.disabled=elSort.disabled=true;
+      elTbody.innerHTML=''; rows=[]; originalRows=[]; sorted=false;
+      elBar.style.width='0%';
+      elValid.textContent=String(entries.length);
+      elSuccess.textContent='0'; elFail.textContent='0';
+      elSum.textContent='0'; elMsg.textContent='';
+      elMsg.classList.remove('error-text');
+      elSort.textContent='按余额排序';
+
+      const threads=Math.max(1, Math.min(10, parseInt(elThreads.value)||2));
+      const delay=Math.max(0, Math.min(5000, parseInt(elDelay.value)||500));
+      const connection=new solanaWeb3.Connection(elRpc.value.trim(),{commitment:'confirmed'});
+
+      let total=0n, successCount=0, failCount=0;
+      rows = entries.map(it=>({
+        index:it.line,
+        address:it.address,
+        sol:'0',
+        status:'等待'
+      }));
+      originalRows=[...rows];
+      renderTable(rows);
+      
+      let currentIndex = 0;
+      async function worker(){
+        while(currentIndex < entries.length){
+          const idx = currentIndex++;
+          const it = entries[idx];
+          try{
+            const info = await connection.getAccountInfo(new solanaWeb3.PublicKey(it.address), {commitment:'confirmed'});
+            if(info){
+              const lam=BigInt(info.lamports);
+              const sol=lamportsToSolString(lam);
+              rows[idx]={ index:it.line, address:it.address, lamports: lam, sol:sol, status:'成功' };
+originalRows[idx]=rows[idx];
+successCount++;
+const sumLam = rows.reduce((acc, r) => acc + (r.lamports || 0n), 0n);
+elSum.textContent = lamportsToSolString(sumLam);
+            }else{
+              rows[idx]={ index:it.line, address:it.address, lamports:0n, sol:'0', status:'失败' };
+              originalRows[idx]=rows[idx];
+              failCount++;
+            }
+          }catch(e){
+            rows[idx]={ index:it.line, address:it.address, lamports:0n, sol:'0', status:'失败' };
+            originalRows[idx]=rows[idx];
+            failCount++;
+          }
+          elBar.style.width = Math.round(((successCount+failCount)/entries.length)*100)+'%';
+          elSuccess.textContent = String(successCount);
+          elFail.textContent = String(failCount);
+          renderTable(rows);
+          await sleep(delay);
+        }
+      }
+      await Promise.all(Array.from({length: threads}, ()=>worker()));
+      elRun.disabled=false; elExport.disabled=elCopy.disabled=elSort.disabled=false;
+      if(rows.filter(r=>r.status==='失败').length>0){ elRetry.style.display='inline-block'; elRetry.disabled=false; }
+      showToast('查询完成');
+// === DO NOT MODIFY END: elRun.onclick ===
+    };
+
+    function renderTable(data){
+      elTbody.innerHTML='';
+      data.forEach(r=>appendRow(r));
+    }
+
+    function appendRow(r, replace=false){
+      if(replace){
+        const existingRow = elTbody.querySelector(`tr[data-index="${r.index}"]`);
+        if(existingRow) existingRow.remove();
+      }
+      const tr=document.createElement('tr');
+      tr.setAttribute('data-index', r.index);
+      tr.innerHTML=`<td>${r.index}</td><td>${r.address}</td><td>${r.sol}</td><td><span class="tag tag-${r.status==='成功'?'success':r.status==='失败'?'fail':'wait'}">${r.status}</span></td>`;
+      elTbody.appendChild(tr);
+    }
+
+    function toast(msg){
+      const t=document.getElementById('toast');
+      if(!t) return;
+      t.textContent=msg; t.classList.add('show');
+      setTimeout(()=>t.classList.remove('show'),2000);
+    }
+}
+
+// 当切换到 SOL 批量查询标签时初始化
+document.addEventListener('DOMContentLoaded', function() {
+  const solBatchBtn = document.querySelector('button[data-tab="sol-batch"]');
+  if (solBatchBtn) {
+    solBatchBtn.addEventListener('click', initSolBatchTool);
+  }
+});
+</script>
+
+
+<style>
+/* 修复：夜间模式下文本工具区仍然白底的问题 */
+body.dark #dedupe .card,
+body.dark #affix .card,
+body.dark #split .card,
+body.dark #passwd .card {
+  background:#2a2a2a !important;
+  border:1px solid #444 !important;
+  color:#e5e5e5 !important;
+}
+
+body.dark #dedupe textarea,
+body.dark #affix textarea,
+body.dark #split textarea,
+body.dark #passwd textarea,
+body.dark #dedupe input,
+body.dark #affix input,
+body.dark #split input,
+body.dark #passwd input {
+  background:#2e2e2e !important;
+  border:2px solid #444 !important;
+  color:#e5e5e5 !important;
+  -webkit-text-fill-color:#e5e5e5 !important;
+}
+
+body.dark #dedupe textarea:focus,
+body.dark #affix textarea:focus,
+body.dark #split textarea:focus,
+body.dark #passwd textarea:focus,
+body.dark #dedupe input:focus,
+body.dark #affix input:focus,
+body.dark #split input:focus,
+body.dark #passwd input:focus {
+  background:#2a2a2a !important;
+  border:2px solid #3399ff !important;
+  color:#e5e5e5 !important;
+}
+</style>
+
+
+<style>
+/* 修复：夜间模式下 文本批量增加工具 分隔符输入框聚焦后变白的问题 */
+body.dark #affix #affixStr,
+body.dark #affix #affixStr:focus {
+  background-color:#2e2e2e !important;
+  border:2px solid #444 !important;
+  color:#e5e5e5 !important;
+  -webkit-text-fill-color:#e5e5e5 !important;
+  box-shadow:none !important; /* 去掉浅蓝/白色内阴影 */
+}
+</style>
+
+
+<style>
+/* 修复：夜间模式下 autofill 输入框变蓝/白的问题 */
+body.dark #affix #affixStr:-webkit-autofill {
+  background-color:#2e2e2e !important;
+  -webkit-box-shadow: 0 0 0px 1000px #2e2e2e inset !important;
+  -webkit-text-fill-color:#e5e5e5 !important;
+  border:2px solid #444 !important;
+}
+body.dark #affix #affixStr:-webkit-autofill:focus {
+  background-color:#2a2a2a !important;
+  -webkit-box-shadow: 0 0 0px 1000px #2a2a2a inset !important;
+  -webkit-text-fill-color:#e5e5e5 !important;
+  border:2px solid #3399ff !important;
+}
+</style>
+
+
+<style>
+/* 修复：夜间模式下 文本批量增加工具 & 文本分列工具 的分隔符输入框 autofill 变蓝的问题 */
+body.dark #affix #affixStr,
+body.dark #affix #affixStr:focus,
+body.dark #affix #affixStr:-webkit-autofill,
+body.dark #affix #affixStr:-webkit-autofill:focus,
+body.dark #split #splitSep,
+body.dark #split #splitSep:focus,
+body.dark #split #splitSep:-webkit-autofill,
+body.dark #split #splitSep:-webkit-autofill:focus {
+  background-color:#2e2e2e !important;
+  -webkit-box-shadow: 0 0 0px 1000px #2e2e2e inset !important;
+  -webkit-text-fill-color:#e5e5e5 !important;
+  border:2px solid #444 !important;
+}
+body.dark #affix #affixStr:focus,
+body.dark #affix #affixStr:-webkit-autofill:focus,
+body.dark #split #splitSep:focus,
+body.dark #split #splitSep:-webkit-autofill:focus {
+  background-color:#2a2a2a !important;
+  -webkit-box-shadow: 0 0 0px 1000px #2a2a2a inset !important;
+  border:2px solid #3399ff !important;
+}
+</style>
+
+
+<style>
+/* 固定 2FA 验证码列表复制按钮样式：灰底白字，日夜模式一致 */
+#fa td:last-child .btn {
+  background:#666 !important;
+  color:#fff !important;
+  border:none !important;
+}
+#fa td:last-child .btn:hover {
+  background:#555 !important;
+  color:#fff !important;
+}
+</style>
+
+
+<style>
+/* 固定 2FA 验证码列表复制按钮样式：浅灰底黑字，日夜模式一致 */
+#fa td:last-child .btn {
+  background:#ddd !important;
+  color:#000 !important;
+  border:none !important;
+}
+#fa td:last-child .btn:hover {
+  background:#ccc !important;
+  color:#000 !important;
+}
+</style>
+
+
+<style>
+/* 全局右上角 Toast 提示样式 */
+#toast {
+  visibility: hidden;
+  min-width: 140px;
+  max-width: 260px;
+  background: rgba(0,0,0,0.8);
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+  font-size: 14px;
+}
+#toast.show {
+  visibility: visible;
+  animation: fadein 0.3s, fadeout 0.3s 1.7s;
+}
+@keyframes fadein { from{opacity:0; right:0;} to{opacity:1; right:20px;} }
+@keyframes fadeout { from{opacity:1; right:20px;} to{opacity:0; right:0;} }
+</style>
+<script>
+// 全局 Toast 提示函数
+function showToast(msg){
+  const toast=document.getElementById("toast");
+  if(!toast) return;
+  toast.textContent=msg;
+  toast.className="show";
+  setTimeout(()=>{ toast.className=toast.className.replace("show",""); },2000);
+}
+</script>
+
+
+<script>
+// 兼容旧提示函数调用，统一走 showToast
+function toast(msg){ showToast(msg); }
+function copyToast(msg){ showToast(msg); }
+function successToast(msg){ showToast(msg); }
+</script>
+
+<div id="toast-container-global"></div>
+
+<style>
+/* === Global toast (top-right) === */
+#toast-container-global{
+  position:fixed;
+  top:20px;
+  right:20px;
+  z-index:99999;
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  pointer-events:none; /* clicks pass through */
+}
+#toast-container-global .toast{
+  background:rgba(0,0,0,0.85);
+  color:#fff;
+  padding:8px 12px;
+  border-radius:8px;
+  font-size:14px;
+  opacity:0;
+  transform:translateY(-6px);
+  animation:toast-in .2s forwards, toast-out .2s 1.6s forwards;
+  box-shadow:0 6px 16px rgba(0,0,0,0.25);
+  pointer-events:auto; /* allow selecting text if needed */
+}
+@keyframes toast-in{ to{ opacity:1; transform:translateY(0);} }
+@keyframes toast-out{ to{ opacity:0; transform:translateY(-6px);} }
+body.dark #toast-container-global .toast{ background:rgba(0,0,0,0.9); }
+/* Hide legacy, per-section toast containers so they don't capture getElementById('toast') callers */
+section #toast{ display:none !important; }
+</style>
+<script>
+// === Global toast implementation ===
+function showToast(msg){
+  try{
+    var box = document.getElementById('toast-container-global');
+    if(!box){
+      box = document.createElement('div');
+      box.id = 'toast-container-global';
+      document.body.appendChild(box);
+    }
+    var item = document.createElement('div');
+    item.className = 'toast';
+    item.textContent = msg || '';
+    box.appendChild(item);
+    // Remove after animation
+    setTimeout(function(){ if(item && item.parentNode){ item.parentNode.removeChild(item); } }, 2000);
+  }catch(e){ console && console.warn && console.warn('toast error:', e); }
+}
+// === Shims for legacy calls ===
+window.toast = function(msg){ showToast(msg); };
+window.copyToast = function(msg){ showToast(msg || '已复制'); };
+window.successToast = function(msg){ showToast(msg || '成功'); };
 </script>
 
 </body>
 </html>
-
-
-
-
-
-
 
