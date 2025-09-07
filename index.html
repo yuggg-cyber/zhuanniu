@@ -734,6 +734,93 @@ body.dark #sol-batch .tag-fail    { background:#5a1e1e; color:#ffb3b3; border-co
 body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#555; }
 </style>
 
+
+<style>
+/* === 安全增量：手机适配 + 下拉菜单（不破坏原结构） === */
+@media (max-width: 768px) {
+  body { flex-direction: column; height: auto; }
+  nav {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #ccc;
+    padding: 10px;
+    overflow: visible;
+  }
+  main { width: 100%; padding: 10px; }
+  section { padding: 10px; }
+
+  /* 表格横向滚动，避免挤压 */
+  table { display: block; overflow-x: auto; white-space: nowrap; }
+
+  /* 按钮区在手机上更易点 */
+  .btnbar { flex-direction: column; gap: 6px; }
+  textarea, input[type="text"], input[type="number"] { font-size: 14px; padding: 6px; }
+
+  /* 下拉菜单 UI */
+  .menu-toggle {
+    display: inline-block;
+    font-size: 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #f6f6f6;
+    margin-left: 8px;
+  }
+  .menu-items {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .menu-items.open { max-height: 1000px; }
+  .menu-items button {
+    display: block;
+    width: 100%;
+    margin: 6px 0;
+    font-size: 14px;
+    padding: 10px;
+    text-align: left;
+  }
+}
+</style>
+
+
+<style id="mobile-noflash-patch">
+/* --- Mobile no-flash patch (non-destructive) --- */
+@media (max-width: 768px) {
+  /* Hide the original nav buttons at first paint to prevent flash,
+     they will be shown via the dropdown (.menu-items) after JS init */
+  nav > button,
+  nav > hr {
+    display: none !important;
+  }
+
+  /* Ensure dropdown container is hidden until explicitly opened */
+  .menu-items {
+    display: none;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+  }
+  .menu-items.open {
+    display: block;
+    max-height: 1000px;
+  }
+
+  /* Menu toggle button basic look (in case not defined) */
+  .menu-toggle {
+    display: inline-block;
+    font-size: 20px;
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    border-radius: 6px;
+    background: #f6f6f6;
+    margin-left: 8px;
+  }
+}
+</style>
+
 </head>
 <body>
 <nav>
@@ -954,8 +1041,9 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
 </div>
 </div>
 <label>地址列表（每行一个）</label>
-<textarea id="list" placeholder="
-"></textarea>
+<textarea id="list" placeholder="例：
+11111111111111111111111111111111
+7ZP8o..."></textarea>
 <div class="row">
 <button id="runBtn">开始查询</button>
 <button id="clearBtn">清空</button>
@@ -2005,6 +2093,67 @@ function showToast(msg){
 window.toast = function(msg){ showToast(msg); };
 window.copyToast = function(msg){ showToast(msg || '已复制'); };
 window.successToast = function(msg){ showToast(msg || '成功'); };
+</script>
+
+
+<script>
+// === 安全增量：手机端下拉菜单（不破坏原有切换） ===
+document.addEventListener("DOMContentLoaded", function() {
+  try {
+    var nav = document.querySelector("nav");
+    if (!nav) return;
+
+    // 若已经初始化过则跳过
+    if (nav.dataset.dropdownInited === "1") return;
+    nav.dataset.dropdownInited = "1";
+
+    // 创建顶部 ≡ 按钮（放在 h2 内右侧）
+    var h2 = nav.querySelector("h2");
+    if (!h2) {
+      h2 = document.createElement("h2");
+      h2.textContent = "功能导航";
+      nav.insertBefore(h2, nav.firstChild);
+    }
+    if (!h2.querySelector(".menu-toggle")) {
+      var mt = document.createElement("span");
+      mt.className = "menu-toggle";
+      mt.textContent = "≡";
+      h2.appendChild(mt);
+    }
+
+    // 包一层 .menu-items 容器，只收拢按钮和 <hr>
+    if (!nav.querySelector(".menu-items")) {
+      var wrap = document.createElement("div");
+      wrap.className = "menu-items";
+
+      var movable = [];
+      Array.prototype.forEach.call(nav.children, function(el) {
+        if (el.tagName === "BUTTON" || el.tagName === "HR") movable.push(el);
+      });
+      movable.forEach(function(el){ wrap.appendChild(el); });
+      nav.appendChild(wrap);
+    }
+
+    var menuToggle = nav.querySelector(".menu-toggle");
+    var menuItems = nav.querySelector(".menu-items");
+
+    if (menuToggle && menuItems) {
+      menuToggle.addEventListener("click", function() {
+        menuItems.classList.toggle("open");
+      });
+    }
+
+    // 在移动端点击任意导航按钮后自动收起
+    nav.addEventListener("click", function(e) {
+      var btn = e.target.closest("button[data-tab]");
+      if (btn && menuItems && window.matchMedia("(max-width: 768px)").matches) {
+        menuItems.classList.remove("open");
+      }
+    });
+  } catch (err) {
+    console.error("Mobile dropdown init error:", err);
+  }
+});
 </script>
 
 </body>
