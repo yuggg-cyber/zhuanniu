@@ -1238,6 +1238,78 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
 
     (async ()=>{ lastStep=Math.floor(Math.floor(Date.now()/1000)/period); })();
   </script>
+
+<script>
+// === 批量 2FA 验证器点击高亮（亮暗模式自适应） ===
+(function(){
+  const STORAGE_KEY = "lastClicked2FARow_v4";
+
+  function applyHighlight(index) {
+    document.querySelectorAll("#resultTable tr.highlighted-row").forEach(r => r.classList.remove("highlighted-row"));
+    const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
+    if (!rows || rows.length === 0) return;
+    const idx = Number(index);
+    if (!idx || idx < 1 || idx > rows.length) return;
+    rows[idx - 1].classList.add("highlighted-row");
+  }
+
+  function restoreHighlight() {
+    const last = localStorage.getItem(STORAGE_KEY);
+    if (!last) return;
+    applyHighlight(last);
+  }
+
+  document.addEventListener("click", function(e) {
+    const table = e.target.closest && e.target.closest("#resultTable");
+    if (!table) return;
+    const target = e.target.closest("#resultTable .code, #resultTable button");
+    if (!target) return;
+
+    const row = e.target.closest("tr");
+    if (!row) return;
+    const rows = Array.from(row.parentElement.children);
+    const index = rows.indexOf(row) + 1;
+    localStorage.setItem(STORAGE_KEY, index);
+    applyHighlight(index);
+  }, true);
+
+  if (!document.getElementById("twofa-highlight-style")) {
+    const style = document.createElement("style");
+    style.id = "twofa-highlight-style";
+    style.textContent = `
+      #resultTable tr.highlighted-row td {
+        background: #cce5ff !important; /* 亮色模式浅蓝 */
+        transition: background 0.25s ease;
+      }
+      body.dark #resultTable tr.highlighted-row td {
+        background: #204d74 !important; /* 暗色模式深蓝灰 */
+      }
+    `;
+    document.head.appendChild(style);
+  }
+
+  function observeTableBody() {
+    const tbody = document.querySelector("#resultTable tbody");
+    if (!tbody) return;
+    if (tbody._twofa_observer) {
+      try { tbody._twofa_observer.disconnect(); } catch(e){}
+      tbody._twofa_observer = null;
+    }
+    const mo = new MutationObserver(() => setTimeout(restoreHighlight, 50));
+    mo.observe(tbody, { childList: true, subtree: false });
+    tbody._twofa_observer = mo;
+  }
+
+  const tryBind = setInterval(() => {
+    const tbody = document.querySelector("#resultTable tbody");
+    if (tbody) {
+      clearInterval(tryBind);
+      observeTableBody();
+      restoreHighlight();
+    }
+  }, 200);
+})();
+</script>
 </section>
 <section id="dedupe">
 <div class="card"><div class="hd">输入</div><div class="bd">
@@ -1769,7 +1841,7 @@ elRun.onclick=async()=>{
         catch{ invalidLines.push(it.line); }
       }
       if(invalidLines.length){
-        elMsg.textContent = '⚠️ 第 ' + invalidLines.join(', ') + ' 行地址格式错误。请删除后再查询。';
+        elMsg.textContent = ⚠️ 第 ' + invalidLines.join(', ') + ' 行地址格式错误。请删除后再查询。';
         elMsg.classList.add('error-text');
         return;
       }
@@ -2156,6 +2228,3 @@ document.addEventListener("DOMContentLoaded", function() {
 
 </body>
 </html>
-
-
-
