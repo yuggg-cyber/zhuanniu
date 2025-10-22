@@ -1240,10 +1240,11 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
   </script>
 
 <script>
-// === 批量 2FA 验证器点击高亮（亮暗模式自适应） ===
+// === 批量 2FA 验证器点击高亮（浅蓝色） ===
 (function(){
-  const STORAGE_KEY = "lastClicked2FARow_v4";
+  const STORAGE_KEY = "lastClicked2FARow_v3";
 
+  // 应用高亮到指定索引
   function applyHighlight(index) {
     document.querySelectorAll("#resultTable tr.highlighted-row").forEach(r => r.classList.remove("highlighted-row"));
     const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
@@ -1253,12 +1254,14 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
     rows[idx - 1].classList.add("highlighted-row");
   }
 
+  // 恢复上次高亮
   function restoreHighlight() {
     const last = localStorage.getItem(STORAGE_KEY);
     if (!last) return;
     applyHighlight(last);
   }
 
+  // 点击事件（委托）
   document.addEventListener("click", function(e) {
     const table = e.target.closest && e.target.closest("#resultTable");
     if (!table) return;
@@ -1273,21 +1276,20 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
     applyHighlight(index);
   }, true);
 
+  // 注入样式
   if (!document.getElementById("twofa-highlight-style")) {
     const style = document.createElement("style");
     style.id = "twofa-highlight-style";
     style.textContent = `
       #resultTable tr.highlighted-row td {
-        background: #cce5ff !important; /* 亮色模式浅蓝 */
+        background: #bdbdbd !important;
         transition: background 0.25s ease;
-      }
-      body.dark #resultTable tr.highlighted-row td {
-        background: #204d74 !important; /* 暗色模式深蓝灰 */
       }
     `;
     document.head.appendChild(style);
   }
 
+  // 监控表格变化并恢复
   function observeTableBody() {
     const tbody = document.querySelector("#resultTable tbody");
     if (!tbody) return;
@@ -1300,6 +1302,7 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
     tbody._twofa_observer = mo;
   }
 
+  // 初始绑定
   const tryBind = setInterval(() => {
     const tbody = document.querySelector("#resultTable tbody");
     if (tbody) {
@@ -1841,7 +1844,7 @@ elRun.onclick=async()=>{
         catch{ invalidLines.push(it.line); }
       }
       if(invalidLines.length){
-        elMsg.textContent = ⚠️ 第 ' + invalidLines.join(', ') + ' 行地址格式错误。请删除后再查询。';
+        elMsg.textContent = '⚠️ 第 ' + invalidLines.join(', ') + ' 行地址格式错误。请删除后再查询。';
         elMsg.classList.add('error-text');
         return;
       }
