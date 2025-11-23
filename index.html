@@ -1036,7 +1036,7 @@ section #toast{ display:none !important; }
 <div class="menu-items">
   <button class="active" data-tab="sol">SOL账户工具</button><hr/>
   <button data-tab="sol-batch">SOL查询</button><hr/>
-  <button data-tab="2fa">2FA验证器</button><hr/>
+  <button data-tab="fa">2FA验证器</button><hr/>
   
   <!-- >>> 更改部分：将4个文本工具合并为一个入口 <<< -->
   <button data-tab="text-tools">文本工具</button><hr/>
@@ -1289,7 +1289,7 @@ section #toast{ display:none !important; }
 </div>
 </section>
 
-<section id="2fa">
+<section id="fa">
 <div class="container">
 <!-- 左：输入 -->
 <div class="left">
@@ -2216,7 +2216,7 @@ elRun.onclick=async()=>{
         catch{ invalidLines.push(it.line); }
       }
       if(invalidLines.length){
-        elMsg.textContent = ⚠️ 第 ' + invalidLines.join(', ') + ' 行地址格式错误。请删除后再查询。';
+        elMsg.textContent = '⚠️ 第 ' + invalidLines.join(', ') + ' 行地址格式错误。请删除后再查询。';
         elMsg.classList.add('error-text');
         return;
       }
