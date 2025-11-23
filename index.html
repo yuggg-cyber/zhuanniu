@@ -826,7 +826,7 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
 <nav>
 <h2>功能导航 <span aria-label="切换主题" class="theme-toggle" id="globalThemeToggle" role="button">🌙</span></h2>
 <button class="active" data-tab="sol">SOL账户工具</button><hr/><button data-tab="sol-batch">SOL批量查询</button><hr/>
-<button data-tab="fa">批量2FA验证器</button><hr/><button data-tab="dedupe">文本去重复</button><hr/><button data-tab="affix">文本批量增加</button><hr/><button data-tab="split">文本分列</button><hr/><button data-tab="passwd">密码生成</button></nav>
+<button data-tab="fa">批量2FA验证器</button><hr/><button data-tab="dedupe">文本去重</button><hr/><button data-tab="affix">文本增加</button><hr/><button data-tab="split">文本分列</button><hr/><button data-tab="shuffle">文本打乱</button><hr/><button data-tab="passwd">密码生成</button></nav>
 <main>
 <section class="active" id="sol">
 <h2>🔥 Solana Token Manager (Batch Burn &amp; Close)</h2>
@@ -1358,12 +1358,109 @@ body.dark #sol-batch .tag-wait    { background:#333; color:#aaa; border-color:#5
 </div></div>
 <div id="toast"></div>
 </section>
+<!-- ================= 文本打乱 (新增功能) START ================= -->
+<section id="shuffle">
+  <div class="card">
+    <div class="hd">输入</div>
+    <div class="bd">
+      <textarea id="shuffleIn" placeholder="请输入要打乱的文本，每行一条..."></textarea>
+    </div>
+  </div>
+  <div class="card">
+    <div class="hd">结果</div>
+    <div class="bd">
+      <div class="btnbar">
+        <button class="btn primary" id="shuffleRun">随机打乱</button>
+        <button class="btn" id="shuffleCopy">复制</button>
+        <button class="btn" id="shuffleTxt">导出 TXT</button>
+        <button class="btn" id="shuffleXlsx">导出 XLSX</button>
+        <button class="btn" id="shuffleClear">清空</button>
+      </div>
+      <div class="stat" id="shuffleStat">—</div>
+      <textarea id="shuffleOut" readonly></textarea>
+    </div>
+  </div>
+  
+  <script>
+    // Fisher-Yates 洗牌算法
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+      return array;
+    }
+
+    document.getElementById('shuffleRun').onclick = () => {
+      const raw = document.getElementById('shuffleIn').value;
+      // 按行分割，自动去除首尾空格并移除空行
+      let lines = raw.split(/\r?\n/).map(s => s.trim()).filter(s => s !== '');
+      
+      if (lines.length < 1) {
+        toast('没有内容可打乱');
+        return;
+      }
+
+      const shuffled = shuffleArray([...lines]); // 创建副本进行打乱
+      document.getElementById('shuffleOut').value = shuffled.join('\n');
+      document.getElementById('shuffleStat').textContent = `共 ${lines.length} 行已重新排序`;
+      toast('打乱完成');
+    };
+
+    document.getElementById('shuffleCopy').onclick = () => {
+      const val = document.getElementById('shuffleOut').value;
+      if(!val) return toast('结果为空');
+      navigator.clipboard.writeText(val);
+      toast('已复制');
+    };
+
+    document.getElementById('shuffleTxt').onclick = () => {
+      const val = document.getElementById('shuffleOut').value;
+      if(!val) return toast('结果为空');
+      saveTxt(`文本打乱${fileTimestamp()}.txt`, val);
+    };
+
+    document.getElementById('shuffleXlsx').onclick = () => {
+      const val = document.getElementById('shuffleOut').value;
+      if(!val) return toast('结果为空');
+      const rows = [['结果'], ...val.split('\n').map(v => [v])];
+      aoaToXlsx(rows, `文本打乱${fileTimestamp()}.xlsx`);
+    };
+
+    document.getElementById('shuffleClear').onclick = () => {
+      document.getElementById('shuffleIn').value = '';
+      document.getElementById('shuffleOut').value = '';
+      document.getElementById('shuffleStat').textContent = '—';
+    };
+  </script>
+
+  <style>
+    /* 针对本模块的暗黑模式样式修复，保持与主文件风格一致 */
+    body.dark #shuffle .card {
+      background: #2a2a2a !important;
+      border: 1px solid #444 !important;
+      color: #e5e5e5 !important;
+    }
+    body.dark #shuffle textarea {
+      background: #2e2e2e !important;
+      border: 2px solid #444 !important;
+      color: #e5e5e5 !important;
+      -webkit-text-fill-color: #e5e5e5 !important;
+    }
+    body.dark #shuffle textarea:focus {
+      background: #2a2a2a !important;
+      border: 2px solid #3399ff !important;
+      color: #e5e5e5 !important;
+    }
+  </style>
+</section>
+<!-- ================= 文本打乱 (新增功能) END ================= -->
 <section id="passwd">
 <div class="card"><div class="hd">设置</div><div class="bd">
 <label>长度：<input id="pwdLen" max="64" min="4" type="number" value="12"/></label><br/>
 <label><input checked="" id="pwdUpper" type="checkbox"/> 大写字母</label>
 <label><input checked="" id="pwdNum" type="checkbox"/> 数字</label>
-<label><input id="pwdSym" type="checkbox"/> 特殊符号</label>
+<label><input id="pwdSym" type="checkbox"/> 特殊符号 </label>
 <label><input id="pwdCount" max="50" min="1" type="number" value="5"/> 生成数量</label>
 </div></div>
 <div class="card"><div class="hd">结果</div><div class="bd">
@@ -1488,7 +1585,7 @@ function genPwd(len,upper,num,sym){
   let chars=lower;
   if(upper) chars+=lower.toUpperCase();
   if(num) chars+='23456789';
-  if(sym) chars+='!@#$%^&*()-_=+[]{};:,.<>?';
+  if(sym) chars+='!@#$%^&*()_+-='; // 限制为常规符号
   chars=chars.replace(/[oOlI]/g,'');
   if(!chars) return '';
   let pwd='';for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
