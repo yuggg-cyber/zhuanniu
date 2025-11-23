@@ -2,12 +2,12 @@
 <html lang="zh">
 <head>
 <meta charset="utf-8"/>
-<title>zhuanniu - 集成版</title>
+<title>zhuanniu</title>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <script defer="" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <!-- =========================================================
-     保留所有原有样式 (不合并，原样保留)
+     以下是你原本的所有样式，我完全没有合并，原样保留
      ========================================================= -->
 
 <style>
@@ -1035,8 +1035,8 @@ section #toast{ display:none !important; }
 </h2>
 <div class="menu-items">
   <button class="active" data-tab="sol">SOL账户工具</button><hr/>
-  <button data-tab="sol-batch">SOL查询</button><hr/>
-  <button data-tab="fa">2FA验证器</button><hr/>
+  <button data-tab="sol-batch">SOL批量查询</button><hr/>
+  <button data-tab="fa">批量2FA验证器</button><hr/>
   
   <!-- >>> 更改部分：将4个文本工具合并为一个入口 <<< -->
   <button data-tab="text-tools">文本工具</button><hr/>
@@ -1680,9 +1680,6 @@ section #toast{ display:none !important; }
         document.getElementById(id).classList.add('active');
         document.querySelectorAll('#text-tools .tt-tab').forEach(el => el.classList.remove('active'));
         btn.classList.add('active');
-        
-        // 保存当前子标签状态
-        localStorage.setItem("active_text_tool_sub_tab", id);
     }
   </script>
 </section>
@@ -1885,43 +1882,6 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
   // 初始化
   initScale();
   initTheme();
-  
-  // =========================================================
-  // >>> 新增功能：自动记忆最后一次打开的页面 <<<
-  // =========================================================
-  
-  // 1. 恢复主菜单位置
-  const savedMainTab = localStorage.getItem("active_main_tab");
-  if(savedMainTab) {
-    const btn = document.querySelector(`button[data-tab="${savedMainTab}"]`);
-    if(btn) btn.click();
-  } else {
-    // 默认点第一个
-    const first = document.querySelector('nav button[data-tab]');
-    if(first) first.click();
-  }
-
-  // 2. 恢复文本工具的子菜单位置
-  const savedSubTab = localStorage.getItem("active_text_tool_sub_tab");
-  if(savedSubTab) {
-      // 只有当主菜单是文本工具时才自动切换子菜单，或者直接切换
-      // 这里为了体验顺滑，我们直接激活对应的子菜单（虽然它可能不可见，直到你切换到主菜单）
-      const btn = document.querySelector(`.tt-tab[onclick*="${savedSubTab}"]`);
-      if(btn) switchTextTool(savedSubTab, btn);
-  }
-
-  // =========================================================
-  // >>> 新增功能：支持 URL Hash 深度链接 (比如 打开 xxx.html#fa 直接跳到 2FA) <<<
-  // =========================================================
-  const hash = window.location.hash.replace('#', '');
-  if(hash){
-      // 尝试匹配主菜单
-      const mainBtn = document.querySelector(`button[data-tab="${hash}"]`);
-      if(mainBtn) {
-          mainBtn.click();
-      }
-  }
-
 })();
 
 // 全局主题切换
@@ -1980,7 +1940,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-// 标签切换功能 (带记忆功能)
+// 标签切换功能
 document.querySelectorAll('nav button').forEach(btn => {
   btn.addEventListener('click', () => {
     const tab = btn.dataset.tab;
@@ -1994,12 +1954,6 @@ document.querySelectorAll('nav button').forEach(btn => {
     document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
     const section = document.getElementById(tab);
     if (section) section.classList.add('active');
-    
-    // >>> 保存到本地存储，以便下次刷新恢复 <<<
-    localStorage.setItem("active_main_tab", tab);
-
-    // >>> 更新 URL Hash，方便分享 <<<
-    window.history.replaceState(null, null, '#' + tab);
   });
 });
 </script>
