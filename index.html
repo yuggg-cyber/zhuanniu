@@ -2433,9 +2433,28 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
         function finish() { isRunning = false; const t = ((performance.now() - startTime) / 1000).toFixed(2); ui.status.innerText = `完成 ${currentCount} 个，耗时 ${t} 秒`; resetBtnState(); }
         function resetBtnState() { ui.inp.disabled = false; ui.start.style.display = 'block'; ui.stop.style.display = 'none'; if (walletData.length > 0) ui.export.disabled = false; }
         
-        ui.export.onclick = () => {
-            const ws = XLSX.utils.json_to_sheet(walletData); const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Wallets"); XLSX.writeFile(wb, `Batch_Gen_${currentCount}.xlsx`);
+ui.export.onclick = () => {
+            const ws = XLSX.utils.json_to_sheet(walletData);
+            
+            // === 新增：自动计算列宽逻辑 ===
+            if (walletData.length > 0) {
+                const keys = Object.keys(walletData[0]); // 获取表头 (id, address, privateKey...)
+                const colWidths = keys.map(key => {
+                    // 遍历每一列数据，找出最长的内容
+                    const maxLen = walletData.reduce((max, row) => {
+                        const cellStr = row[key] ? String(row[key]) : "";
+                        // 如果内容中有中文，长度计算可能需要调整，但这里主要是字母数字，直接取 length 即可
+                        return Math.max(max, cellStr.length);
+                    }, key.length); // 初始宽度至少要包含表头文字长度
+                    return { wch: maxLen + 2 }; // +2 为了稍微留点空隙
+                });
+                ws['!cols'] = colWidths;
+            }
+            // === 结束 ===
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Wallets"); 
+            XLSX.writeFile(wb, `Batch_Gen_${currentCount}.xlsx`);
         };
 
         // 复制功能
