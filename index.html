@@ -1035,13 +1035,11 @@ section #toast{ display:none !important; }
 </h2>
 <div class="menu-items">
   <button class="active" data-tab="sol">SOL账户工具</button><hr/>
-  <button data-tab="sol-batch">SOL批量查询</button><hr/>
-  <button data-tab="fa">批量2FA验证器</button><hr/>
-  
-  <!-- >>> 更改部分：将4个文本工具合并为一个入口 <<< -->
+  <button data-tab="sol-batch">SOL查询</button><hr/>
+  <button data-tab="fa">2FA验证器</button><hr/>
   <button data-tab="text-tools">文本工具</button><hr/>
-  
-  <button data-tab="passwd">密码生成</button>
+  <button data-tab="passwd">密码生成</button><hr/>
+  <button data-tab="koala">硬币看板</button>
 </div>
 </nav>
 
@@ -1848,6 +1846,145 @@ document.getElementById('pwdTxt').onclick=()=>saveTxt(`密码生成${fileTimesta
 document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document.getElementById('pwdOut').value.split('\n').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
 document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
 </script>
+</section>
+<!-- =========================================================
+     新增模块：考拉看板 - 三列竖长布局 (第3列加宽)
+     ========================================================= -->
+<section id="koala">
+  
+  <!-- 顶部控制栏 -->
+  <div class="card" style="margin-bottom: 15px; padding: 10px 15px;">
+    <div style="display: flex; justify-content: space-between; align-items: center;">
+      <span style="font-weight:bold; font-size:16px;">🪙 硬币数据看板</span>
+      <button class="btn" onclick="refreshDune()" style="padding:4px 12px; font-size:12px;">刷新全板数据</button>
+    </div>
+  </div>
+
+  <!-- 三列布局容器 -->
+  <div class="dune-triple-grid">
+    
+    <!-- 【图表 1】普通宽 -->
+    <div class="card dune-col">
+      <div class="hd compact-hd">周度数据 (Part 1)</div>
+      <div class="bd compact-bd">
+        <iframe id="duneFrame1" class="dune-iframe-tall" src="" frameborder="0" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- 【图表 2】普通宽 -->
+    <div class="card dune-col">
+      <div class="hd compact-hd">日度数据 (Part 2)</div>
+      <div class="bd compact-bd">
+        <iframe id="duneFrame2" class="dune-iframe-tall" src="" frameborder="0" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <!-- 【图表 3】加宽版 (放地址) -->
+    <div class="card dune-col">
+      <div class="hd compact-hd">详细地址列表 (Part 3)</div>
+      <div class="bd compact-bd">
+        <iframe id="duneFrame3" class="dune-iframe-tall" src="" frameborder="0" loading="lazy" allowfullscreen></iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 底部说明 -->
+  <div style="margin-top:10px; font-size:12px; color:var(--muted); text-align:center;">
+    数据来源：Dune Analytics (30分钟同步)
+  </div>
+
+  <!-- 样式设定 -->
+  <style>
+    /* 1. 三列布局核心配置 */
+    .dune-triple-grid {
+      display: grid;
+      /* 关键点：1fr 1fr 1.4fr 表示前两个等宽，第三个宽 1.4倍 */
+      grid-template-columns: 1fr 1fr 1.4fr; 
+      gap: 12px; /* 列间距 */
+      align-items: stretch; /* 强制高度拉伸对齐 */
+    }
+
+    /* 2. 卡片样式微调 */
+    .compact-hd {
+      padding: 8px 10px !important;
+      font-size: 14px !important;
+      border-bottom: 1px solid #eee;
+      white-space: nowrap; 
+      overflow: hidden; 
+      text-overflow: ellipsis; /* 防止标题太长换行 */
+    }
+    .compact-bd {
+      padding: 0 !important;
+      height: calc(100% - 38px); /* 扣除标题高度，填满剩余空间 */
+    }
+
+    /* 3. 图表高度设定 (竖长条) */
+    .dune-iframe-tall {
+      width: 100%;
+      height: 800px; /* 这里设置高度，如果不购长可以改成 900px */
+      display: block;
+    }
+
+    /* 4. 响应式适配：手机端变成单列堆叠 */
+    @media (max-width: 1000px) {
+      .dune-triple-grid {
+        grid-template-columns: 1fr; /* 变成单列 */
+      }
+      .dune-iframe-tall {
+        height: 500px; /* 手机上不用那么长，500够了 */
+      }
+    }
+
+    /* 5. 暗黑模式适配 */
+    body.dark .compact-hd { border-bottom: 1px solid #444; background: #2a2a2a; }
+    body.dark #koala .card { background-color: #2a2a2a !important; border: 1px solid #444 !important; color: #e5e5e5 !important; }
+    body.dark #koala .btn { background-color: #3399ff !important; color: white !important; border: none !important; }
+  </style>
+
+  <!-- 逻辑脚本 -->
+  <script>
+    (function(){
+      // ✅ 配置：3个图表链接
+      // 第三个链接放到了最宽的格子里
+      const charts = [
+        { id: 'duneFrame1', url: 'https://dune.com/embeds/6247745/9961500/053658e5-5246-4b9b-8e39-300dcd8faf82' },
+        { id: 'duneFrame2', url: 'https://dune.com/embeds/6247801/9961580/ee74f02c-8a8e-483b-94b1-fcebf17db73a' },
+        { id: 'duneFrame3', url: 'https://dune.com/embeds/6247803/9961582/85216cfd-a976-4e67-b998-b316d6fab291' }
+      ];
+
+      window.refreshDune = function() {
+        const isDark = document.body.classList.contains('dark');
+        const themeParam = isDark ? "?theme=dark" : "?theme=light";
+        const timestamp = "&ts=" + new Date().getTime(); 
+        
+        charts.forEach(chart => {
+          const el = document.getElementById(chart.id);
+          if(el) {
+            el.src = chart.url + themeParam + timestamp;
+          }
+        });
+      };
+
+      setTimeout(refreshDune, 500);
+
+      const globalToggle = document.getElementById('globalThemeToggle');
+      if(globalToggle) {
+        globalToggle.addEventListener('click', function(){
+          setTimeout(refreshDune, 100); 
+        });
+      }
+      
+      document.addEventListener('click', function(e){
+        if(e.target && e.target.dataset.tab === 'koala') {
+           const firstFrame = document.getElementById('duneFrame1');
+           if(!firstFrame.src || firstFrame.src === 'about:blank' || firstFrame.src === '') {
+             refreshDune();
+           }
+        }
+      });
+    })();
+  </script>
 </section>
 </main>
 
