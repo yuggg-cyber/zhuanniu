@@ -7,7 +7,7 @@
 <script defer="" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <!-- =========================================================
-     以下是你原本的所有样式，我完全没有合并，原样保留
+     样式部分
      ========================================================= -->
 
 <style>
@@ -1034,7 +1034,7 @@ section #toast{ display:none !important; }
 <span class="menu-toggle">≡</span>
 </h2>
 <div class="menu-items">
-  <button class="active" data-tab="sol">SOL账户工具</button><hr/>
+  <button data-tab="sol">SOL账户工具</button><hr/>
   <button data-tab="sol-batch">SOL查询</button><hr/>
   <button data-tab="fa">2FA验证器</button><hr/>
   <button data-tab="text-tools">文本工具</button><hr/>
@@ -1044,7 +1044,7 @@ section #toast{ display:none !important; }
 </nav>
 
 <main>
-<section class="active" id="sol">
+<section id="sol">
 <h2>🔥 Solana Token Manager (Batch Burn &amp; Close)</h2>
 <button id="connectBtn">连接钱包</button><span id="wallet">未连接</span>
 <!-- 燃烧代币模块 -->
@@ -2077,22 +2077,77 @@ document.addEventListener('DOMContentLoaded', function() {
 
 });
 
-// 标签切换功能
-document.querySelectorAll('nav button').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const tab = btn.dataset.tab;
-    if (!tab) return;
-    
-    // 更新按钮状态
-    document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    
-    // 更新内容区域
-    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
-    const section = document.getElementById(tab);
-    if (section) section.classList.add('active');
+// ==========================================
+// 新增：支持 #Hash 路由跳转与状态记忆 (无闪烁版)
+// ==========================================
+(function() {
+  // 1. 配置路由映射表：[内部ID] : [URL Hash]
+  const routeMap = {
+    'sol': 'sol-account',
+    'sol-batch': 'solscan',
+    'fa': '2fa',
+    'text-tools': 'text-tools',
+    'passwd': 'passgen',
+    'koala': 'abs'
+  };
+  const defaultId = 'sol'; // 默认显示的页面ID
+
+  // 生成反向映射用于查找：[URL Hash] : [内部ID]
+  const hashToId = Object.entries(routeMap).reduce((acc, [id, hash]) => {
+    acc[hash] = id;
+    return acc;
+  }, {});
+
+  // 2. 绑定点击事件（包含 UI 切换 + URL 更新）
+  const navButtons = document.querySelectorAll('nav button');
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const tab = btn.dataset.tab;
+      if (!tab) return;
+      
+      // A. UI 切换逻辑
+      navButtons.forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      
+      document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+      const section = document.getElementById(tab);
+      if (section) section.classList.add('active');
+
+      // B. URL Hash 更新逻辑
+      const targetHash = routeMap[tab];
+      if (targetHash) {
+        if (location.hash.substring(1) !== targetHash) {
+          history.pushState(null, '', '#' + targetHash);
+        }
+      }
+    });
   });
-});
+
+  // 3. 核心：页面加载时决定显示谁
+  function applyStateFromHash() {
+    const hash = location.hash.substring(1);
+    // 如果有Hash就用Hash对应的ID，没有Hash就用默认的ID
+    let targetId = hashToId[hash] || defaultId;
+
+    // 清除所有active状态（双重保险）
+    navButtons.forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
+
+    // 找到目标按钮并模拟点击
+    // 模拟点击是最安全的，因为它会触发上面绑定的所有逻辑（包括lazy load初始化）
+    const targetBtn = document.querySelector(`nav button[data-tab="${targetId}"]`);
+    if (targetBtn) {
+      targetBtn.click();
+    }
+  }
+
+  // 监听浏览器后退/前进
+  window.addEventListener('hashchange', applyStateFromHash);
+  
+  // 立即执行一次（不用等DOMContentLoaded，因为脚本在底部，元素已经存在）
+  applyStateFromHash();
+
+})();
 </script>
 
 
