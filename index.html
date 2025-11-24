@@ -1027,8 +1027,68 @@ section #toast{ display:none !important; }
     }
 </style>
 
+<!-- 密码生成器的新样式 -->
+<style>
+.pwd-layout-container {
+  display: grid;
+  grid-template-columns: 320px 480px; /* 已修改：右侧固定宽度为480px，不再撑满全屏 */
+  gap: 20px;
+}
+@media (max-width: 768px) {
+  .pwd-layout-container { grid-template-columns: 1fr; }
+}
+.pwd-opt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #eee;
+}
+body.dark .pwd-opt-row { border-bottom-color: #333; }
+.pwd-opt-row:last-child { border-bottom: 0; }
+
+/* 自定义滑块 */
+.pwd-range {
+  -webkit-appearance: none; width: 100%; height: 6px; background: #ddd; border-radius: 3px; outline: none;
+}
+.pwd-range::-webkit-slider-thumb {
+  -webkit-appearance: none; width: 18px; height: 18px; border-radius: 50%; background: #0d6efd; cursor: pointer;
+}
+body.dark .pwd-range { background: #444; }
+body.dark .pwd-range::-webkit-slider-thumb { background: #3399ff; }
+
+/* 手机式 Toggle 开关 */
+.switch-toggle { position: relative; display: inline-block; width: 40px; height: 22px; }
+.switch-toggle input { opacity: 0; width: 0; height: 0; }
+.slider-toggle {
+  position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc; transition: .4s; border-radius: 22px;
+}
+.slider-toggle:before {
+  position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px;
+  background-color: white; transition: .4s; border-radius: 50%;
+}
+input:checked + .slider-toggle { background-color: #0d6efd; }
+body.dark input:checked + .slider-toggle { background-color: #3399ff; }
+input:checked + .slider-toggle:before { transform: translateX(18px); }
+body.dark .slider-toggle { background-color: #444; }
+</style>
+
 </head>
 <body>
+<script>
+  // 防闪烁脚本：在页面内容渲染前立即执行
+  (function() {
+    try {
+      var saved = localStorage.getItem('tools_theme');
+      // 如果本地存储是 dark，或者没存储但系统偏好是暗色（可选），则立即加上 dark 类
+      if (saved === 'dark') {
+        document.body.classList.add('dark');
+      }
+    } catch(e) {}
+  })();
+</script>
 <nav>
 <h2>功能导航 <span aria-label="切换主题" class="theme-toggle" id="globalThemeToggle" role="button">🌙</span>
 <span class="menu-toggle">≡</span>
@@ -1683,20 +1743,74 @@ section #toast{ display:none !important; }
 </section>
 
 <section id="passwd">
-<div class="card"><div class="hd">设置</div><div class="bd">
-<label>长度：<input id="pwdLen" max="64" min="4" type="number" value="12"/></label><br/>
-<label><input checked="" id="pwdUpper" type="checkbox"/> 大写字母</label>
-<label><input checked="" id="pwdNum" type="checkbox"/> 数字</label>
-<label><input id="pwdSym" type="checkbox"/> 特殊符号 </label>
-<label><input id="pwdCount" max="50" min="1" type="number" value="5"/> 生成数量</label>
-</div></div>
-<div class="card"><div class="hd">结果</div><div class="bd">
-<div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-<div class="btnbar">
-<button class="btn primary" id="pwdRun">生成</button><button class="btn" id="pwdCopy">复制</button><button class="btn" id="pwdTxt">导出 TXT</button><button class="btn" id="pwdXlsx">导出 XLSX</button><button class="btn" id="pwdClear">清空</button></div>
-<textarea id="pwdOut" readonly=""></textarea>
-</div></div>
-<div id="toast"></div>
+  <div class="pwd-layout-container">
+    <!-- 左侧：控制面板 -->
+    <div class="card">
+      <div class="hd">设置</div>
+      <div class="bd">
+        <!-- 长度控制 -->
+        <div class="pwd-opt-row">
+          <label>密码长度</label>
+          <div style="flex:1; margin:0 15px;">
+            <input type="range" id="lenRange" class="pwd-range" min="4" max="32" value="14">
+          </div>
+          <input id="pwdLen" type="number" value="14" min="4" max="64" style="width:50px; text-align:center; padding:6px;">
+        </div>
+
+        <!-- 开关选项 -->
+        <div class="pwd-opt-row">
+          <label>A-Z (大写字母)</label>
+          <label class="switch-toggle">
+            <input type="checkbox" id="pwdUpper" checked>
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <div class="pwd-opt-row">
+          <label>0-9 (数字)</label>
+          <label class="switch-toggle">
+            <input type="checkbox" id="pwdNum" checked>
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <div class="pwd-opt-row">
+          <label>!@# (特殊符号)</label>
+          <label class="switch-toggle">
+            <input type="checkbox" id="pwdSym">
+            <span class="slider-toggle"></span>
+          </label>
+        </div>
+
+        <div class="pwd-opt-row">
+          <label>生成数量</label>
+          <!-- 这里将默认值修改为了 10 -->
+          <input id="pwdCount" type="number" value="10" min="1" max="50" style="width:60px; text-align:center; padding:6px;">
+        </div>
+
+        <button class="btn primary" id="pwdRun" style="width:100%; margin-top:10px;">生成</button>
+      </div>
+    </div>
+
+    <!-- 右侧：结果面板 -->
+    <div class="card" style="display:flex; flex-direction:column;">
+      <div class="hd">结果</div>
+      <div class="bd" style="flex:1; display:flex; flex-direction:column;">
+        <textarea id="pwdOut" readonly style="flex:1; resize:none; margin-bottom:10px; font-family:monospace; height:220px;"></textarea>
+        
+        <div class="strength-bar">
+          <div class="strength-fill" id="strengthFill"></div>
+        </div>
+
+        <div class="btnbar" style="margin-top:10px;">
+          <button class="btn" id="pwdCopy">复制</button>
+          <button class="btn" id="pwdTxt">导出 TXT</button>
+          <button class="btn" id="pwdXlsx">导出 XLSX</button>
+          <button class="btn" id="pwdClear">清空</button>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 <script>
 /* ====== 主题切换 ====== */
@@ -1806,18 +1920,22 @@ document.getElementById('splitTxt').onclick=()=>{const rows=window.splitRows||[]
 document.getElementById('splitXlsx').onclick=()=>{const rows=window.splitRows||[];const colCount=window.splitColCount||0;if(!rows.length||!colCount){toast('没有可导出的数据');return;}const header=Array.from({length:colCount},(_,i)=>`列${i+1}`);const data=[header,...rows];aoaToXlsx(data,`文本分列${fileTimestamp()}.xlsx`);};
 document.getElementById('splitClear').onclick=()=>{document.getElementById('splitTable').innerHTML='';document.getElementById('splitStat').textContent='—';};
 
-/* ====== 密码生成 ====== */
+/* ====== 密码生成 (实时更新) ====== */
 function genPwd(len,upper,num,sym){
   let lower='abcdefghijklmnopqrstuvwxyz';
   let chars=lower;
   if(upper) chars+=lower.toUpperCase();
-  if(num) chars+='23456789';
-  if(sym) chars+='!@#$%^&*()_+-='; // 限制为常规符号
-  chars=chars.replace(/[oOlI]/g,'');
+  if(num) chars+='0123456789';
+  if(sym) chars+='!@#'; // 限制符号
+  
   if(!chars) return '';
-  let pwd='';for(let i=0;i<len;i++) pwd+=chars[Math.floor(Math.random()*chars.length)];
+  let pwd='';
+  for(let i=0;i<len;i++) {
+    pwd+=chars[Math.floor(Math.random()*chars.length)];
+  }
   return pwd;
 }
+
 function evalStrength(pwd,upper,num,sym){
   let score=0;
   if(pwd.length>=12) score++;
@@ -1826,25 +1944,62 @@ function evalStrength(pwd,upper,num,sym){
   if(sym) score++;
   return score;
 }
-document.getElementById('pwdRun').onclick=()=>{
-  const len=+document.getElementById('pwdLen').value;
-  const cnt=+document.getElementById('pwdCount').value;
-  const upper=document.getElementById('pwdUpper').checked,
-        num=document.getElementById('pwdNum').checked,
-        sym=document.getElementById('pwdSym').checked;
-  const out=[];for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
-  document.getElementById('pwdOut').value=out.join('\n');
-  const score=evalStrength(out[0],upper,num,sym);
-  const bar=document.getElementById('strengthFill');
-  if(score<=1){bar.className='strength-fill weak';bar.style.width='33%';}
-  else if(score<=3){bar.className='strength-fill medium';bar.style.width='66%';}
-  else{bar.className='strength-fill strong';bar.style.width='100%';}
-  toast('生成完成');
+
+function autoGen() {
+  const len = +document.getElementById('pwdLen').value;
+  const cnt = +document.getElementById('pwdCount').value;
+  const upper = document.getElementById('pwdUpper').checked;
+  const num = document.getElementById('pwdNum').checked;
+  const sym = document.getElementById('pwdSym').checked;
+  
+  const out=[];
+  for(let i=0;i<cnt;i++) out.push(genPwd(len,upper,num,sym));
+  
+  const resultStr = out.join('\n');
+  document.getElementById('pwdOut').value = resultStr;
+  
+  if(resultStr) {
+    const score = evalStrength(out[0],upper,num,sym);
+    const bar = document.getElementById('strengthFill');
+    bar.className = 'strength-fill';
+    if(score<=1){ bar.classList.add('weak'); bar.style.width='33%'; }
+    else if(score<=3){ bar.classList.add('medium'); bar.style.width='66%'; }
+    else{ bar.classList.add('strong'); bar.style.width='100%'; }
+  }
+}
+
+// 同步滑块和数字输入 + 实时生成
+const lenRange = document.getElementById('lenRange');
+const lenInput = document.getElementById('pwdLen');
+
+if(lenRange && lenInput) {
+  lenRange.addEventListener('input', (e) => { 
+    lenInput.value = e.target.value; 
+    autoGen(); 
+  });
+  lenInput.addEventListener('input', (e) => { 
+    lenRange.value = e.target.value; 
+    autoGen(); 
+  });
+}
+
+// 绑定其他控件的实时事件
+['pwdUpper', 'pwdNum', 'pwdSym'].forEach(id => {
+  document.getElementById(id).addEventListener('change', autoGen);
+});
+document.getElementById('pwdCount').addEventListener('input', autoGen);
+
+// 按钮手动触发
+document.getElementById('pwdRun').onclick = () => {
+  autoGen();
+  toast('已刷新');
 };
+
 document.getElementById('pwdCopy').onclick=()=>{navigator.clipboard.writeText(document.getElementById('pwdOut').value);toast('已复制');};
 document.getElementById('pwdTxt').onclick=()=>saveTxt(`密码生成${fileTimestamp()}.txt`,document.getElementById('pwdOut').value);
 document.getElementById('pwdXlsx').onclick=()=>aoaToXlsx([['密码'],...document.getElementById('pwdOut').value.split('\n').map(v=>[v])],`密码生成${fileTimestamp()}.xlsx`);
 document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut').value='';document.getElementById('strengthFill').style.width='0';};
+
 </script>
 </section>
 <!-- =========================================================
@@ -2454,12 +2609,20 @@ elSum.textContent = lamportsToSolString(sumLam);
 }
 
 // 当切换到 SOL 批量查询标签时初始化
-document.addEventListener('DOMContentLoaded', function() {
+// 直接绑定，不等待 DOMContentLoaded，防止路由自动跳转时监听器未就绪
+(function(){
   const solBatchBtn = document.querySelector('button[data-tab="sol-batch"]');
   if (solBatchBtn) {
+    // 1. 绑定点击事件（用于后续手动切换）
     solBatchBtn.addEventListener('click', initSolBatchTool);
+
+    // 2. 修复 Bug：检查当前是否直接通过 #solscan 进入，或者是已激活状态
+    // 如果是，说明路由脚本已经帮我们点过了，但当时监听器还没挂载，所以这里要手动补发一次初始化
+    if (location.hash === '#solscan' || solBatchBtn.classList.contains('active')) {
+       initSolBatchTool();
+    }
   }
-});
+})();
 </script>
 
 <script>
