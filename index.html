@@ -4,6 +4,8 @@
 <meta charset="utf-8"/>
 <title>zhuanniu</title>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<!-- 引入 ethers.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 <script defer="" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <!-- =========================================================
@@ -28,6 +30,112 @@
     main {flex:1; overflow:auto;}
     section {display:none; min-height:100%; overflow:auto; padding:10px; box-sizing:border-box;}
     section.active {display:block;}
+</style>
+
+<style>
+/* 钱包生成器专用样式 (Scope: #wallet-generator) */
+/* 修复 ID 冲突，改用 #wallet-generator */
+#wallet-generator .wg-container { max-width: 1100px; margin: 0 auto; }
+
+/* 修改：背景色由 #fafafa 改为 #fff，边框颜色调整，添加阴影以匹配其他 .tool-card */
+#wallet-generator .toolbar {
+    background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 20px;
+    display: flex; align-items: center; gap: 15px; margin-bottom: 25px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+}
+#wallet-generator .label { font-size: 14px; color: #333; font-weight: 500; }
+
+/* 修改：边框加粗为 2px，颜色改为 #bbb，匹配全站输入框风格 */
+#wallet-generator input[type="number"] { padding: 8px 12px; border: 2px solid #bbb; border-radius: 8px; width: 100px; font-size: 14px; background: #fafafa; }
+#wallet-generator input:focus { border-color: #0d6efd; outline: none; background: #fff; }
+
+/* 修改：主按钮颜色改为全站统一的蓝色 #0d6efd */
+#wallet-generator .btn-black { background: #0d6efd; color: #fff; border: none; padding: 10px 24px; border-radius: 8px; font-size: 14px; cursor: pointer; transition: all .2s; }
+#wallet-generator .btn-black:hover { background: linear-gradient(90deg,#0d6efd,#0b5ed7); }
+#wallet-generator .btn-black:disabled { opacity: 0.6; cursor: not-allowed; background: #ccc; }
+
+#wallet-generator .btn-stop { background: #d93025; border-color: #d93025; display: none; }
+#wallet-generator .btn-stop:hover { background: #b02a22; }
+
+/* 修改：次要按钮风格匹配全站 .btn */
+#wallet-generator .btn-outline { background: #f6f6f6; color: #111; border: 1px solid #bbb; padding: 10px 24px; border-radius: 8px; margin-left: auto; cursor: pointer; transition: background 0.2s; }
+#wallet-generator .btn-outline:hover { background: #eaeaea; }
+#wallet-generator .btn-outline:disabled { opacity: 0.5; cursor: not-allowed; }
+
+#wallet-generator .toolbar-status { font-size: 14px; color: #666; margin-left: 5px; }
+#wallet-generator .security-badge { font-size: 12px; padding: 4px 8px; border-radius: 4px; margin-left: 10px; font-weight: 600; }
+#wallet-generator .bg-safe { background: #e6f4ea; color: #1e8e3e; }
+#wallet-generator .bg-danger { background: #fce8e6; color: #d93025; }
+
+#wallet-generator .table-wrapper { border: 1px solid #e5e7eb; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 6px rgba(0,0,0,0.04); }
+#wallet-generator table { width: 100%; border-collapse: collapse; font-size: 13px; table-layout: fixed; }
+#wallet-generator thead { background: #fafafa; }
+#wallet-generator th { text-align: left; padding: 14px 16px; color: #555; font-weight: 600; border-bottom: 1px solid #eee; }
+#wallet-generator th:nth-child(1) { width: 60px; } 
+#wallet-generator th:nth-child(2) { width: 380px; } 
+#wallet-generator th:nth-child(3) { width: 280px; }
+#wallet-generator td { padding: 12px 16px; border-bottom: 1px solid #eee; color: #444; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; height: 50px; }
+
+#wallet-generator .copyable { cursor: pointer; transition: background 0.2s; border-radius: 4px; padding: 2px 4px; margin: -2px -4px; }
+#wallet-generator .copyable:active { background: #e0e0e0; color: #000 !important; }
+#wallet-generator .font-mono { font-family: "SFMono-Regular", Consolas, monospace; }
+#wallet-generator .blur-text { color: transparent; text-shadow: 0 0 10px rgba(0,0,0,0.5); transition: all 0.3s ease; user-select: none; }
+#wallet-generator .blur-text:hover { color: #333; text-shadow: none; user-select: auto; }
+
+/* 遮罩层 */
+#wg-networkOverlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.98); z-index: 9999;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    text-align: center; transition: opacity 0.3s;
+}
+/* 只有当 active 时才显示遮罩，且如果 hidden 类存在则隐藏 */
+#wallet-generator:not(.active) #wg-networkOverlay { display: none !important; }
+#wg-networkOverlay.hidden { display: none !important; }
+
+#wallet-generator .warning-icon { width: 64px; height: 64px; background: #333; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 32px; margin-bottom: 24px; }
+#wallet-generator .overlay-title { font-size: 26px; font-weight: 600; color: #111; margin-bottom: 12px; letter-spacing: -0.5px; }
+#wallet-generator .overlay-desc { font-size: 15px; color: #666; max-width: 480px; line-height: 1.6; margin-bottom: 32px; }
+
+#wallet-generator .btn-verify {
+    background: #111; color: #fff; border: none; padding: 14px 36px; border-radius: 6px; font-size: 15px; cursor: pointer; font-weight: 500;
+    transition: all 0.2s; display: flex; align-items: center; gap: 10px;
+}
+#wallet-generator .btn-verify:hover { background: #333; transform: translateY(-1px); }
+#wallet-generator .btn-verify:active { transform: translateY(0); }
+#wallet-generator .btn-verify:disabled { background: #ccc; cursor: not-allowed; transform: none; }
+#wallet-generator .btn-verify.error { background: #d93025; animation: shake 0.4s ease-in-out; }
+
+@keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+#wallet-generator .spinner { width: 14px; height: 14px; border: 2px solid rgba(255,255,255,0.3); border-top-color: #fff; border-radius: 50%; animation: spin 0.8s linear infinite; display: none; }
+
+/* Dark Mode for Wallet Gen (修正颜色以匹配全站暗黑主题) */
+body.dark #wallet-generator { background: #1e1e1e; color: #e5e5e5; }
+body.dark #wallet-generator .toolbar { background: #2a2a2a; border-color: #444; box-shadow: none; }
+body.dark #wallet-generator .label { color: #e5e5e5; }
+/* 修改：暗黑模式输入框匹配全站 */
+body.dark #wallet-generator input[type="number"] { background: #2e2e2e; border: 2px solid #444; color: #e5e5e5; }
+body.dark #wallet-generator input[type="number"]:focus { border-color: #3399ff; background: #1e1e1e; }
+
+/* 修改：暗黑模式按钮匹配全站 Accent Blue */
+body.dark #wallet-generator .btn-black { background: #3399ff; color: #fff; }
+body.dark #wallet-generator .btn-black:hover { background: #4da6ff; }
+body.dark #wallet-generator .btn-outline { background: #333; color: #e5e5e5; border-color: #555; }
+body.dark #wallet-generator .btn-outline:hover { background: #444; }
+
+body.dark #wallet-generator .table-wrapper { border-color: #444; }
+body.dark #wallet-generator table { background: #2a2a2a; }
+body.dark #wallet-generator thead { background: #333; }
+body.dark #wallet-generator th, body.dark #wallet-generator td { border-color: #444; color: #e5e5e5; }
+body.dark #wallet-generator .blur-text:hover { color: #e5e5e5; }
+
+/* Dark Mode Overlay */
+body.dark #wg-networkOverlay { background: rgba(30, 30, 30, 0.98); }
+body.dark #wallet-generator .warning-icon { background: #e5e5e5; color: #1e1e1e; }
+body.dark #wallet-generator .overlay-title { color: #e5e5e5; }
+body.dark #wallet-generator .overlay-desc { color: #aaa; }
+body.dark #wallet-generator .btn-verify { background: #e5e5e5; color: #1e1e1e; }
+body.dark #wallet-generator .btn-verify:hover { background: #fff; }
 </style>
 
 <style>
@@ -1099,7 +1207,8 @@ body.dark .slider-toggle { background-color: #444; }
   <button data-tab="fa">2FA验证器</button><hr/>
   <button data-tab="text-tools">文本工具</button><hr/>
   <button data-tab="passwd">密码生成</button><hr/>
-  <button data-tab="koala">硬币看板</button>
+  <button data-tab="koala">硬币看板</button><hr/>
+  <button data-tab="wallet-generator">钱包生成</button>
 </div>
 </nav>
 
@@ -2141,6 +2250,219 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
     })();
   </script>
 </section>
+
+<!-- =========================================================
+     新增模块：钱包生成 (集成 Demo) - 已重命名ID防止冲突
+     ========================================================= -->
+<section id="wallet-generator">
+    <!-- 安全检测遮罩 -->
+    <div id="wg-networkOverlay">
+        <div class="warning-icon">
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 1l22 22"/><path d="M16.72 11.06A10.94 10.94 0 0 1 19 12.55"/><path d="M5 12.55a10.94 10.94 0 0 1 5.17-2.39"/><path d="M10.71 5.05A16 16 0 0 1 22.58 9"/><path d="M1.42 9a15.91 15.91 0 0 1 4.7-2.88"/><path d="M8.53 16.11a6 6 0 0 1 6.95 0"/><line x1="12" y1="20" x2="12.01" y2="20"/></svg>
+        </div>
+        <div class="overlay-title">环境安全检测</div>
+        <div class="overlay-desc">
+            为确保私钥生成过程的绝对安全，本程序仅允许在<b>离线环境</b>下运行。<br>
+            请务必<b>断开网络连接</b>（拔网线或关闭 Wi-Fi）。
+        </div>
+        
+        <button id="wg-btnVerify" class="btn-verify">
+            <div class="spinner" id="wg-verifySpinner"></div>
+            <span id="wg-verifyText">我已断网，点击验证</span>
+        </button>
+    </div>
+
+    <div class="wg-container">
+        <h1>钱包批量生成</h1>
+        <div class="subtitle">以太坊EVM通用 离线生成请安全储存</div>
+
+        <div class="toolbar">
+            <span class="label">数量</span>
+            <input type="number" id="wg-inpCount" value="10" min="1">
+            
+            <button id="wg-btnStart" class="btn-black">开始生成</button>
+            <button id="wg-btnStop" class="btn-black btn-stop">停止</button>
+            
+            <span id="wg-statusText" class="toolbar-status">就绪</span>
+            <span id="wg-badge" class="security-badge bg-safe">OFFLINE</span>
+            <button id="wg-btnExport" class="btn-outline" disabled>导出 Excel</button>
+        </div>
+
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>#</th><th>地址 (Address)</th><th>私钥 (Private Key)</th><th>助记词 (Mnemonic)</th></tr>
+                </thead>
+                <tbody id="wg-tbody"></tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+    (function(){
+        // 状态管理
+        let isRunning = false;
+        let targetTotal = 0;
+        let currentCount = 0;
+        let walletData = [];
+        let startTime = 0;
+        let isOfflineConfirmed = false;
+
+        // DOM 元素 (使用 wg- 前缀)
+        const ui = {
+            inp: document.getElementById('wg-inpCount'),
+            start: document.getElementById('wg-btnStart'),
+            stop: document.getElementById('wg-btnStop'),
+            export: document.getElementById('wg-btnExport'),
+            tbody: document.getElementById('wg-tbody'),
+            status: document.getElementById('wg-statusText'),
+            overlay: document.getElementById('wg-networkOverlay'),
+            badge: document.getElementById('wg-badge'),
+            btnVerify: document.getElementById('wg-btnVerify'),
+            verifySpinner: document.getElementById('wg-verifySpinner'),
+            verifyText: document.getElementById('wg-verifyText')
+        };
+
+        // 网络探测
+        function probeUrl(url) {
+            return new Promise((resolve, reject) => {
+                const img = new Image();
+                img.onload = () => resolve(true); 
+                img.onerror = () => reject(false);
+                img.src = url + "?t=" + Date.now();
+            });
+        }
+
+        async function verifyOfflineStatus() {
+            ui.btnVerify.disabled = true;
+            ui.btnVerify.classList.remove('error');
+            ui.verifySpinner.style.display = 'block';
+            ui.verifyText.innerText = "正在检测网络环境...";
+
+            const targets = [
+                "https://www.baidu.com/favicon.ico",
+                "https://www.taobao.com/favicon.ico"
+            ];
+            
+            const probes = targets.map(probeUrl);
+            const timeoutPromise = new Promise((_, reject) => {
+                setTimeout(() => reject(new Error("TIMEOUT")), 3000);
+            });
+
+            try {
+                await Promise.any(probes);
+                // 代码走到这里说明：检测到了网络连接
+                throw new Error("ONLINE_DETECTED");
+
+            } catch (error) {
+                if (error.message === "ONLINE_DETECTED") {
+                    ui.verifyText.innerText = "验证失败：当前网络暂未关闭";
+                    ui.btnVerify.classList.add('error');
+                    
+                    setTimeout(() => {
+                        ui.btnVerify.disabled = false;
+                        ui.btnVerify.classList.remove('error');
+                        ui.verifySpinner.style.display = 'none';
+                        ui.verifyText.innerText = "重试 (请确保已断网)";
+                    }, 1500);
+                } else {
+                    // 确认离线 -> 解锁
+                    isOfflineConfirmed = true;
+                    ui.overlay.style.opacity = '0';
+                    setTimeout(() => {
+                        ui.overlay.classList.add('hidden');
+                    }, 300);
+                    
+                    ui.badge.innerText = 'SECURE OFFLINE';
+                    ui.badge.className = 'security-badge bg-safe';
+                }
+            }
+        }
+
+        ui.btnVerify.onclick = verifyOfflineStatus;
+
+        // 监听系统事件
+        window.addEventListener('online', () => {
+            // 只有在当前标签页是 wallet-generator 时才触发严格模式
+            const walletSection = document.getElementById('wallet-generator');
+            if (!walletSection.classList.contains('active')) return;
+
+            isOfflineConfirmed = false;
+            ui.overlay.classList.remove('hidden');
+            ui.overlay.style.opacity = '1';
+            ui.badge.innerText = 'ONLINE DETECTED';
+            ui.badge.className = 'security-badge bg-danger';
+            
+            ui.verifySpinner.style.display = 'none';
+            ui.btnVerify.disabled = false;
+            ui.btnVerify.classList.remove('error');
+            ui.verifyText.innerText = "我已断网，点击验证";
+
+            if (isRunning) {
+                stopGeneration();
+                alert("环境安全警告：检测到网络连接，已停止运行。");
+            }
+        });
+
+        // 核心生成逻辑
+        function generateOne() {
+            if (!isRunning || currentCount >= targetTotal) { finish(); return; }
+            
+            const wallet = ethers.Wallet.createRandom();
+            currentCount++;
+            walletData.push({ id: currentCount, address: wallet.address, privateKey: wallet.privateKey, mnemonic: wallet.mnemonic.phrase });
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${currentCount}</td><td class="font-mono copyable">${wallet.address}</td><td><div class="blur-text font-mono copyable">${wallet.privateKey}</div></td><td><div class="blur-text copyable">${wallet.mnemonic.phrase}</div></td>`;
+            ui.tbody.appendChild(tr);
+            ui.status.innerText = `正在生成... ${currentCount} / ${targetTotal}`;
+            if (isRunning) requestAnimationFrame(generateOne); 
+        }
+
+        ui.start.onclick = () => {
+            if(typeof ethers === 'undefined') return alert('核心库未加载，请先联网刷新，再断网。');
+            const val = parseInt(ui.inp.value);
+            if(!val || val <= 0) return;
+            targetTotal = val; currentCount = 0; walletData = []; isRunning = true; startTime = performance.now();
+            ui.tbody.innerHTML = ''; ui.inp.disabled = true; ui.start.style.display = 'none'; ui.stop.style.display = 'block'; ui.export.disabled = true;
+            generateOne();
+        };
+
+        function stopGeneration() { isRunning = false; ui.status.innerText = `已停止，共 ${currentCount} 个`; resetBtnState(); }
+        ui.stop.onclick = stopGeneration;
+        function finish() { isRunning = false; const t = ((performance.now() - startTime) / 1000).toFixed(2); ui.status.innerText = `完成 ${currentCount} 个，耗时 ${t} 秒`; resetBtnState(); }
+        function resetBtnState() { ui.inp.disabled = false; ui.start.style.display = 'block'; ui.stop.style.display = 'none'; if (walletData.length > 0) ui.export.disabled = false; }
+        
+        ui.export.onclick = () => {
+            const ws = XLSX.utils.json_to_sheet(walletData); const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Wallets"); XLSX.writeFile(wb, `Batch_Gen_${currentCount}.xlsx`);
+        };
+
+        // 复制功能
+        ui.tbody.addEventListener('click', async (e) => {
+            const target = e.target.closest('.copyable');
+            if (target) {
+                try { 
+                    await navigator.clipboard.writeText(target.innerText); 
+                    // 使用主站的 toast 函数
+                    if(window.showToast) window.showToast(`已复制`); 
+                } catch (err) {}
+            }
+        });
+
+        // 初始化检测：每次切回 tab 时，如果是联网状态，应该显示遮罩
+        const navBtn = document.querySelector('button[data-tab="wallet-generator"]');
+        if(navBtn) {
+            navBtn.addEventListener('click', function() {
+                if(navigator.onLine && !isOfflineConfirmed) {
+                   ui.overlay.classList.remove('hidden');
+                   ui.overlay.style.opacity = '1';
+                }
+            });
+        }
+    })();
+    </script>
+</section>
 </main>
 
 
@@ -2243,7 +2565,8 @@ document.addEventListener('DOMContentLoaded', function() {
     'fa': '2fa',
     'text-tools': 'text-tools',
     'passwd': 'passgen',
-    'koala': 'abs'
+    'koala': 'abs',
+    'wallet-generator': 'wallet'
   };
   const defaultId = 'sol'; // 默认显示的页面ID
 
@@ -2380,8 +2703,7 @@ async function initSolBatchTool() {
     const elThreads=document.getElementById('threads');
     const elDelay=document.getElementById('delay');
     const elTbody=document.getElementById('tbody');
-    const elTableContainer = elTbody.parentElement.parentElement;
-
+    
     let rows=[];
     let originalRows=[];
     let sorted=false;
@@ -2427,7 +2749,7 @@ async function initSolBatchTool() {
 
     
     // === DO NOT MODIFY START: elRetry.onclick (失败重试逻辑) ===
-elRetry.onclick=async()=>{
+    elRetry.onclick=async()=>{
       const failedRows = rows.filter(r=>r.status==='失败');
       if(!failedRows.length){ showToast('没有失败的地址'); return; }
       elRetry.disabled = true;
@@ -2475,22 +2797,21 @@ elRetry.onclick=async()=>{
       elSuccess.textContent = String(_succEnd);
       elFail.textContent = String(_failEnd);
       if(rows.filter(r=>r.status==='失败').length===0){ elRetry.style.display='none'; elRetry.disabled=true; }
-      if(rows.filter(r=>r.status==='失败').length===0){ elRetry.style.display='none'; elRetry.disabled=true; }
       showToast('失败地址已重试完成');
-// === DO NOT MODIFY END: elRetry.onclick ===
     };
+    // === DO NOT MODIFY END: elRetry.onclick ===
 
-// === DO NOT MODIFY START: elSort.onclick (排序逻辑) ===
-elSort.onclick=()=>{
+    // === DO NOT MODIFY START: elSort.onclick (排序逻辑) ===
+    elSort.onclick=()=>{
       if(!rows.length) return;
       if(!sorted){
         rows = [...rows].sort((a,b)=>parseFloat(b.sol)-parseFloat(a.sol));
-        sorted=true;                       // 先设置，再渲染
+        sorted=true;                       
         renderTable(rows);
         elSort.textContent='恢复原始顺序';
       }else{
         rows = [...originalRows];
-        sorted=false;                      // 先设置，再渲染
+        sorted=false;                      
         renderTable(rows);
         elSort.textContent='按余额排序';
       }
@@ -2507,7 +2828,7 @@ elSort.onclick=()=>{
     };
 
     // === DO NOT MODIFY START: elRun.onclick (初始化逻辑) ===
-elRun.onclick=async()=>{
+    elRun.onclick=async()=>{
       const entries=parseLines(elList.value);
       if(!entries.length){ elMsg.textContent='请输入地址'; elMsg.classList.remove('error-text'); return; }
 
@@ -2535,7 +2856,7 @@ elRun.onclick=async()=>{
       const delay=Math.max(0, Math.min(5000, parseInt(elDelay.value)||500));
       const connection=new solanaWeb3.Connection(elRpc.value.trim(),{commitment:'confirmed'});
 
-      let total=0n, successCount=0, failCount=0;
+      let successCount=0, failCount=0;
       rows = entries.map(it=>({
         index:it.line,
         address:it.address,
@@ -2556,10 +2877,10 @@ elRun.onclick=async()=>{
               const lam=BigInt(info.lamports);
               const sol=lamportsToSolString(lam);
               rows[idx]={ index:it.line, address:it.address, lamports: lam, sol:sol, status:'成功' };
-originalRows[idx]=rows[idx];
-successCount++;
-const sumLam = rows.reduce((acc, r) => acc + (r.lamports || 0n), 0n);
-elSum.textContent = lamportsToSolString(sumLam);
+              originalRows[idx]=rows[idx];
+              successCount++;
+              const sumLam = rows.reduce((acc, r) => acc + (r.lamports || 0n), 0n);
+              elSum.textContent = lamportsToSolString(sumLam);
             }else{
               rows[idx]={ index:it.line, address:it.address, lamports:0n, sol:'0', status:'失败' };
               originalRows[idx]=rows[idx];
@@ -2581,8 +2902,8 @@ elSum.textContent = lamportsToSolString(sumLam);
       elRun.disabled=false; elExport.disabled=elCopy.disabled=elSort.disabled=false;
       if(rows.filter(r=>r.status==='失败').length>0){ elRetry.style.display='inline-block'; elRetry.disabled=false; }
       showToast('查询完成');
-// === DO NOT MODIFY END: elRun.onclick ===
     };
+    // === DO NOT MODIFY END: elRun.onclick ===
 
     function renderTable(data){
       elTbody.innerHTML='';
@@ -2609,7 +2930,6 @@ elSum.textContent = lamportsToSolString(sumLam);
 }
 
 // 当切换到 SOL 批量查询标签时初始化
-// 直接绑定，不等待 DOMContentLoaded，防止路由自动跳转时监听器未就绪
 (function(){
   const solBatchBtn = document.querySelector('button[data-tab="sol-batch"]');
   if (solBatchBtn) {
@@ -2617,7 +2937,6 @@ elSum.textContent = lamportsToSolString(sumLam);
     solBatchBtn.addEventListener('click', initSolBatchTool);
 
     // 2. 修复 Bug：检查当前是否直接通过 #solscan 进入，或者是已激活状态
-    // 如果是，说明路由脚本已经帮我们点过了，但当时监听器还没挂载，所以这里要手动补发一次初始化
     if (location.hash === '#solscan' || solBatchBtn.classList.contains('active')) {
        initSolBatchTool();
     }
