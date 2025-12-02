@@ -27,7 +27,7 @@
       background:#f6f6f6; text-align:left;
     }
     nav button.active {background:#0d6efd; color:#fff; border:2px solid #0d6efd;}
-    main {flex:1; overflow:auto;}
+    main {flex:1; overflow:auto; position: relative;} /* main 增加 relative */
     section {display:none; min-height:100%; overflow:auto; padding:10px; box-sizing:border-box;}
     section.active {display:block;}
 </style>
@@ -35,7 +35,29 @@
 <style>
 /* 钱包生成器专用样式 (Scope: #wallet-generator) */
 /* 修复 ID 冲突，改用 #wallet-generator */
+#wallet-generator {
+    position: relative; /* 关键修改：让绝对定位的遮罩层只相对于本区域定位 */
+}
+
 #wallet-generator .wg-container { max-width: 1100px; margin: 0 auto; }
+
+/* 修改：提示词 subtitle 样式优化 */
+#wallet-generator .subtitle {
+    font-size: 13px;
+    color: #666;
+    background: #f8f9fa;
+    padding: 12px 16px;
+    border-radius: 8px;
+    border: 1px solid #eee;
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+/* 暗黑模式适配 subtitle */
+body.dark #wallet-generator .subtitle {
+    background: #2a2a2a;
+    color: #aaa;
+    border-color: #444;
+}
 
 /* 修改：背景色由 #fafafa 改为 #fff，边框颜色调整，添加阴影以匹配其他 .tool-card */
 #wallet-generator .toolbar {
@@ -82,10 +104,12 @@
 #wallet-generator .blur-text { color: transparent; text-shadow: 0 0 10px rgba(0,0,0,0.5); transition: all 0.3s ease; user-select: none; }
 #wallet-generator .blur-text:hover { color: #333; text-shadow: none; user-select: auto; }
 
-/* 遮罩层 */
+/* 遮罩层修改：从 fixed 改为 absolute，使其只遮挡 content 区域 */
 #wg-networkOverlay {
-    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(255, 255, 255, 0.98); z-index: 9999;
+    position: absolute; /* 修改点 */
+    top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(255, 255, 255, 0.98); 
+    z-index: 50; /* 调整层级，确保在 section 内容之上即可 */
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     text-align: center; transition: opacity 0.3s;
 }
@@ -2274,7 +2298,8 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
 
     <div class="wg-container">
         <h1>ETH钱包批量生成</h1>
-        <div class="subtitle">提示:钱包生成过程均在本地环境完成，我们无法获取到钱包的任何信息！此工具在本地运行，为了安全，请断开网络并在无痕浏览器上执行此工具！</div>
+        <!-- 提示词更新：样式优化 -->
+        <div class="subtitle">提示: 钱包生成过程均在本地环境完成，我们无法获取到钱包的任何信息！此工具在本地运行，为了安全，请断开网络并在无痕浏览器上执行此工具！</div>
 
         <div class="toolbar">
             <span class="label">数量</span>
@@ -2346,7 +2371,8 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
             
             const probes = targets.map(probeUrl);
             const timeoutPromise = new Promise((_, reject) => {
-                setTimeout(() => reject(new Error("TIMEOUT")), 3000);
+                // 修改：超时时间缩短为 800ms，加速检测体验
+                setTimeout(() => reject(new Error("TIMEOUT")), 800);
             });
 
             try {
@@ -3048,5 +3074,3 @@ document.addEventListener("DOMContentLoaded", function() {
 </script>
 </body>
 </html>
-
-
