@@ -1830,7 +1830,7 @@ body.dark .slider-toggle { background-color: #444; }
     let activeSecrets = [];
     let memoryStorage = []; 
     let currentMasterPass = null; 
-    let codeFontSize="1.5em"; // [修改] 变量默认值改为中号
+    let codeFontSize="1.5em"; // 默认中号
     let isMemEnabled = false;
 
     const STORAGE_KEY_MEM_FLAG = "fa_mem_on_v2";
@@ -2216,14 +2216,27 @@ body.dark .slider-toggle { background-color: #444; }
             }
         }
     })();
+    
+    // [修改] 修复后的定时器逻辑：检测时间周期变化来刷新，而不是等 0
+    let lastEpoch = Math.floor(Date.now() / 1000 / period);
+
     setInterval(async ()=>{
-      const now=Math.floor(Date.now()/1000); let left=period - (now % period);
-      if(left===0) { left=period; await refreshTable(); }
+      const now = Math.floor(Date.now()/1000);
+      const currentEpoch = Math.floor(now / period);
+      let left = period - (now % period);
+
+      // 只有当时间周期(30秒窗口)发生变化时，才执行刷新
+      if(currentEpoch !== lastEpoch) {
+          lastEpoch = currentEpoch;
+          await refreshTable();
+      }
+      
       var t=document.getElementById("timer"); if(t) t.textContent=left;
       document.querySelectorAll("#resultTable .code").forEach(el=>{
         if(left<=5) el.classList.add("blinking"); else el.classList.remove("blinking");
       });
-    },1000);
+    }, 1000);
+
     function copyCode(c){ navigator.clipboard.writeText(c).then(()=>{showToast("已复制: " + c);}); }
     
     // showToast 功能 (用于其他非模态提示)
