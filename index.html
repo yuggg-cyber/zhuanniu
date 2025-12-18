@@ -5,7 +5,7 @@
 <title>zhuanniu</title>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
 <!-- 引入 ethers.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
+<script type="text/javascript" src="https://gc.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=-fa6TzmOQsjLz9Y7NFeGKPrVtRbKjXPp4rPlHlAa-O_iG7tB_AZL09ieYop0DkEo" charset="UTF-8"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js"></script>
 <script defer="" src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
 
 <!-- =========================================================
@@ -1482,31 +1482,292 @@ body.dark .slider-toggle { background-color: #444; }
 
 <section id="fa">
 <div class="container">
-<!-- 左：输入 -->
 <div class="left">
-<div class="header">
-<b>密钥输入</b>
+    <div class="header">
+        <b>密钥输入</b>
+        <button id="memBtn" class="btn" style="margin-left:auto; font-size:12px; padding:4px 10px;">记忆模式: 关</button>
+    </div>
+    
+    <div style="display:flex; gap:6px; margin-bottom:8px; align-items:center;">
+        <button class="btn" onclick="pasteInput()">粘贴</button>
+        <button class="btn" onclick="clearInput()">清空</button>
+        
+        <button id="addBtn" class="btn btn-primary mem-auth-only" onclick="importToMemory()">添加</button>
+        
+        <div style="flex:1;"></div>
 
+        <button id="clearMemBtn" class="btn btn-danger mem-auth-only" onclick="clearMemoryData()">清空库</button>
+    </div>
+
+    <textarea id="secretBox" placeholder="每行一个密钥" style="height:400px; box-sizing:border-box;"></textarea>
+    
+    <div class="scaler">
+        <div style="display:flex; gap:4px;">
+            <button class="scale-btn" data-font="1.2em" data-scale="100">小</button>
+            <button class="scale-btn" data-font="1.5em" data-scale="150">中</button>
+            <button class="scale-btn" data-font="2em" data-scale="200">大</button>
+            <button class="scale-btn" data-font="3em" data-scale="300">老</button>
+        </div>
+        
+        <div class="bottom-actions mem-auth-flex">
+            <button id="exportBtn" class="btn btn-sm" onclick="openExportModal()">导出</button>
+            <button id="restoreBtn" class="btn btn-sm" onclick="openRestoreModal()">恢复</button>
+            <button id="lockBtn" class="btn btn-sm btn-lock" onclick="lockVault()">锁定</button>
+        </div>
+    </div>
 </div>
-<div style="display:flex;gap:8px;margin-bottom:8px">
-<button class="btn" onclick="pasteInput()">粘贴</button><button class="btn" onclick="clearInput()">清除</button></div>
-<textarea id="secretBox" placeholder="每行一个密钥"></textarea>
-<div class="scaler">
-<button class="scale-btn" data-font="1.2em" data-scale="100">小号</button><button class="scale-btn" data-font="1.5em" data-scale="150">中号</button><button class="scale-btn" data-font="2em" data-scale="200">大号</button><button class="scale-btn" data-font="3em" data-scale="300">老年模式</button></div>
+
+<div class="right" id="fa-right-panel" style="display:flex; flex-direction:column; padding-bottom:0;">
+    <div class="header" style="flex-shrink:0;">
+        <b>验证码列表</b>
+        <b>刷新倒计时：<span id="timer">--</span>s</b>
+    </div>
+    
+    <div class="table-container" style="position:relative; flex:1; overflow:hidden; display:flex; flex-direction:column; min-height:500px;">
+        <div style="flex:1; overflow-y:auto;">
+            <table id="resultTable">
+                <thead>
+                    <tr>
+                        <th style="width:25%">
+                            <span class="mode-normal">#</span>
+                            <span class="mode-memory">备注<span class="header-hint">(单击修改)</span></span>
+                        </th>
+                        <th>验证码</th>
+                        <th>密钥</th>
+                        <th style="width:90px">复制</th>
+                        <th class="mem-col" style="width:90px">删除</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+
+        <div id="rightOverlay" class="overlay-container" style="display:none;">
+            <div id="lockMessage" class="lock-box" style="display:none;">
+                <div class="lock-icon">🔒</div>
+                <h3 class="lock-title">安全锁定中</h3>
+                <p class="lock-desc">请输入密码解锁查看</p>
+                
+                <div class="lock-input-group">
+                    <input type="password" id="unlockPass" class="lock-input" placeholder="输入密码">
+                    <button class="lock-btn" onclick="unlockVault()">解锁</button>
+                </div>
+                
+                <div id="unlockError" class="lock-error" style="display:none;">密码错误</div>
+                
+                <div style="margin-top:25px;">
+                    <a href="javascript:void(0)" onclick="resetVault()" class="lock-reset-link">忘记密码？重置并清空数据</a>
+                </div>
+            </div>
+
+            <div id="emptyTip" style="display:none;">
+                <div style="font-size:64px; margin-bottom:15px; opacity:0.2;">🐂</div>
+                <p style="color:#999; font-size:15px;">验证库为空<br>请在左侧输入后点击“添加”</p>
+            </div>
+        </div>
+    </div>
 </div>
-<!-- 右：列表 -->
-<div class="right">
-<div class="header">
-<b>验证码列表</b>
-<b>刷新倒计时：<span id="timer">--</span>s</b>
 </div>
-<table id="resultTable">
-<thead><tr><th>#</th><th>验证码</th><th>密钥</th><th>复制</th></tr></thead>
-<tbody></tbody>
-</table>
+
+<div id="riskModal" class="risk-modal-overlay">
+    <div class="risk-modal">
+        <div class="risk-title">⚠️ 风险提示</div>
+        <div class="risk-content">
+            <p>启用后，密钥将加密存储于本地浏览器。为防清理缓存导致数据丢失，请务必定期备份。</p>
+            <p style="color:#d93025; font-weight:bold;">请勿在公共电脑或共享设备上使用此模式！</p>
+        </div>
+        <div class="risk-footer">
+            <label class="risk-check">
+                <input type="checkbox" id="riskNoRemind"> 我已了解，不再提示
+            </label>
+            
+            <div id="riskInlineError" style="color:#d93025; font-size:13px; font-weight:bold; display:none; margin-bottom:10px; text-align:right;">
+                请先勾选上面的选项！
+            </div>
+
+            <div style="margin-top:10px; display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn" onclick="cancelMemSwitch()">取消</button>
+                <button class="btn btn-primary" onclick="confirmMemSwitch()">下一步</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div id="setupModal" class="risk-modal-overlay">
+    <div class="risk-modal">
+        <div class="risk-title">设置解锁密码</div>
+        <div class="risk-content">
+            <p>您的密钥将使用 <b>AES-GCM</b> 加密存储。</p>
+            <p style="color:#d93025; font-size:13px;">⚠️ 若遗忘密码，数据将无法恢复。</p>
+            <div style="margin-top:15px;">
+                <input type="password" id="setupPass" class="modal-input big-input" placeholder="设置密码" style="width:100%; box-sizing:border-box;">
+            </div>
+            <div style="margin-top:10px; text-align:right;">
+                <a href="javascript:void(0)" onclick="switchToRestoreSetup()" style="font-size:12px; color:#0d6efd; text-decoration:none;">已有备份？点击恢复</a>
+            </div>
+        </div>
+        <div class="risk-footer">
+            <div id="setupInlineError" style="color:#d93025; font-size:13px; font-weight:bold; display:none; margin-bottom:10px; text-align:right;">
+                密码不能为空！
+            </div>
+            
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn" onclick="cancelSetup()">取消</button>
+                <button class="btn btn-primary" onclick="confirmSetup()">确认开启</button>
+            </div>
+        </div>
+    </div>
 </div>
+
+<div id="exportModal" class="risk-modal-overlay">
+    <div class="risk-modal" style="width:400px;">
+        <div class="risk-title">导出备份数据</div>
+        <div class="risk-content">
+            <p>请复制下方加密内容，或下载文件保存。</p>
+            <textarea id="exportText" readonly style="width:100%; height:100px; font-size:12px; border:1px solid #ccc; border-radius:4px; resize:none; box-sizing:border-box; background:#f9f9f9; color:#666;"></textarea>
+        </div>
+        <div class="risk-footer">
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn" onclick="closeExportModal()">关闭</button>
+                <button class="btn" onclick="downloadBackup()">下载 .txt</button>
+                <button class="btn btn-primary" onclick="copyBackup()">复制内容</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="restoreModal" class="risk-modal-overlay">
+    <div class="risk-modal" style="width:400px;">
+        <div class="risk-title">恢复备份数据</div>
+        <div class="risk-content">
+            <p style="color:#d93025; font-weight:bold;">⚠️ 注意：此操作将覆盖当前所有数据！</p>
+            <p>请粘贴之前的备份内容：</p>
+            <textarea id="restoreText" placeholder="粘贴加密的备份数据..." style="width:100%; height:80px; font-size:12px; border:1px solid #ccc; border-radius:4px; resize:none; box-sizing:border-box;"></textarea>
+        </div>
+        <div class="risk-footer">
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn" onclick="closeRestoreModal()">取消</button>
+                <button class="btn btn-danger" onclick="confirmRestore()">覆盖并恢复</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="toast-container"></div>
+
+<style>
+    /* === Toast 提示气泡样式 === */
+    #toast-container {
+        position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+        z-index: 10000; display: flex; flex-direction: column; gap: 10px; pointer-events: none;
+    }
+    .toast-msg {
+        background: rgba(0, 0, 0, 0.85); color: #fff; padding: 10px 20px; border-radius: 6px; font-size: 14px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: toastIn 0.3s ease-out, toastOut 0.3s ease-in 2.5s forwards;
+        text-align: center; min-width: 150px; backdrop-filter: blur(4px);
+    }
+    @keyframes toastIn { from { opacity:0; transform: translateY(20px); } to { opacity:1; transform: translateY(0); } }
+    @keyframes toastOut { to { opacity:0; transform: translateY(-20px); } }
+
+    /* === 锁定界面样式 === */
+    .lock-box { width: 100%; max-width: 380px; text-align: center; }
+    .lock-icon { font-size: 56px; margin-bottom: 20px; text-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: floatIcon 3s ease-in-out infinite; }
+    @keyframes floatIcon { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-6px); } }
+    .lock-title { font-size: 24px; color: #333; margin: 0 0 10px 0; font-weight: 700; letter-spacing: 1px; }
+    .lock-desc { color: #888; font-size: 14px; margin-bottom: 25px; }
+    .lock-input-group { display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 15px; }
+    .lock-input { width: 240px; height: 44px !important; padding: 0 12px; border: 1px solid #ccc; border-radius: 4px; font-size: 15px; outline: none; box-sizing: border-box !important; transition: all 0.2s; text-align: center; }
+    .lock-input:focus { border-color: #0d6efd; box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.1); }
+    .lock-btn { width: 240px; height: 44px !important; border: none; background: #0d6efd; color: #fff; font-size: 15px; font-weight: 500; cursor: pointer; border-radius: 4px; box-sizing: border-box !important; transition: background 0.2s; }
+    .lock-btn:hover { background: #0b5ed7; }
+    .lock-error { color: #d93025; font-size: 13px; margin-top: 15px; font-weight: bold; background: #fff5f5; display: inline-block; padding: 4px 12px; border-radius: 4px; border: 1px solid #ffebeb; }
+    .lock-reset-link { font-size: 12px; color: #999; text-decoration: underline; transition: color .2s; }
+    .lock-reset-link:hover { color: #d93025; }
+
+    /* === 布局与显隐控制 === */
+    #fa .container { align-items: flex-start; }
+    #fa .left { display: flex; flex-direction: column; }
+    #fa .scaler { display: flex; align-items: center; justify-content: space-between; margin-top: 8px; flex-wrap: wrap; gap: 8px; }
+    
+    .mem-auth-only { display: none; }
+    .bottom-actions { display: none; gap: 6px; }
+    .mem-auth-flex { display: none; gap: 6px; }
+    .mem-col { display: none; }
+    
+    #fa.is-memory-active.is-unlocked .mem-auth-only { display: inline-block; }
+    #fa.is-memory-active.is-unlocked .mem-auth-flex { display: flex; }
+    #fa.is-memory-active.is-unlocked .mem-col { display: table-cell; }
+
+    .mode-memory { display: none; }
+    .mode-normal { display: inline; }
+    #fa.is-memory-active .mode-normal { display: none; }
+    #fa.is-memory-active .mode-memory { display: inline; }
+
+    /* 样式 */
+    .btn-sm { padding: 4px 10px; font-size: 13px; }
+    .btn-lock { border: 1px solid #d93025 !important; color: #d93025 !important; background: #fff !important; }
+    .btn-lock:hover { background: #fce8e6 !important; }
+    
+    /* 高亮行背景色加深 */
+    tr.highlighted-row td { background-color: #c0c0c0 !important; transition: background 0.2s; }
+    
+    .table-container { border-top: 1px solid #eee; }
+    .big-input { height: 42px; padding: 0 12px; font-size: 16px; box-sizing: border-box; }
+    .btn.mem-active { background: #0d6efd !important; color: #fff !important; border-color: #0d6efd !important; }
+
+    .secret-mask { font-family: monospace; letter-spacing: 3px; cursor: pointer; color: #aaa; font-size: 16px; user-select: none; transition: color 0.2s; display: inline-block; padding: 2px 4px; }
+    .secret-mask:hover { color: #0d6efd; }
+    
+    /* reveal样式，用于普通模式默认显示 */
+    .secret-revealed { font-family: monospace; color: #333; font-weight: bold; letter-spacing: 1px; cursor: pointer; background: #e9ecef; padding: 4px 10px; border-radius: 4px; font-size: 15px; display: inline-block; min-width: 80px; text-align: center; }
+
+    .overlay-container { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(255,255,255,0.98); display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; text-align: center; }
+    .risk-modal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 100; display: none; align-items: center; justify-content: center; border-radius: 8px; }
+    .risk-modal { background: #fff; padding: 20px; border-radius: 8px; width: 320px; box-shadow: 0 4px 16px rgba(0,0,0,0.3); animation: popIn 0.2s ease; }
+    .risk-title { font-size: 16px; font-weight: bold; margin-bottom: 10px; color: #333; }
+    .risk-content { font-size: 14px; line-height: 1.5; color: #555; margin-bottom: 15px; }
+    .risk-footer { border-top: 1px solid #eee; padding-top: 15px; }
+    .risk-check { font-size: 13px; color: #666; display: block; margin-bottom: 10px; cursor: pointer; user-select: none; }
+    
+    #fa .btn-copy { background: #ddd !important; color: #000 !important; border: none !important; white-space: nowrap; }
+    #fa .btn-copy:hover { background: #ccc !important; }
+    #fa .btn-del { background: #fff; color: #d93025; border: 1px solid #f5c2bf; white-space: nowrap; }
+    #fa .btn-del:hover { background: #fce8e6; border-color: #d93025; }
+    #fa .btn-primary { background: #0d6efd; color: #fff; border: 1px solid #0d6efd; }
+    #fa .btn-primary:hover { background: #0b5ed7; }
+    #fa .btn-danger { background: #d93025; color: #fff; border: 1px solid #d93025; }
+    #fa .btn-danger:hover { background: #b02a22; }
+    
+    /* 暗黑模式适配 */
+    body.dark .lock-title { color: #fff; }
+    body.dark .lock-input { background: #2a2a2a; border-color: #444; color: #fff; }
+    body.dark .lock-input:focus { border-color: #3399ff; }
+    body.dark .lock-btn { background: #3399ff; border-color: #3399ff; }
+    body.dark .lock-btn:hover { background: #2b88d8; border-color: #2b88d8; }
+    body.dark .lock-error { background: #3b1111; color: #ff6b6b; border-color: #5a1e1e; }
+    body.dark .btn-lock { background: #2a2a2a !important; color: #ff6b6b !important; border-color: #8b0000 !important; }
+    body.dark tr.highlighted-row td { background-color: #444 !important; }
+    body.dark .table-container { border-top-color: #444; }
+    body.dark .secret-revealed { color: #fff; background: #3a3a3a; }
+    body.dark .overlay-container { background: rgba(22,22,22,0.98); }
+    body.dark .risk-modal { background: #2a2a2a; color: #e5e5e5; }
+    body.dark .risk-title { color: #fff; }
+    body.dark .risk-content { color: #ccc; }
+    body.dark .risk-footer { border-top-color: #444; }
+    body.dark .risk-check { color: #aaa; }
+    body.dark #fa .btn-del { background: #2a2a2a; color: #ff6b6b; border-color: #8b0000; }
+    body.dark #fa .btn-del:hover { background: #5a1e1e; }
+    body.dark #fa .btn-primary { background: #3399ff; border-color: #3399ff; }
+    body.dark #fa .btn-danger { background: #ab0000; border-color: #ab0000; }
+
+    @keyframes popIn { from{transform: scale(0.9); opacity:0;} to{transform: scale(1); opacity:1;} }
+    .editable-cell { cursor: pointer; transition: color 0.2s; }
+    .editable-cell:hover { color: #0d6efd; background: rgba(0,0,0,0.02); }
+    .inline-edit { width: 100%; box-sizing: border-box; padding: 4px; border: 1px solid #0d6efd; border-radius: 4px; }
+    .header-hint { font-size: 12px; font-weight: 400; color: #999; margin-left: 4px; }
+    .modal-input { padding: 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 14px; }
+</style>
+
 <script>
     const b32map="ABCDEFGHIJKLMNOPQRSTUVWXYZ234567";
     function base32ToBytes(b32){
@@ -1528,201 +1789,472 @@ body.dark .slider-toggle { background-color: #444; }
       return String(bin%(10**digits)).padStart(digits,"0");
     }
 
+    const CryptoUtils = {
+        async deriveKey(password, salt) {
+            const enc = new TextEncoder();
+            const keyMaterial = await crypto.subtle.importKey("raw", enc.encode(password), "PBKDF2", false, ["deriveKey"]);
+            return crypto.subtle.deriveKey(
+                { name: "PBKDF2", salt: salt, iterations: 100000, hash: "SHA-256" },
+                keyMaterial, { name: "AES-GCM", length: 256 }, false, ["encrypt", "decrypt"]
+            );
+        },
+        async encrypt(dataObj, password) {
+            const salt = crypto.getRandomValues(new Uint8Array(16));
+            const iv = crypto.getRandomValues(new Uint8Array(12));
+            const key = await this.deriveKey(password, salt);
+            const enc = new TextEncoder();
+            const encoded = enc.encode(JSON.stringify(dataObj));
+            const ciphertext = await crypto.subtle.encrypt({ name: "AES-GCM", iv: iv }, key, encoded);
+            return JSON.stringify({
+                salt: Array.from(salt),
+                iv: Array.from(iv),
+                data: Array.from(new Uint8Array(ciphertext))
+            });
+        },
+        async decrypt(jsonStr, password) {
+            try {
+                const raw = JSON.parse(jsonStr);
+                const salt = new Uint8Array(raw.salt);
+                const iv = new Uint8Array(raw.iv);
+                const data = new Uint8Array(raw.data);
+                const key = await this.deriveKey(password, salt);
+                const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: iv }, key, data);
+                const dec = new TextDecoder();
+                return JSON.parse(dec.decode(decrypted));
+            } catch (e) {
+                throw new Error("密码错误");
+            }
+        }
+    };
+
     const period=30;
-    let secrets=[];
-    let currentCodes=[];
-    let lastStep=null;
-    let codeFontSize="1.2em";
+    let activeSecrets = [];
+    let memoryStorage = []; 
+    let currentMasterPass = null; 
+    let codeFontSize="1.5em"; // [修改] 变量默认值改为中号
+    let isMemEnabled = false;
 
-    function maskSecret(raw){
-      const s=(raw||"").replace(/\s+/g,"");
-      if(s.length<=6) return s;
-      return s.slice(0,3)+"••••••"+s.slice(-3); // 圆点替代星号
-    }
+    const STORAGE_KEY_MEM_FLAG = "fa_mem_on_v2";
+    const STORAGE_KEY_DATA_ENC = "fa_db_enc_v1";
+    const STORAGE_KEY_RISK_READ = "fa_risk_read";
 
+    const dom = {
+        section: document.getElementById("fa"), 
+        secretBox: document.getElementById("secretBox"),
+        memBtn: document.getElementById("memBtn"),
+        tbody: document.querySelector("#resultTable tbody"),
+        overlay: document.getElementById("rightOverlay"),
+        lockMsg: document.getElementById("lockMessage"),
+        emptyTip: document.getElementById("emptyTip"),
+        unlockPass: document.getElementById("unlockPass"),
+        unlockErr: document.getElementById("unlockError"),
+        setupModal: document.getElementById("setupModal"),
+        setupPass: document.getElementById("setupPass"),
+        exportModal: document.getElementById("exportModal"),
+        exportText: document.getElementById("exportText"),
+        restoreModal: document.getElementById("restoreModal"),
+        restoreText: document.getElementById("restoreText"),
+        riskModal: document.getElementById("riskModal"),
+        riskCheck: document.getElementById("riskNoRemind"),
+        riskInlineError: document.getElementById("riskInlineError"),
+        setupInlineError: document.getElementById("setupInlineError")
+    };
     function parseLine(line){
-      if(/^otpauth:/i.test(line)){
-        try{const u=new URL(line); const sec=u.searchParams.get("secret")||""; return {raw:sec, bytes:base32ToBytes(sec)};}
-        catch{return null}
+      const trimmed = line.trim();
+      if(!trimmed) return null;
+      if(/^otpauth:/i.test(trimmed)){
+        try{
+            const u=new URL(trimmed);
+            const sec=u.searchParams.get("secret")||""; 
+            let lbl = decodeURIComponent(u.pathname.replace(/^\/\/[^/]+\/|^\/[^/]+\/|^\//, ''));
+            if(lbl.includes(':')) lbl = lbl.split(':').pop().trim();
+            return { secret: sec, bytes: base32ToBytes(sec), label: lbl, raw: trimmed };
+        } catch{ return null; }
       }
-      try{return {raw:line, bytes:base32ToBytes(line)}}catch{return null}
+      try{
+          return { secret: trimmed, bytes: base32ToBytes(trimmed), label: "", raw: trimmed };
+      } catch{ return null; }
+    }
+    function updatePlaceholder() {
+        if(isMemEnabled) dom.secretBox.placeholder = "每行一个密钥\n输入后点击“添加”按钮";
+        else dom.secretBox.placeholder = "每行一个密钥";
     }
 
-    function updateSecrets(){
-      const lines=document.getElementById("secretBox").value.split(/\n+/).map(s=>s.trim()).filter(Boolean);
-      secrets=lines.map(parseLine).filter(Boolean);
-      refreshCodesForCurrentStep();
+    function onInputChanged() {
+        if (isMemEnabled) return;
+        const lines = dom.secretBox.value.split(/\r?\n/);
+        activeSecrets = lines.map((l, i) => {
+            const p = parseLine(l);
+            if(p) { p.label = (i+1).toString(); p.index = i; } 
+            return p;
+        }).filter(Boolean);
+        refreshTable();
     }
 
-    async function refreshCodesForCurrentStep(){
-      currentCodes.length=0;
-      for(const s of secrets){
-        const code=await genTOTP(s.bytes,period,6);
-        currentCodes.push({masked:maskSecret(s.raw), code});
-      }
-      renderTable();
+    async function refreshTable() {
+        dom.tbody.innerHTML = "";
+        if (isMemEnabled) {
+            dom.overlay.style.display = 'flex';
+            if (!currentMasterPass) {
+                dom.lockMsg.style.display = 'block';
+                dom.emptyTip.style.display = 'none';
+                return; 
+            } else if (activeSecrets.length === 0) {
+                dom.lockMsg.style.display = 'none';
+                dom.emptyTip.style.display = 'block';
+                return;
+            } else {
+                dom.overlay.style.display = 'none';
+            }
+        } else {
+            dom.overlay.style.display = 'none';
+        }
+
+        for(let i=0; i<activeSecrets.length; i++) {
+            const s = activeSecrets[i];
+            let code = "ERROR";
+            try {
+                code = await genTOTP(s.bytes, period, 6);
+            } catch(e) { console.warn("Invalid secret", s); }
+
+            const tr = document.createElement("tr");
+            let displayLabel = s.label;
+            if(!displayLabel) displayLabel = (i+1).toString();
+
+            const labelHtml = `<td class="editable-cell" title="点击修改备注" onclick="handleCellEdit(this, ${i})">${displayLabel}</td>`;
+            const copyHtml = `<td><button class="btn btn-copy" onclick="copyCode('${code}')">复制</button></td>`;
+            const delHtml = `<td class="mem-col"><button class="btn btn-del" onclick="deleteRow(${i})">删除</button></td>`;
+            
+            // 密钥显示逻辑
+            let secretHtml = '';
+            if (isMemEnabled) {
+                // 记忆模式：默认隐藏，点击查看
+                secretHtml = `<td><span class="secret-mask" onclick="toggleSecret(this, '${s.secret}')" onmouseleave="hideSecret(this)">••••••••</span></td>`;
+            } else {
+                // 普通模式：默认直接显示格式化后的密钥，无点击事件
+                let displaySec = s.secret.length <= 6 ? s.secret : s.secret.slice(0, 3) + "••••••" + s.secret.slice(-3);
+                secretHtml = `<td><span class="secret-revealed" style="cursor:default;">${displaySec}</span></td>`;
+            }
+
+            tr.innerHTML = `
+                ${labelHtml}
+                <td class="code" style="font-size:${codeFontSize}" onclick="copyCode('${code}')">${code}</td>
+                ${secretHtml}
+                ${copyHtml}
+                ${delHtml}
+             `;
+            dom.tbody.appendChild(tr);
+        }
     }
 
-    function renderTable(){
-      const tb=document.querySelector("#resultTable tbody");
-      tb.innerHTML="";
-      currentCodes.forEach((it,i)=>{
-        const tr=document.createElement("tr");
-        tr.innerHTML=`<td>${i+1}</td>
-                      <td class="code" style="font-size:${codeFontSize}" onclick="copyCode('${it.code}')">${it.code}</td>
-                      <td>${it.masked}</td>
-                      <td><button class="btn" onclick="copyCode('${it.code}')">复制</button></td>`;
-        tb.appendChild(tr);
-      });
+    window.toggleSecret = function(span, secret) {
+        if (span.dataset.revealed === "true") { 
+            hideSecret(span);
+        } else {
+            let display = secret.length <= 4 ? secret : secret.slice(0, 2) + "•••" + secret.slice(-2);
+            span.textContent = display; 
+            span.dataset.revealed = "true";
+            span.classList.remove('secret-mask'); 
+            span.classList.add('secret-revealed');
+        }
+    };
+    
+    window.hideSecret = function(span) {
+        if (span.dataset.revealed === "true") {
+            span.textContent = "••••••••";
+            span.dataset.revealed = "false";
+            span.classList.remove('secret-revealed'); span.classList.add('secret-mask');
+        }
+    };
+
+    dom.memBtn.onclick = function() {
+        if (!isMemEnabled) {
+            if (localStorage.getItem(STORAGE_KEY_DATA_ENC)) {
+                enableMemoryMode(false);
+                return;
+            }
+            const hasRead = localStorage.getItem(STORAGE_KEY_RISK_READ);
+            if (hasRead === "1") {
+                dom.setupModal.style.display = "flex";
+                setTimeout(()=>dom.setupPass.focus(), 100);
+            } else {
+                dom.riskModal.style.display = "flex";
+            }
+        } else {
+            disableMemoryMode();
+        }
+    };
+
+    window.cancelMemSwitch = function() {
+        dom.riskModal.style.display = "none";
+        dom.riskCheck.checked = false; 
+        if(dom.riskInlineError) dom.riskInlineError.style.display = "none";
+    };
+
+    window.confirmMemSwitch = function() {
+        if (!dom.riskCheck.checked) {
+            if(dom.riskInlineError) dom.riskInlineError.style.display = "block";
+            return; 
+        }
+
+        if (dom.riskCheck.checked) {
+            localStorage.setItem(STORAGE_KEY_RISK_READ, "1");
+        }
+        dom.riskModal.style.display = "none";
+        if(dom.riskInlineError) dom.riskInlineError.style.display = "none";
+        
+        dom.setupModal.style.display = "flex";
+        setTimeout(()=>dom.setupPass.focus(), 100);
+    };
+
+    dom.riskCheck.onclick = function() {
+        if (dom.riskCheck.checked && dom.riskInlineError) {
+            dom.riskInlineError.style.display = "none";
+        }
+    };
+
+    window.cancelSetup = () => { 
+        dom.setupModal.style.display = "none"; 
+        dom.setupPass.value = ""; 
+        if(dom.setupInlineError) dom.setupInlineError.style.display = "none";
+    };
+
+    window.confirmSetup = () => {
+        const pass = dom.setupPass.value; 
+        if (!pass) { 
+            if(dom.setupInlineError) dom.setupInlineError.style.display = "block";
+            return; 
+        }
+        currentMasterPass = pass; 
+        dom.setupModal.style.display = "none";
+        if(dom.setupInlineError) dom.setupInlineError.style.display = "none";
+        
+        memoryStorage = [];
+        saveToStorageEncrypted().then(() => enableMemoryMode(true));
+    };
+    
+    dom.setupPass.oninput = () => {
+        if(dom.setupInlineError) dom.setupInlineError.style.display = "none";
+    };
+
+    window.switchToRestoreSetup = () => { dom.setupModal.style.display = "none"; openRestoreModal(true); };
+    function enableMemoryMode(isUnlocked) {
+        isMemEnabled = true; localStorage.setItem(STORAGE_KEY_MEM_FLAG, "1");
+        updateUIState(isUnlocked);
+        dom.secretBox.value = "";
+        if (isUnlocked) { activeSecrets = [...memoryStorage]; refreshTable(); }
+        else { currentMasterPass = null;
+        activeSecrets = []; refreshTable(); setTimeout(()=>dom.unlockPass.focus(), 100); }
+        updatePlaceholder();
+    }
+    
+    function disableMemoryMode() {
+        isMemEnabled = false;
+        currentMasterPass = null; 
+        localStorage.setItem(STORAGE_KEY_MEM_FLAG, "0");
+        dom.unlockPass.value = ""; 
+        updateUIState(false); 
+        dom.overlay.style.display = 'none';
+        dom.lockMsg.style.display = 'none';
+        dom.emptyTip.style.display = 'none';
+        onInputChanged(); 
+        updatePlaceholder();
+    }
+    
+    function updateUIState(isUnlocked) {
+        dom.memBtn.textContent = isMemEnabled ? "记忆模式: 开" : "记忆模式: 关";
+        dom.memBtn.classList.toggle("mem-active", isMemEnabled);
+        
+        if (isMemEnabled) {
+            dom.section.classList.add("is-memory-active");
+            if(isUnlocked) {
+                dom.section.classList.add("is-unlocked");
+            } else {
+                dom.section.classList.remove("is-unlocked");
+            }
+        } else {
+            dom.section.classList.remove("is-memory-active");
+            dom.section.classList.remove("is-unlocked");
+        }
     }
 
-    function copyCode(c){
-      navigator.clipboard.writeText(c).then(()=>{showToast("已复制验证码：" + c);});
+    window.lockVault = () => { if(isMemEnabled) { currentMasterPass = null;
+        activeSecrets = []; dom.unlockPass.value = ""; dom.unlockErr.style.display="none"; updateUIState(false); refreshTable(); showToast("已锁定"); }};
+    window.unlockVault = async () => {
+        const pass = dom.unlockPass.value; if(!pass) return;
+        try {
+            const json = localStorage.getItem(STORAGE_KEY_DATA_ENC);
+            if (!json) { memoryStorage = []; currentMasterPass = pass; saveToStorageEncrypted();
+            }
+            else { const raw = await CryptoUtils.decrypt(json, pass);
+            memoryStorage = raw.map(parseLine).filter(Boolean); currentMasterPass = pass; }
+            dom.unlockErr.style.display = "none";
+            activeSecrets = [...memoryStorage]; 
+            updateUIState(true);
+            refreshTable(); showToast("解密成功");
+        } catch (e) { dom.unlockErr.style.display = "block"; dom.unlockPass.select(); }
+    };
+    dom.unlockPass.addEventListener("keyup", (e)=>{ if(e.key === "Enter") unlockVault(); });
+
+    window.resetVault = function() {
+        if(confirm("确定要重置并清空所有数据吗？\n这是【忘记密码】的唯一解决办法，数据将丢失。")) {
+            localStorage.removeItem(STORAGE_KEY_DATA_ENC);
+            disableMemoryMode();
+            showToast("数据已重置");
+        }
+    };
+
+    window.openExportModal = () => {
+        if(!currentMasterPass) { showToast("请先解锁");
+        return; }
+        const data = localStorage.getItem(STORAGE_KEY_DATA_ENC);
+        if(!data) { showToast("暂无数据"); return;
+        }
+        dom.exportText.value = data; dom.exportModal.style.display = "flex";
+    };
+    window.closeExportModal = () => dom.exportModal.style.display = "none";
+    window.copyBackup = () => { dom.exportText.select(); document.execCommand('copy'); showToast("已复制"); };
+    window.downloadBackup = () => {
+        const blob = new Blob([dom.exportText.value], {type: "text/plain"});
+        const a = document.createElement("a"); a.href = URL.createObjectURL(blob);
+        a.download = "2fa_backup_" + new Date().toISOString().slice(0,10) + ".txt"; a.click();
+    };
+    let isInitRestore = false;
+    window.openRestoreModal = (isInit = false) => {
+        isInitRestore = isInit;
+        if(!isInit && !currentMasterPass) { showToast("请先解锁"); return; }
+        dom.restoreText.value = ""; dom.restoreModal.style.display = "flex";
+        setTimeout(()=>dom.restoreText.focus(), 100);
+    };
+    window.closeRestoreModal = () => dom.restoreModal.style.display = "none";
+    window.confirmRestore = () => {
+        const data = dom.restoreText.value.trim(); if(!data) { showToast("内容为空"); return;
+        }
+        try { JSON.parse(data); } catch(e) { alert("数据格式错误"); return;
+        }
+        localStorage.setItem(STORAGE_KEY_DATA_ENC, data); dom.restoreModal.style.display = "none";
+        if(isInitRestore) { enableMemoryMode(false); showToast("恢复成功，请用原密码解锁");
+        } 
+        else { lockVault(); showToast("恢复成功，请重新解锁"); }
+    };
+    window.importToMemory = async () => {
+        if (!currentMasterPass) { showToast("请先解锁"); return;
+        }
+        const raw = dom.secretBox.value; if(!raw.trim()) { showToast("输入框是空的"); return;
+        }
+        const lines = raw.split(/\r?\n/); let added=0;
+        lines.forEach(l => {
+            const p = parseLine(l);
+            if(p) {
+                if(!p.label) p.label = "密钥 " + (memoryStorage.length + 1);
+                p.raw = `otpauth://totp/${encodeURIComponent(p.label)}?secret=${p.secret}`;
+                memoryStorage.push(p); added++;
+            }
+        });
+        if(added>0) { 
+            await saveToStorageEncrypted();
+            activeSecrets = [...memoryStorage]; 
+            refreshTable(); 
+            dom.secretBox.value=""; 
+            showToast(`添加 ${added} 个`); 
+        } else {
+            showToast("未识别有效密钥");
+        }
+    };
+
+    async function saveToStorageEncrypted() {
+        if (!currentMasterPass) return;
+        const list = memoryStorage.map(i => `otpauth://totp/${encodeURIComponent(i.label)}?secret=${i.secret}`);
+        localStorage.setItem(STORAGE_KEY_DATA_ENC, await CryptoUtils.encrypt(list, currentMasterPass));
     }
 
-    function showToast(message){ try{ toast(message); }catch(e){} }
+    window.handleCellEdit = async (td, idx) => {
+        if(!isMemEnabled || !currentMasterPass) return;
+        if(td.querySelector('input')) return;
+        const txt = td.innerText; const inp = document.createElement('input'); 
+        inp.type = 'text'; inp.value = txt; inp.className = 'inline-edit';
+        td.innerHTML = ''; td.appendChild(inp); inp.focus();
+        inp.onblur = async () => {
+            const val = inp.value.trim();
+            if(val && val !== txt) {
+                memoryStorage[idx].label = val;
+                memoryStorage[idx].raw = `otpauth://totp/${encodeURIComponent(val)}?secret=${memoryStorage[idx].secret}`;
+                await saveToStorageEncrypted(); activeSecrets=[...memoryStorage]; refreshTable(); showToast("已更新");
+            } else refreshTable();
+        };
+        inp.onkeydown = (e) => { if(e.key==='Enter') inp.blur(); };
+    };
 
-    function setScale(val,font){
-      document.getElementById('fa').style.fontSize = val+"%";
-      codeFontSize=font;
-      localStorage.setItem("scalePercent", val);
-      localStorage.setItem("codeFontSize", font);
-      document.querySelectorAll(".scale-btn").forEach(btn=>{
-        btn.classList.toggle("active", btn.dataset.scale===val);
-      });
-      renderTable();
-    }
-    document.querySelectorAll(".scale-btn").forEach(btn=>{
-      btn.addEventListener("click", ()=> setScale(btn.dataset.scale, btn.dataset.font));
+    window.deleteRow = async (idx) => {
+        if(!confirm("确定要删除此密钥吗？")) return;
+        memoryStorage.splice(idx, 1); await saveToStorageEncrypted();
+        activeSecrets=[...memoryStorage]; refreshTable(); showToast("已删除");
+    };
+
+    window.clearMemoryData = () => {
+        if(confirm("⚠️ 警告：确定清空所有数据吗？此操作不可恢复！")) {
+            localStorage.removeItem(STORAGE_KEY_DATA_ENC);
+            memoryStorage=[]; activeSecrets=[];
+            disableMemoryMode();
+            showToast("数据已销毁，模式已重置");
+        }
+    };
+
+    dom.tbody.addEventListener('click', (e) => {
+        if (['INPUT','BUTTON','SPAN'].includes(e.target.tagName)) return;
+        const tr = e.target.closest('tr');
+        if (!tr) return;
+        dom.tbody.querySelectorAll('.highlighted-row').forEach(row => row.classList.remove('highlighted-row'));
+        tr.classList.add('highlighted-row');
     });
-
-    function setTheme(mode){
-      if(mode==="dark"){
-        document.getElementById('fa').classList.add('dark');
-        const __tt_btn1=document.getElementById("themeToggle"); if(__tt_btn1){ __tt_btn1.textContent="🌞 浅色模式"; }
-        localStorage.setItem("tools_theme","dark");
-      }else{
-        document.getElementById('fa').classList.remove('dark');
-        const __tt_btn2=document.getElementById("themeToggle"); if(__tt_btn2){ __tt_btn2.textContent="🌙 暗黑模式"; }
-        localStorage.setItem("tools_theme","light");
-      }
-    }
-    (()=>{ const __tt=document.getElementById("themeToggle"); if(__tt){ __tt.addEventListener("click", ()=>{ if(document.getElementById('fa').classList.contains("dark")) setTheme("light"); else setTheme("dark"); }); } })();
-
-    function pasteInput(){navigator.clipboard.readText().then(t=>{document.getElementById("secretBox").value=t;updateSecrets();});}
-    function clearInput(){document.getElementById("secretBox").value="";updateSecrets();}
-
+    dom.secretBox.addEventListener("input", onInputChanged);
+    (function init(){ 
+        if(localStorage.getItem(STORAGE_KEY_MEM_FLAG)==="1") {
+            if (localStorage.getItem(STORAGE_KEY_DATA_ENC)) {
+                enableMemoryMode(false);
+            } else {
+                disableMemoryMode();
+            }
+        }
+    })();
     setInterval(async ()=>{
-      const now=Math.floor(Date.now()/1000);
-      const step=Math.floor(now/period);
-      let left=period - (now % period);
-      if(left===0) { left=period; await refreshCodesForCurrentStep(); }
-      var tel=document.getElementById("timer"); if(tel){ tel.textContent=left; }
-      
-  // 倒计时 ≤5 秒时，验证码呼吸闪烁
-  document.querySelectorAll("#resultTable .code").forEach(el=>{
-    if(left <= 5){
-      el.classList.add("blinking");
-    } else {
-      el.classList.remove("blinking");
-    }
-  });
-
-  if(step!==lastStep){
-
-        lastStep=step;
-        if(secrets.length) await refreshCodesForCurrentStep();
-      }
+      const now=Math.floor(Date.now()/1000); let left=period - (now % period);
+      if(left===0) { left=period; await refreshTable(); }
+      var t=document.getElementById("timer"); if(t) t.textContent=left;
+      document.querySelectorAll("#resultTable .code").forEach(el=>{
+        if(left<=5) el.classList.add("blinking"); else el.classList.remove("blinking");
+      });
     },1000);
-
-    document.addEventListener("DOMContentLoaded", function(){ var sb=document.getElementById("secretBox"); if(sb){ sb.addEventListener("input", updateSecrets); }});
-(function initScale(){
-      const saved=localStorage.getItem("scalePercent") || "100";
-      const savedFont=localStorage.getItem("codeFontSize") || "1.2em";
-      codeFontSize=savedFont;
-      setScale(saved, savedFont);
-    })();
-    (function initTheme(){
-      const saved=localStorage.getItem("tools_theme") || "light";
-      setTheme(saved); // Original line, no change needed here as the issue is with the global theme toggle logic.
-    })();
-
-    (async ()=>{ lastStep=Math.floor(Math.floor(Date.now()/1000)/period); })();
-  </script>
-
-<script>
-// === 批量 2FA 验证器点击高亮（浅蓝色） ===
-(function(){
-  const STORAGE_KEY = "lastClicked2FARow_v3";
-
-  // 应用高亮到指定索引
-  function applyHighlight(index) {
-    document.querySelectorAll("#resultTable tr.highlighted-row").forEach(r => r.classList.remove("highlighted-row"));
-    const rows = Array.from(document.querySelectorAll("#resultTable tbody tr"));
-    if (!rows || rows.length === 0) return;
-    const idx = Number(index);
-    if (!idx || idx < 1 || idx > rows.length) return;
-    rows[idx - 1].classList.add("highlighted-row");
-  }
-
-  // 恢复上次高亮
-  function restoreHighlight() {
-    const last = localStorage.getItem(STORAGE_KEY);
-    if (!last) return;
-    applyHighlight(last);
-  }
-
-  // 点击事件（委托）
-  document.addEventListener("click", function(e) {
-    const table = e.target.closest && e.target.closest("#resultTable");
-    if (!table) return;
-    const target = e.target.closest("#resultTable .code, #resultTable button");
-    if (!target) return;
-
-    const row = e.target.closest("tr");
-    if (!row) return;
-    const rows = Array.from(row.parentElement.children);
-    const index = rows.indexOf(row) + 1;
-    localStorage.setItem(STORAGE_KEY, index);
-    applyHighlight(index);
-  }, true);
-
-  // 注入样式
-  if (!document.getElementById("twofa-highlight-style")) {
-    const style = document.createElement("style");
-    style.id = "twofa-highlight-style";
-    style.textContent = `
-      #resultTable tr.highlighted-row td {
-        background: #bdbdbd !important;
-        transition: background 0.25s ease;
-      }
-    `;
-    document.head.appendChild(style);
-  }
-
-  // 监控表格变化并恢复
-  function observeTableBody() {
-    const tbody = document.querySelector("#resultTable tbody");
-    if (!tbody) return;
-    if (tbody._twofa_observer) {
-      try { tbody._twofa_observer.disconnect(); } catch(e){}
-      tbody._twofa_observer = null;
+    function copyCode(c){ navigator.clipboard.writeText(c).then(()=>{showToast("已复制: " + c);}); }
+    
+    // showToast 功能 (用于其他非模态提示)
+    function showToast(msg){ 
+        const container = document.getElementById('toast-container');
+        if (!container) return;
+        const div = document.createElement('div');
+        div.className = 'toast-msg';
+        div.textContent = msg;
+        container.appendChild(div);
+        setTimeout(() => { div.remove(); }, 2800);
     }
-    const mo = new MutationObserver(() => setTimeout(restoreHighlight, 50));
-    mo.observe(tbody, { childList: true, subtree: false });
-    tbody._twofa_observer = mo;
-  }
 
-  // 初始绑定
-  const tryBind = setInterval(() => {
-    const tbody = document.querySelector("#resultTable tbody");
-    if (tbody) {
-      clearInterval(tryBind);
-      observeTableBody();
-      restoreHighlight();
+    function pasteInput(){ navigator.clipboard.readText().then(t=>{ dom.secretBox.value=t; if(!isMemEnabled) onInputChanged(); }); }
+    function clearInput(){ dom.secretBox.value="";
+    if(!isMemEnabled) onInputChanged(); }
+    function setScale(val,font){
+      document.getElementById('fa').style.fontSize=val+"%"; codeFontSize=font;
+      localStorage.setItem("scalePercent",val); localStorage.setItem("codeFontSize",font);
+      document.querySelectorAll(".scale-btn").forEach(b=>b.classList.toggle("active", b.dataset.scale===val));
+      refreshTable();
     }
-  }, 200);
-})();
+    document.querySelectorAll(".scale-btn").forEach(b=>b.onclick=()=>setScale(b.dataset.scale,b.dataset.font));
+    
+    // [修改] 默认值设为中号 (150%)
+    (function(){ 
+        const s=localStorage.getItem("scalePercent")||"150"; 
+        const f=localStorage.getItem("codeFontSize")||"1.5em";
+        codeFontSize=f; setScale(s,f);
+    })();
 </script>
 </section>
 
