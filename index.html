@@ -1572,8 +1572,9 @@ body.dark .slider-toggle { background-color: #444; }
     <div class="risk-modal">
         <div class="risk-title">⚠️ 风险提示</div>
         <div class="risk-content">
-            <p>启用后，密钥将加密存储于本地浏览器。为防清理缓存导致数据丢失，请务必定期备份。</p>
-            <p style="color:#d93025; font-weight:bold;">请勿在公共电脑或共享设备上使用此模式！</p>
+            <p style="margin-bottom: 8px;">启用后，密钥将<b>加密存储</b>于本地浏览器 (Local Storage)。</p>
+            <p style="margin-bottom: 8px;">为防清理缓存导致数据丢失，请<b>务必定期备份</b>！</p>
+            <p style="color:#d93025; font-weight:bold; margin-top:12px;">请勿在公共电脑或共享设备上使用此模式！</p>
         </div>
         <div class="risk-footer">
             <label class="risk-check">
@@ -1707,7 +1708,7 @@ body.dark .slider-toggle { background-color: #444; }
     .btn-lock { border: 1px solid #d93025 !important; color: #d93025 !important; background: #fff !important; }
     .btn-lock:hover { background: #fce8e6 !important; }
     
-    /* 高亮行背景色加深 */
+    /* [关键] 高亮行背景色加深 */
     tr.highlighted-row td { background-color: #c0c0c0 !important; transition: background 0.2s; }
     
     .table-container { border-top: 1px solid #eee; }
@@ -1832,6 +1833,7 @@ body.dark .slider-toggle { background-color: #444; }
     let currentMasterPass = null; 
     let codeFontSize="1.5em"; // 默认中号
     let isMemEnabled = false;
+    let selectedRowIndex = -1; // [新增] 用于记录当前选中的行
 
     const STORAGE_KEY_MEM_FLAG = "fa_mem_on_v2";
     const STORAGE_KEY_DATA_ENC = "fa_db_enc_v1";
@@ -1887,6 +1889,7 @@ body.dark .slider-toggle { background-color: #444; }
             if(p) { p.label = (i+1).toString(); p.index = i; } 
             return p;
         }).filter(Boolean);
+        selectedRowIndex = -1; // 输入变更时重置选中
         refreshTable();
     }
 
@@ -1917,6 +1920,13 @@ body.dark .slider-toggle { background-color: #444; }
             } catch(e) { console.warn("Invalid secret", s); }
 
             const tr = document.createElement("tr");
+            tr.dataset.index = i; // [新增] 给行添加索引标记
+            
+            // [新增] 如果当前行是选中的行，添加高亮样式
+            if (i === selectedRowIndex) {
+                tr.classList.add('highlighted-row');
+            }
+
             let displayLabel = s.label;
             if(!displayLabel) displayLabel = (i+1).toString();
 
@@ -1927,10 +1937,8 @@ body.dark .slider-toggle { background-color: #444; }
             // 密钥显示逻辑
             let secretHtml = '';
             if (isMemEnabled) {
-                // 记忆模式：默认隐藏，点击查看
                 secretHtml = `<td><span class="secret-mask" onclick="toggleSecret(this, '${s.secret}')" onmouseleave="hideSecret(this)">••••••••</span></td>`;
             } else {
-                // 普通模式：默认直接显示格式化后的密钥，无点击事件
                 let displaySec = s.secret.length <= 6 ? s.secret : s.secret.slice(0, 3) + "••••••" + s.secret.slice(-3);
                 secretHtml = `<td><span class="secret-revealed" style="cursor:default;">${displaySec}</span></td>`;
             }
@@ -2041,6 +2049,7 @@ body.dark .slider-toggle { background-color: #444; }
         isMemEnabled = true; localStorage.setItem(STORAGE_KEY_MEM_FLAG, "1");
         updateUIState(isUnlocked);
         dom.secretBox.value = "";
+        selectedRowIndex = -1;
         if (isUnlocked) { activeSecrets = [...memoryStorage]; refreshTable(); }
         else { currentMasterPass = null;
         activeSecrets = []; refreshTable(); setTimeout(()=>dom.unlockPass.focus(), 100); }
@@ -2056,6 +2065,7 @@ body.dark .slider-toggle { background-color: #444; }
         dom.overlay.style.display = 'none';
         dom.lockMsg.style.display = 'none';
         dom.emptyTip.style.display = 'none';
+        selectedRowIndex = -1;
         onInputChanged(); 
         updatePlaceholder();
     }
@@ -2187,6 +2197,7 @@ body.dark .slider-toggle { background-color: #444; }
     window.deleteRow = async (idx) => {
         if(!confirm("确定要删除此密钥吗？")) return;
         memoryStorage.splice(idx, 1); await saveToStorageEncrypted();
+        selectedRowIndex = -1; // 删除后重置选中
         activeSecrets=[...memoryStorage]; refreshTable(); showToast("已删除");
     };
 
@@ -2194,18 +2205,27 @@ body.dark .slider-toggle { background-color: #444; }
         if(confirm("⚠️ 警告：确定清空所有数据吗？此操作不可恢复！")) {
             localStorage.removeItem(STORAGE_KEY_DATA_ENC);
             memoryStorage=[]; activeSecrets=[];
+            selectedRowIndex = -1;
             disableMemoryMode();
             showToast("数据已销毁，模式已重置");
         }
     };
 
+    // [修改] 点击行时记录索引
     dom.tbody.addEventListener('click', (e) => {
         if (['INPUT','BUTTON','SPAN'].includes(e.target.tagName)) return;
         const tr = e.target.closest('tr');
         if (!tr) return;
+        
         dom.tbody.querySelectorAll('.highlighted-row').forEach(row => row.classList.remove('highlighted-row'));
         tr.classList.add('highlighted-row');
+        
+        // 记录选中的索引
+        if (tr.dataset.index) {
+            selectedRowIndex = parseInt(tr.dataset.index);
+        }
     });
+    
     dom.secretBox.addEventListener("input", onInputChanged);
     (function init(){ 
         if(localStorage.getItem(STORAGE_KEY_MEM_FLAG)==="1") {
@@ -2217,7 +2237,6 @@ body.dark .slider-toggle { background-color: #444; }
         }
     })();
     
-    // [修改] 修复后的定时器逻辑：检测时间周期变化来刷新，而不是等 0
     let lastEpoch = Math.floor(Date.now() / 1000 / period);
 
     setInterval(async ()=>{
@@ -2261,7 +2280,6 @@ body.dark .slider-toggle { background-color: #444; }
     }
     document.querySelectorAll(".scale-btn").forEach(b=>b.onclick=()=>setScale(b.dataset.scale,b.dataset.font));
     
-    // [修改] 默认值设为中号 (150%)
     (function(){ 
         const s=localStorage.getItem("scalePercent")||"150"; 
         const f=localStorage.getItem("codeFontSize")||"1.5em";
