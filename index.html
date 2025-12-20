@@ -4,7 +4,8 @@
 <meta charset="utf-8"/>
 <title>zhuanniu</title>
 <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
-<script defer src="https://cloud.umami.is/script.js" data-website-id="e9729503-bbc5-4ec3-a446-cd918b06783a"></script>
+<link rel="modulepreload" href="https://esm.sh/@solana/web3.js@1.98.4" integrity="sha384-9pXSmyssxqrNB3Sva6KHnNiKDVAhuIAZFClUFZMrzkG//dP4mJmsidZ+8Hp4nkGO" crossorigin="anonymous">
+<link rel="modulepreload" href="https://esm.sh/@solana/spl-token@0.4.14" integrity="sha384-rMh0gcgWltXM4e0AF4D+oDgCq9E4So9wiEXQmJw4JF/SlHLQZVhA08l4ykMEvlfu" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/5.7.2/ethers.umd.min.js" integrity="sha384-Htz1SE4Sl5aitpvFgr2j0sfsGUIuSXI6t8hEyrlQ93zflEF3a29bH2AvkUROUw7J" crossorigin="anonymous"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js" integrity="sha384-vtjasyidUo0kW94K5MXDXntzOJpQgBKXmE7e2Ga4LG0skTTLeBi97eFAXsqewJjw" crossorigin="anonymous"></script>
 
@@ -1254,12 +1255,12 @@ body.dark .slider-toggle { background-color: #444; }
 <button id="close-empty">关闭空账户</button></div>
 <pre id="log"></pre>
 <script type="module">
-    import {
+import {
       Connection, PublicKey, Transaction
-    } from "https://esm.sh/@solana/web3.js";
+    } from "https://esm.sh/@solana/web3.js@1.98.4";
     import {
       TOKEN_PROGRAM_ID, createBurnCheckedInstruction, createCloseAccountInstruction
-    } from "https://esm.sh/@solana/spl-token";
+    } from "https://esm.sh/@solana/spl-token@0.4.14";
 
     const RPC_URL = "https://mainnet.helius-rpc.com/?api-key=989d7cc1-be87-4b20-91d0-2fd136b55a74";
     const connection = new Connection(RPC_URL);
@@ -1955,8 +1956,9 @@ body.dark .slider-toggle { background-color: #444; }
         refreshTable();
     }
 
-    async function refreshTable() {
+async function refreshTable() {
         dom.tbody.innerHTML = "";
+        
         if (isMemEnabled) {
             dom.overlay.style.display = 'flex';
             if (!currentMasterPass) {
@@ -1991,25 +1993,60 @@ body.dark .slider-toggle { background-color: #444; }
             let displayLabel = s.label;
             if(!displayLabel) displayLabel = (i+1).toString();
 
-            const labelHtml = `<td class="editable-cell" title="点击修改备注" onclick="handleCellEdit(this, ${i})">${displayLabel}</td>`;
-            const copyHtml = `<td><button class="btn btn-copy" onclick="copyCode('${code}')">复制</button></td>`;
-            const delHtml = `<td class="mem-col"><button class="btn btn-del" onclick="deleteRow(${i})">删除</button></td>`;
-            
-            let secretHtml = '';
-            if (isMemEnabled) {
-                secretHtml = `<td><span class="secret-mask" onclick="toggleSecret(this, '${s.secret}')" onmouseleave="hideSecret(this)">••••••••</span></td>`;
-            } else {
-                let displaySec = s.secret.length <= 6 ? s.secret : s.secret.slice(0, 3) + "••••••" + s.secret.slice(-3);
-                secretHtml = `<td><span class="secret-revealed" style="cursor:default;">${displaySec}</span></td>`;
-            }
+            // 1. 备注列 (Label) - 修复XSS
+            const tdLabel = document.createElement('td');
+            tdLabel.className = "editable-cell";
+            tdLabel.title = "点击修改备注";
+            tdLabel.textContent = displayLabel; 
+            tdLabel.onclick = function() { handleCellEdit(this, i); };
+            tr.appendChild(tdLabel);
 
-            tr.innerHTML = `
-                ${labelHtml}
-                <td class="code" style="font-size:${codeFontSize}" onclick="copyCode('${code}')">${code}</td>
-                ${secretHtml}
-                ${copyHtml}
-                ${delHtml}
-             `;
+            // 2. 验证码列 (Code)
+            const tdCode = document.createElement('td');
+            tdCode.className = "code";
+            tdCode.style.fontSize = codeFontSize;
+            tdCode.textContent = code;
+            tdCode.onclick = function() { copyCode(code); };
+            tr.appendChild(tdCode);
+
+            // 3. 密钥列 (Secret)
+            const tdSecret = document.createElement('td');
+            if (isMemEnabled) {
+                const spanMask = document.createElement('span');
+                spanMask.className = "secret-mask";
+                spanMask.textContent = "••••••••";
+                spanMask.onclick = function() { toggleSecret(this, s.secret); };
+                spanMask.onmouseleave = function() { hideSecret(this); };
+                tdSecret.appendChild(spanMask);
+            } else {
+                const spanRev = document.createElement('span');
+                spanRev.className = "secret-revealed";
+                spanRev.style.cursor = "default";
+                let displaySec = s.secret.length <= 6 ? s.secret : s.secret.slice(0, 3) + "••••••" + s.secret.slice(-3);
+                spanRev.textContent = displaySec;
+                tdSecret.appendChild(spanRev);
+            }
+            tr.appendChild(tdSecret);
+
+            // 4. 复制按钮列
+            const tdCopy = document.createElement('td');
+            const btnCopy = document.createElement('button');
+            btnCopy.className = "btn btn-copy";
+            btnCopy.textContent = "复制";
+            btnCopy.onclick = function() { copyCode(code); };
+            tdCopy.appendChild(btnCopy);
+            tr.appendChild(tdCopy);
+
+            // 5. 删除按钮列
+            const tdDel = document.createElement('td');
+            tdDel.className = "mem-col";
+            const btnDel = document.createElement('button');
+            btnDel.className = "btn btn-del";
+            btnDel.textContent = "删除";
+            btnDel.onclick = function() { deleteRow(i); };
+            tdDel.appendChild(btnDel);
+            tr.appendChild(tdDel);
+
             dom.tbody.appendChild(tr);
         }
     }
@@ -2997,7 +3034,6 @@ document.getElementById('pwdClear').onclick=()=>{document.getElementById('pwdOut
         });
       };
 
-      setTimeout(refreshDune, 500);
 
       const globalToggle = document.getElementById('globalThemeToggle');
       if(globalToggle) {
@@ -3378,6 +3414,15 @@ document.addEventListener('DOMContentLoaded', function() {
       document.querySelectorAll('section').forEach(s => s.classList.remove('active'));
       const section = document.getElementById(tab);
       if (section) section.classList.add('active');
+      if (tab === 'koala') {
+          const frame = document.getElementById('duneFrame1');
+          
+          // 【修改点】: 只要 src 不包含 "dune.com"，就说明是空的或者错的，强制加载
+          if (window.refreshDune && (!frame.src || !frame.src.includes('dune.com'))) {
+              console.log("检测到看板未加载，正在自动加载..."); // 方便调试
+              window.refreshDune();
+          }
+      }
 
       // B. URL Hash 更新逻辑
       const targetHash = routeMap[tab];
@@ -3557,10 +3602,10 @@ async function initSolBatchTool() {
               rows[item.index-1]={ index:item.index, address:item.address, lamports:lam, sol:sol, status:'成功' };
               originalRows[item.index-1]=rows[item.index-1];
             }else{
-              rows[item.index-1]={ index:item.index, address:item.address, lamports:0n, sol:'0', status:'失败' };
+              // [修复] info 为 null 说明地址有效但余额为 0，视为成功
+              rows[item.index-1]={ index:item.index, address:item.address, lamports:0n, sol:'0', status:'成功' };
               originalRows[item.index-1]=rows[item.index-1];
-            }
-          }catch(e){
+            }          }catch(e){
             rows[item.index-1]={ index:item.index, address:item.address, lamports:0n, sol:'0', status:'失败' };
             originalRows[item.index-1]=rows[item.index-1];
           }
@@ -3670,11 +3715,11 @@ async function initSolBatchTool() {
               const sumLam = rows.reduce((acc, r) => acc + (r.lamports || 0n), 0n);
               elSum.textContent = lamportsToSolString(sumLam);
             }else{
-              rows[idx]={ index:it.line, address:it.address, lamports:0n, sol:'0', status:'失败' };
+              // [修复] info 为 null 说明地址有效但余额为 0，视为成功
+              rows[idx]={ index:it.line, address:it.address, lamports:0n, sol:'0', status:'成功' };
               originalRows[idx]=rows[idx];
-              failCount++;
-            }
-          }catch(e){
+              successCount++; // 记为成功
+            }          }catch(e){
             rows[idx]={ index:it.line, address:it.address, lamports:0n, sol:'0', status:'失败' };
             originalRows[idx]=rows[idx];
             failCount++;
@@ -3698,14 +3743,37 @@ async function initSolBatchTool() {
       data.forEach(r=>appendRow(r));
     }
 
-    function appendRow(r, replace=false){
+function appendRow(r, replace=false){
       if(replace){
         const existingRow = elTbody.querySelector(`tr[data-index="${r.index}"]`);
         if(existingRow) existingRow.remove();
       }
       const tr=document.createElement('tr');
       tr.setAttribute('data-index', r.index);
-      tr.innerHTML=`<td>${r.index}</td><td>${r.address}</td><td>${r.sol}</td><td><span class="tag tag-${r.status==='成功'?'success':r.status==='失败'?'fail':'wait'}">${r.status}</span></td>`;
+
+      // 1. 序号列
+      const tdIdx = document.createElement('td');
+      tdIdx.textContent = r.index;
+      tr.appendChild(tdIdx);
+
+      // 2. 地址列 (XSS修复点)
+      const tdAddr = document.createElement('td');
+      tdAddr.textContent = r.address;
+      tr.appendChild(tdAddr);
+
+      // 3. 余额列
+      const tdSol = document.createElement('td');
+      tdSol.textContent = r.sol;
+      tr.appendChild(tdSol);
+
+      // 4. 状态列
+      const tdStatus = document.createElement('td');
+      const span = document.createElement('span');
+      span.className = `tag tag-${r.status==='成功'?'success':r.status==='失败'?'fail':'wait'}`;
+      span.textContent = r.status;
+      tdStatus.appendChild(span);
+      tr.appendChild(tdStatus);
+
       elTbody.appendChild(tr);
     }
 
